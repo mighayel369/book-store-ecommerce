@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify Email</title>
+    <style>
+        body {
+            background-color: #eef2f7;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #333;
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 70vh;
+        }
+
+        .otp-form {
+            width: 100%;
+            max-width: 400px;
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        h3 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+
+        p {
+            color: #7f8c8d;
+            margin-bottom: 20px;
+            font-size: 16px;
+        }
+
+        .otp-form input[type="text"] {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+            margin-bottom: 20px;
+            box-sizing: border-box;
+        }
+
+        .otp-form input[type="text"]:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.2);
+            outline: none;
+        }
+
+        .otp-form button {
+            width: 100%;
+            padding: 12px;
+            background-color: #141414;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .otp-form button:hover {
+            background-color: #0056b3;
+        }
+
+        .change {
+            margin-top: 10px;
+            color: #e74c3c;
+            font-size: 14px;
+        }
+
+        #timer {
+            color: #555;
+            font-size: 14px;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+    <%- include('../partials/userHeader') %>
+    <div class="container">
+        <div class="otp-form">
+            <h3 class="fw-bold">Verify Your Email</h3>
+            <p>Please enter your registered email address:</p>
+            <form action="/verify-email" method="post">
+                <div class="mb-3">
+                    <input type="text" class="form-control" id="email" placeholder="Enter email" name="email">
+                </div>
+                <% if (message) { %>
+                    <div class="text-danger change"><%= message.message %></div>
+                <% } %>
+                <div id="timer" class="mt-3"></div>
+                <button type="submit" class="btn btn-dark" id="verify">Verify</button>
+            </form>
+        </div>
+    </div>
+    <%- include('../partials/userfooter') %>
+</body>
+</html>

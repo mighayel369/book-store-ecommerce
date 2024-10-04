@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cancel Order</title>
+  <style>
+    .container {
+      text-align: center;
+      width: 100%;
+      min-height: 500px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    #cancelForm {
+      width: 400px;
+    }
+    .form-control {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    .submit-btn {
+      width: 100%;
+      padding: 10px;
+      background-color: #dc3545;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .submit-btn:hover {
+      background-color: #c82333;
+    }
+    .colored-toast {
+  background: #9b7878!important; 
+  color: white!important; 
+}
+
+.toast-text {
+  color: #ffffff!important;
+}
+  </style>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+
+<%- include('../partials/userHeader') %>
+<div class="container">
+  <form id="cancelForm">
+    <p class="fw-bold text-muted fs-5">Cancel Order</p>
+    <input type="hidden" name="orderId" value="<%= orderid %>" id="orderId">
+    <input type="hidden" name="productId" value="<%= productid %>" id="productId">
+    <textarea class="form-control" id="cancelReason"  rows="13" placeholder="write a reason for cancel order"></textarea>
+    <button type="submit" class="submit-btn">Submit</button>
+  </form>
+</div>
+<%- include('../partials/userfooter') %>
+
+<script>
+  $('#cancelForm').on('submit', function(e) {
+    e.preventDefault();
+    let reason = $('#cancelReason').val()
+    let orderId = $('#orderId').val();
+    let productId = $('#productId').val();
+    console.log(orderId)
+    if (reason) {
+      $.ajax({
+        url: '/order/cancel',
+        type: 'POST',
+        data: { reason: reason, orderId: orderId ,productId:productId},
+        success: function(response) {
+          Swal.fire({
+      toast: true,
+      position: 'top-end',
+      text: 'Your Order Canceled Successfully',
+      showConfirmButton: false,
+      timer: 2000,
+      timerProgressBar: false,
+      background: '#28a745',
+      customClass: {
+        popup: 'colored-toast',
+        text: 'toast-text'
+      }
+    }).then(() => {
+      window.location.href = `/account/${orderId}`;
+    });
+  },
+        error: function(error) {
+          Swal.fire({
+                toast: true,
+                position: 'top-end',
+                text: 'Your Order Cancelation failed try again',
+                showConfirmButton: false,
+                timer: 2000,
+                timerProgressBar: false,
+                background: '#28a745',
+                customClass: {
+                    popup: 'colored-toast',
+                    text: 'toast-text'
+                }
+            });
+        }
+      });
+    } else {
+      Swal.fire({
+        title: 'Please enter a reason',
+        icon: 'warning',
+        confirmButtonText: 'OK'
+      });
+    }
+  });
+</script>
+
+</body>
+</html>

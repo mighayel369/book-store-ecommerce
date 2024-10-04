@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Centered Offcanvas with Scrollbar</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+
+        .account-nav {
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            padding: 20px;
+            width: 100%;
+            font-weight: bold;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .account-navitem {
+            border-bottom: 1px solid #ccc;
+            padding: 10px;
+            cursor: pointer;
+        }
+
+        .account-navitem:last-child {
+            border-bottom: none;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: #555;
+            text-decoration: none;
+        }
+
+        .nav-link i {
+            margin-right: 10px;
+        }
+
+        .account {
+            margin-left: 30px;
+            margin-top: 70px;
+        }
+
+        .active {
+            background-color: #df9f9f;
+            border-radius: 5px;
+        }
+        .arrow{
+            position: absolute;
+            left:255px;
+        }
+        .addressDiv{
+            margin-top: 130px;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .offcanvas-center {
+            width: 500px;
+            height: 90vh; 
+            margin: auto;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            transform: none;
+            border-radius: 10px;
+            overflow-y: auto;
+        }
+        .offcanvas-header, .offcanvas-body {
+            padding: 20px;
+        }
+
+        .offcanvas-center::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        .offcanvas-center::-webkit-scrollbar-thumb {
+            background-color: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+        }
+        .address-list{
+            border: 1px solid grey;
+            width: 40%;
+            margin-left: 27px;
+            margin-top: 10px;
+            padding: 15px;
+            border-radius: 10px;
+            background-color: rgb(225, 238, 248);
+        }
+        .address-list p {
+         margin-bottom: 0.2rem;
+         line-height: 1.2; 
+         font-weight:500;
+          }
+          .header-section {
+            background-color: #b46363;
+            color: white;
+            height: 50px;
+            text-align: center;
+            padding-top: 10px;
+            border-bottom: 1px solid #ccc;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <%- include('../partials/userHeader') %>
+    <p class="fw-bold text-dark fs-5 mt-4 ms-3">Home > <span>Account ></span><span class="text-warning fs-5"> Address</span></p>
+    <div class="container-fluid">
+        <% if (message) { %>
+            <div class="alert m-4 alert-dismissible fade show alert-<%= message.type %>" role="alert">
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              <strong><%= message.message %></strong>
+            </div>
+          <% } %>
+        <div class="row">
+            <div class="col-md-3 ">
+                <%- include('../partials/account-nav') %>
+            </div>
+            <div class="col-md-9">
+                <div class="addressDiv">
+                    <div class="header-section"><h5 class="fw-bold">Shipping Address</h5></div>
+                    <div class="d-flex mt-4">
+                        <button class="btn btn-dark ms-auto mx-3" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasWithBothOptions" aria-controls="offcanvasWithBothOptions">Add Address</button>
+                    </div>
+                    <% if (users && users.address && users.address.length > 0) { %>
+                    <% users.address.forEach(element => { %>
+                        <div class="address-list mb-3 position-relative">
+                            <div class="position-absolute top-0 end-0">
+                                <a href="" type="button" class="mx-1 mt-1 text-muted" data-bs-toggle="offcanvas" data-bs-target="#offcanvasEditAddress"  aria-controls="offcanvasEditAddress"  data-id="<%= element._id %>"  data-fullname="<%= element.fullname %>"  data-houseno="<%= element.houseno %>" data-area="<%= element.area %>" data-landmark="<%= element.landmark %>"data-town="<%= element.town %>"data-state="<%= element.state %>"data-pincode="<%= element.pincode %>"data-phoneno="<%= element.phoneno %>"data-default= " <%= element.default %>" 
+                     onclick="populateEditForm(this)"><i class="fa-solid fa-pen-to-square"></i></a>
+                                <a  onclick="deleteAddress('<%= element._id %>')"  class="mx-1 mt-1 text-muted"><i class="fa-solid fa-trash"></i></a>
+                            </div>
+                            <p class="mb-1"><%= element.fullname %></p>
+                            <p class="mb-1"><%= element.houseno %>,<%= element.area %>,<%= element.landmark %></p>
+                            <p class="mb-1"><%= element.town %>,<%= element.state %></p>
+                            <p class="mb-1"><%= element.phoneno %></p>
+                            <p class="mb-1"><%= element.pincode %></p>
+                        </div>
+                    <% }) %>
+                    <% }else { %>
+                        <p class="text-center text-muted my-4 fw-bold" style="font-size: 1.2rem;">No addresses found.</p>
+                        <% } %>
+                    
+                    <div class="offcanvas offcanvas-center" data-bs-scroll="true" tabindex="-1" id="offcanvasWithBothOptions" aria-labelledby="offcanvasWithBothOptionsLabel">
+                        <div class="offcanvas-header">
+                            <h5 class="offcanvas-title" id="offcanvasWithBothOptionsLabel">Add New Address</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                        </div>
+                        <div class="offcanvas-body">
+                            <form action="/addaddress" method="post">
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" id="fullname" placeholder="name" name="fullname" required>
+                                <label for="fullname">Name</label>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <input type="number" class="form-control" id="phoneno" name="phoneno" placeholder="Phone Number" required>
+                                <label for="phoneno">Phone Number</label>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" id="houseno" name="houseno" placeholder="Flat, House No, Company, Building, Apartment" required>
+                                <label for="houseno">Flat, House No, Company, Building, Apartment</label>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" id="area" name="area" placeholder="Area, Street, Sector, Village" required>
+                                <label for="area">Area, Street, Sector, Village</label>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" id="landmark" name="landmark" placeholder="Landmark" required>
+                                <label for="landmark">Landmark</label>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" id="town" name="town" placeholder="Town, City" required>
+                                <label for="town">Town, City</label>
+                            </div>
+                            <div class="row">
+                                <div class="form-floating mb-3 col-md-6">
+                                    <select class="form-select" id="state" name="state">
+                                        <option value="kerala">Kerala</option>
+                                        <option value="Tamil Nadu">Tamil Nadu</option>
+                                        <option value="kerala">Kerala</option>
+                                        <option value="Tamil Nadu">Tamil Nadu</option>
+                                        <option value="kerala">Kerala</option>
+                                        <option value="Tamil Nadu">Tamil Nadu</option>
+                                        <option value="kerala">Kerala</option>
+                                        <option value="Tamil Nadu">Tamil Nadu</option>
+                                        <option value="kerala">Kerala</option>
+                                        <option value="Tamil Nadu">Tamil Nadu</option>
+                                    </select>
+                                    <label for="state" class="mx-2 mb-1">State</label>
+                                </div>
+                                <div class="form-floating mb-3 col-md-6">
+                                    <input type="number" class="form-control" id="pincode" name="pincode" placeholder="Pincode" required>
+                                    <label for="pincode" class="mx-2">Pincode</label>
+                                </div>
+                            </div>
+                            <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="true" id="checkadd" name="default">
+                             <label class="form-check-label" for="checkadd">
+                               set as default
+                             </label>
+                                </div>
+                            <div class="d-flex justify-content-center w-100">
+                                <button class="btn btn-dark" type="submit">Add Address</button>
+                            </div>
+                            </form>
+                        </div>
+                    </div>
+<div class="offcanvas offcanvas-center" data-bs-scroll="true" tabindex="-1" id="offcanvasEditAddress" aria-labelledby="offcanvasEditAddressLabel">
+    <div class="offcanvas-header">
+        <h5 class="offcanvas-title" id="offcanvasEditAddressLabel">Edit Address</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+        <form  method="post" action="#" id="edit-address-form">
+            <div class="form-floating mb-3">
+                <input type="text" class="form-control" id="edit-fullname" name="fullname" placeholder="Full Name">
+                <label for="edit-fullname">Name</label>
+            </div>
+            <div class="form-floating mb-3">
+                <input type="number" class="form-control" id="edit-phoneno" name="phoneno" placeholder="Phone Number">
+                <label for="edit-phoneno">Phone Number</label>
+            </div>
+            <div class="form-floating mb-3">
+                <input type="text" class="form-control" id="edit-houseno" name="houseno" placeholder="Flat, House No, Company, Building, Apartment">
+                <label for="edit-houseno">Flat, House No, Company, Building, Apartment</label>
+            </div>
+            <div class="form-floating mb-3">
+                <input type="text" class="form-control" id="edit-area" name="area" placeholder="Area, Street, Sector, Village">
+                <label for="edit-area">Area, Street, Sector, Village</label>
+            </div>
+            <div class="form-floating mb-3">
+                <input type="text" class="form-control" id="edit-landmark" name="landmark" placeholder="Landmark">
+                <label for="edit-landmark">Landmark</label>
+            </div>
+            <div class="form-floating mb-3">
+                <input type="text" class="form-control" id="edit-town" name="town" placeholder="Town, City">
+                <label for="edit-town">Town, City</label>
+            </div>
+            <div class="row">
+                <div class="form-floating mb-3 col-md-6">
+                    <select class="form-select" id="edit-state" name="state">
+                        <option value="kerala">Kerala</option>
+                        <option value="Tamil Nadu">Tamil Nadu</option>
+                    </select>
+                    <label for="edit-state" class="mx-2 mb-1">State</label>
+                </div>
+                <div class="form-floating mb-3 col-md-6">
+                    <input type="number" class="form-control" id="edit-pincode" name="pincode" placeholder="Pincode">
+                    <label for="edit-pincode" class="mx-2">Pincode</label>
+                </div>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="true" id="flexCheckDefault" name="default">
+                 <label class="form-check-label" for="default">
+                   set as default
+                 </label>
+            </div>
+            <div class="d-flex justify-content-center w-100">
+                <button class="btn btn-dark" type="submit">Update Address</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <%- include('../partials/userfooter') %>
+    <script>
+         $(document).ready(function() {
+            const navItems = $('.account-navitem a');
+        navItems.each(function() {
+            if (window.location.pathname === $(this).attr('href')) {
+                $(this).parent().addClass('active');
+            }
+        });
+
+        navItems.on('click', function() {
+            navItems.parent().removeClass('active'); 
+            $(this).parent().addClass('active');
+        });
+});
+
+function deleteAddress(addressId){
+    let url=`/delete-address/${addressId}`
+    const isConfirmed = window.confirm('Do you really want to delete the address?');
+    if(isConfirmed){
+        window.location.href=url
+    }else{
+        console.log("canceled")
+    }
+}
+
+
+function populateEditForm(button){
+let addressId=button.getAttribute('data-id')
+const fullname = button.getAttribute('data-fullname');
+const houseno = button.getAttribute('data-houseno');
+const area = button.getAttribute('data-area');
+const landmark = button.getAttribute('data-landmark');
+const town = button.getAttribute('data-town');
+const state = button.getAttribute('data-state');
+const pincode = button.getAttribute('data-pincode');
+const phoneno = button.getAttribute('data-phoneno');
+const Isdefault=button.getAttribute('data-default')
+console.log(Isdefault)
+console.log('Type of Isdefault:', typeof Isdefault);
+document.getElementById('edit-fullname').value=fullname
+document.getElementById('edit-houseno').value = houseno;
+document.getElementById('edit-area').value = area;
+document.getElementById('edit-landmark').value = landmark;
+document.getElementById('edit-town').value = town;
+document.getElementById('edit-state').value = state;
+document.getElementById('edit-pincode').value = pincode;
+document.getElementById('edit-phoneno').value = phoneno;
+
+
+if (String(Isdefault).trim() === 'true') {
+    document.getElementById('flexCheckDefault').checked = true;
+} else {
+    document.getElementById('flexCheckDefault').checked = false;
+}
+let url = `/edit-address/${addressId}`;
+document.getElementById('edit-address-form').action = url;
+}
+</script>
+</body>
+</html>

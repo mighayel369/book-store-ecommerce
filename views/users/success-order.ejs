@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Success</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .order-success-container {
+            max-width: 800px;
+            margin: 50px auto;
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .order-success-container h2 {
+            color: #28a745;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .order-summary, .payment-shipping-info {
+            margin-bottom: 30px;
+        }
+
+        .order-summary h4, .payment-shipping-info h4 {
+            font-weight: bold;
+            border-bottom: 2px solid #ddd;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        .product-list {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            margin-bottom: 20px;
+        }
+
+        .product-item {
+            padding: 10px 0;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .product-item:last-child {
+            border-bottom: none;
+        }
+
+        .btn-primary, .btn-secondary {
+            width: 100%;
+            margin-bottom: 15px;
+        }
+
+        .track-order-support p, .continue-shopping {
+            text-align: center;
+        }
+
+        .track-order-support p a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        .track-order-support p a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <%- include('../partials/userHeader') %>
+    <div class="container-fluid">
+        <div class="order-success-container">
+            <h2>Thank You for Your Order!</h2>
+            <p class="text-center">Your order has been successfully placed.</p>
+
+            <div class="order-summary">
+                <h4>Order Summary</h4>
+                <p>Order Number: <strong><%= orderDetails.orderId %></strong></p>
+                <p>Order Date: <strong><%= orderDetails.createdAt.toISOString().split('T')[0] %></strong></p>
+                
+                <div class="product-list">
+                    <% orderDetails.products.forEach(product => { %>
+                        <div class="product-item">
+                            <p>Product Name: <strong><%= product.productName %></strong></p>
+                            <p>Quantity: <%= product.quantity %></p>
+                            <p>Price: <%= product.discountPrice?product.discountPrice:product.productprice %></p>
+                        </div>
+                    <% }) %>
+                </div>
+        
+                <p>Total Amount: <strong><%= orderDetails.finalPrice?orderDetails.finalPrice:orderDetails.totalAmount%> (including taxes and shipping)</strong></p>
+            </div>
+            <div class="payment-shipping-info">
+                <h4>Payment Information</h4>
+                <p>Payment Method:<%= orderDetails.paymentMethod %></p>
+
+                <h4>Shipping Information</h4>
+                <p>Shipping Address:</p>             
+                    <p class="mb-0 fw-bold"><%= orderDetails.shippingAddress.fullname %></p>
+                    <p class="mb-0"><%= orderDetails.shippingAddress.houseno %>, <%= orderDetails.shippingAddress.area %>, <%= orderDetails.shippingAddress.landmark %></p>
+                    <p class="mb-0"><%= orderDetails.shippingAddress.town %>, <%= orderDetails.shippingAddress.state %></p>
+                    <p class="mb-0"><%= orderDetails.shippingAddress.phoneno %></p>
+                    <p class="mb-0"><%= orderDetails.shippingAddress.pincode %></p>
+                  </p>
+                <p>Estimated Delivery: <%= orderDetails.deliveryExpected.toISOString().split('T')[0] %></p>
+            </div>
+
+            <div class="track-order-support">
+                <a class="btn btn-primary" href="/account/<%=orderDetails._id  %>">Track Your Order</a>
+                <p>If you have any questions, please <a href="#">contact us</a>.</p>
+            </div>
+
+            <div class="continue-shopping">
+                <a href="/" class="btn btn-secondary">Continue Shopping</a>
+            </div>
+        </div>
+    </div>
+    <%- include('../partials/userFooter') %>
+</body>
+</html>

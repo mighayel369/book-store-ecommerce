@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add Coupon - Admin Panel</title>
+  <style>
+    .couponDiv {
+      background-color: #a2c7ec;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      width: 450px;
+      margin: 0 auto;
+    }
+    .coupon-header {
+      border-bottom: 1px solid #dee2e6;
+      padding-bottom: 8px;
+      margin-bottom: 15px;
+    }
+    .form-label {
+      font-size: 0.9rem; 
+    }
+    .form-control, .form-select {
+      font-size: 0.9rem; 
+    }
+    .btn {
+      font-size: 0.9rem; 
+    }
+  </style>
+</head>
+<body>
+
+  <%- include('../partials/adminHeader') %>
+  
+  <main>
+    <div class="container mt-4">
+      <div class="row">
+        <div class="col-lg-6 mx-auto">
+          <div class="couponDiv">
+            <div class="coupon-header text-center">
+              <h5 class="fw-bold"><i class="fas fa-ticket-alt me-2"></i>Edit Coupon</h5>
+            </div>
+            <form action="/admin/editcoupon/<%= Coupon._id %>" method="post">
+                <input type="hidden" class="form-control" id="couponcode"  name="couponcode" value="<%= Coupon.code %>">
+              <div class="mb-2">
+                <label for="coupontype" class="form-label">Type</label>
+                <select class="form-select" id="coupontype" name="coupontype">
+                  <option selected disabled>Select Type</option>
+                  <option value="percentage"<%= Coupon.discountType==='percentage'?'selected':"" %>>Percentage</option>
+                  <option value="fixed"<%= Coupon.discountType==='fixed'?'selected':"" %>>Fixed-Amount</option>
+                </select>
+              </div>
+              <div class="mb-2">
+                <label for="discountvalue" class="form-label">Discount-Value</label>
+                <input type="number" class="form-control" id="discountvalue" value="<%= Coupon.discountValue %>" name="discountvalue">
+              </div>
+              <div class="mb-2">
+                <label for="minamount" class="form-label">Min-Amount</label>
+                <input type="number" class="form-control" id="minamount"  name="minamount" value="<%= Coupon.minimumPurchaseAmount %>">
+              </div>
+              <div class="mb-2">
+                <label for="description" class="form-label">Description</label>
+                <textarea class="form-control" id="description" name="description" rows="2"><%= Coupon.description %></textarea>
+              </div>
+              <div class="mb-2">
+                <label for="startdate" class="form-label">Start Date</label>
+                <input type="date" class="form-control" id="startdate" name="startdate" value="<%= Coupon.startDate.toISOString().split('T')[0] %>">
+              </div>
+              <div class="mb-2">
+                <label for="enddate" class="form-label">End Date</label>
+                <input type="date" class="form-control" id="enddate" name="enddate" value="<%= Coupon.endDate.toISOString().split('T')[0] %>">
+              </div>
+              <% if (adminmessage) { %>
+                <p class="text-danger fw-light"id="change" ><%= adminmessage.message %></p>
+               <% } %>
+              <div class="d-grid mt-3">
+                <button type="submit" class="btn btn-dark btn-sm"> Save Changes</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+
+  <%- include('../partials/adminfooter') %>
+</body>
+</html>

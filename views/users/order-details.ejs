@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            padding: 20px;
+        }
+
+        .order-details {
+            margin: auto;
+            max-width: 900px;
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .order-details h5 {
+            border-bottom: 2px solid #b46363;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            color: #b46363;
+            text-align: center;
+        }
+
+        .order-address {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .order-address > div {
+            flex: 1;
+            min-width: 250px;
+            padding: 15px;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            background-color: #f8f9fa;
+        }
+
+        .order-address h6 {
+            font-size: 1rem;
+            color: #b46363;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        .order-address p {
+            margin: 0 0 5px;
+            font-size: 0.9rem;
+            color: #555;
+        }
+
+        .order-tabledata table {
+            width: 100%;
+            margin-bottom: 30px;
+            border-collapse: collapse;
+        }
+
+        .order-tabledata th, .order-tabledata td {
+            padding: 15px;
+            border: 1px solid #ccc;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .order-tabledata th {
+            background-color: #e9ecef;
+            font-weight: bold;
+        }
+
+        .order-tabledata td {
+            background-color: #f9f9f9;
+        }
+
+        .btn-danger {
+            background-color: #dc3545;
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .btn-danger:hover {
+            background-color: #c82333;
+        }
+
+        .subtotal {
+            border-top: 2px solid #e9ecef;
+            padding-top: 20px;
+            text-align: right;
+        }
+
+        .subtotal p {
+            margin: 0;
+        }
+
+        .subtotal p + p {
+            margin-top: 5px;
+        }
+
+        .subtotal p:last-child {
+            font-weight: bold;
+            font-size: 1.2em;
+        } 
+
+    </style>
+</head>
+<body>
+    <%- include('../partials/userHeader') %>
+
+    <div class="container">
+        <div class="order-details">
+            <h5>Order Details</h5>
+            <div class="d-flex justify-content-between mb-3">
+                <p class="mb-0">Details For Order Id: <%= orderDetails.orderId %></p>
+                <button type="button" onclick="downloadInvoice('<%= orderDetails._id %>')" class="btn btn-outline-secondary btn-download">Download Invoice</button>
+            </div>
+            
+            <div class="order-table">
+                <div class="order-address">
+                    <div class="customor-info">
+                        <h6>User Details</h6>
+                        <p><%= users.username %></p>
+                        <p><%= users.email %></p>
+                        <p><%= users.phoneno %></p>
+                    </div>
+                    <div class="order-info">
+                        <h6>Order Info</h6>
+                        <p>Shipping: Fargo Express</p>
+                        <p>Payment Method: <%= orderDetails.paymentMethod %></p>
+                        <p>Status: <%= orderDetails.status %></p>
+                        <p>Payment Status:</p>
+                        <p class="fs-5" style="font-weight: bold;color: #28a745;"><%= orderDetails.paymentStatus %></p>
+                    </div>
+                    <div class="deliver-info">
+                        <h6>Delivery Address</h6>
+                        <p><%= orderDetails.shippingAddress.houseno %>, <%= orderDetails.shippingAddress.area %></p>
+                        <p><%= orderDetails.shippingAddress.landmark %></p>
+                        <p><%= orderDetails.shippingAddress.town %>, <%= orderDetails.shippingAddress.state %></p>
+                        <p><%= orderDetails.shippingAddress.pincode %></p>
+                    </div>
+                </div>
+                <div class="order-tabledata">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Price</th>
+                                <th>Quantity</th>
+                                <th>Total</th>
+                                <th>Order Status</th>
+                                <th>Return/Cancel</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% orderDetails.products.forEach(product => { %>
+                                <tr>
+                                    <td><%= product.productName %></td>
+                                    <td><%= product.discountPrice ? product.discountPrice : product.productprice %></td>
+                                    <td><%= product.quantity %></td>
+                                    <td><%= product.discountPrice ? product.discountPrice * product.quantity : product.productprice * product.quantity %></td>
+                                    <td><%= product.orderStatus ? product.orderStatus : orderDetails.status %></td>
+                                    <td>
+                                        <% if (product.orderStatus !== 'Delivered'&&product.orderStatus !== 'Returned') { %>
+                                            <% if (product.orderStatus === 'Canceled') { %>
+                                                <span class="text-danger font-weight-bold">Order Canceled</span>
+                                            <% } else { %>
+                                                <a href="javascript:void(0);" onclick="cancelProduct('<%= orderDetails._id %>', '<%= product.productId %>')" class="btn btn-danger btn-sm">
+                                                    <i class="fas fa-times-circle"></i> Cancel Product
+                                                </a>
+                                            <% } %>
+                                        <% } else { %>
+                                            <% if (product.returnRequest) { %>
+                                                <p class="mt-3"><%= product.returnRequest %></p>
+                                            <% } else { %>
+                                                <button class="btn btn-primary btn-sm" onclick="returnProduct('<%= orderDetails._id %>', '<%= product.productId %>')">
+                                                    <i class="fas fa-undo-alt"></i> Return Product
+                                                </button>
+                                            <% } %>
+                                        <% } %>
+                                    </td>
+                                    <td><%= orderDetails.createdAt.toISOString().split('T')[0] %></td>
+                                </tr>
+                            <% }) %>
+                        </tbody>                        
+                    </table>
+                </div>
+                <div class="subtotal">
+                    <p>Subtotal: ₹<%= orderDetails.totalAmount %></p>
+                    <p>Shipping Fee: Free</p>
+                    <p>Coupon: 
+                        <span class="text-warning">
+                            <%= orderDetails.finalPrice ? "₹" + (orderDetails.totalAmount - orderDetails.finalPrice) : "No Coupon" %>
+                        </span>
+                    </p>
+                    <p>Grand Total: ₹<%= orderDetails.finalPrice ? orderDetails.finalPrice : orderDetails.totalAmount %></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <%- include('../partials/userfooter') %>
+
+    <script>
+        function cancelProduct(orderId, productId) {
+            let url = `/orders/${orderId}/product/${productId}/cancel-reason`;
+            Swal.fire({
+                title: `Are you sure you want to cancel this product?`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = url;
+                }
+            });
+        }
+
+        function returnProduct(orderId, productId) {
+            let url = `/orderReturn/${orderId}/product/${productId}`;
+            Swal.fire({
+                title: `Are you sure you want to return this product?`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = url;
+                }
+            });
+        }
+        function downloadInvoice(orderId){
+            let url=`/downloadinvoice/${orderId}`
+            Swal.fire({
+                title: `Are you sure you want to donwload invoice`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = url;
+                }
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add Coupon - Admin Panel</title>
+  <style>
+    .couponDiv {
+      background-color: #f8f9fa;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      width: 450px;
+      margin: 0 auto;
+    }
+    .coupon-header {
+      border-bottom: 1px solid #dee2e6;
+      padding-bottom: 8px;
+      margin-bottom: 15px;
+    }
+    .form-label {
+      font-size: 0.9rem; 
+    }
+    .form-control, .form-select {
+      font-size: 0.9rem; 
+    }
+    .btn {
+      font-size: 0.9rem; 
+    }
+  </style>
+</head>
+<body>
+
+  <%- include('../partials/adminHeader') %>
+  
+  <main>
+    <div class="container mt-4">
+      <div class="row">
+        <div class="col-lg-6 mx-auto">
+          <div class="couponDiv">
+            <div class="coupon-header text-center">
+              <h5 class="fw-bold"><i class="fas fa-ticket-alt me-2"></i>Add Coupon</h5>
+            </div>
+            <form action="/admin/addcoupon" method="post">
+              <div class="mb-2">
+                <label for="coupontype" class="form-label">Type</label>
+                <select class="form-select" id="coupontype" name="coupontype">
+                  <option selected disabled>Select Type</option>
+                  <option value="percentage">Percentage</option>
+                  <option value="fixed">Fixed-Amount</option>
+                </select>
+              </div>
+              <div class="mb-2">
+                <label for="discountvalue" class="form-label">Discount-Value</label>
+                <input type="number" class="form-control" id="discountvalue" placeholder="Enter discount amount" name="discountvalue">
+              </div>
+              <div class="mb-2">
+                <label for="minamount" class="form-label">Min-Amount</label>
+                <input type="number" class="form-control" id="minamount" placeholder="Enter minimum amount" name="minamount">
+              </div>
+              <div class="mb-2">
+                <label for="description" class="form-label">Description</label>
+                <textarea class="form-control" id="description" name="description" rows="2" placeholder="Enter a description"></textarea>
+              </div>
+              <div class="mb-2">
+                <label for="startdate" class="form-label">Start Date</label>
+                <input type="date" class="form-control" id="startdate" name="startdate">
+              </div>
+              <div class="mb-2">
+                <label for="enddate" class="form-label">End Date</label>
+                <input type="date" class="form-control" id="enddate" name="enddate">
+              </div>
+              <% if (adminmessage) { %>
+                <p class="text-danger fw-light"id="change" ><%= adminmessage.message %></p>
+               <% } %>
+              <div class="d-grid mt-3">
+                <button type="submit" class="btn btn-dark btn-sm"><i class="fas fa-save me-1"></i> Save Coupon</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+
+  <%- include('../partials/adminfooter') %>
+</body>
+</html>

@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/5.0.0/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <title>Product Page</title>
+  <style>
+    ul {
+      list-style-type: none;
+      padding: 0;
+    }
+    #borderli{
+      border: 1px solid goldenrod;
+    }
+    #borderli:hover{
+      border: 3px solid goldenrod;
+      box-shadow:white;
+    }
+    ul li img {
+      width: 70px;
+      height: 70px;
+      cursor: pointer;
+    }
+
+    .big_img {
+      width: 100%;
+      height: 100%;
+    }
+    .star-rating {
+      font-size: .7rem;
+      color: #ffcc00;
+    }
+
+    .additional-images {
+      height: 500px;
+      width: 150px;
+      overflow-y: auto;
+      display: flex;
+      align-items: center;
+      margin-left: 30px;
+    }
+    #first {
+      position: absolute;
+      overflow: hidden;
+      width: 400px;
+      height: 450px;
+      padding: 15px;
+      margin-top: 25px;
+    }
+
+    #lens {
+      width: 150px;
+      height: 150px;
+      background: rgba(0, 0, 0, .4);
+      position: absolute;
+      border: 3px solid #00b050;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+      display: none;
+    }
+    .description{
+      text-align: justify;
+    }
+    #second {
+      display: none;
+      background: url('/product_images/<%= products.image[0] %>') no-repeat;
+      background-size: 300% 300%;
+      position: absolute;
+      z-index: 10; 
+      width:450px;
+      height: 500px;
+    }
+        .price {
+      margin-bottom: 0.2rem; 
+    }
+    .mrp {
+      margin-top: 0; 
+    }
+    .icons{
+      display: flex;
+      justify-content: space-evenly;
+      text-align: center;
+      font-weight: bold;
+    }
+    #product-image{
+        width: 150px;
+        height: 200px;
+    }
+   .similar{
+    margin-left: 60px!important;
+    margin-top: 60px!important;
+   }
+    .card {
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      overflow: hidden;
+      transition: box-shadow 0.3s ease;
+      height: 350px;
+    }
+
+    .card:hover {
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .card img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      position: relative;
+    }
+
+    .wishlist {
+  position: absolute;
+  top: 90%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 1px solid black;
+  width: 200px;
+  padding: 5px 10px;
+  height: 30px;
+  font-weight: bold;
+  background-color: white;
+  color:black;
+  border-radius: 5px;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 1;
+  cursor: pointer;
+}
+
+.img-wrapper {
+  position: relative;
+  padding: 30px;
+}
+
+.img-wrapper:hover .wishlist {
+  display: flex;
+}
+
+
+    .allfeatures {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .addtobag {
+      color: grey;
+      font-size: 0.9rem;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .price {
+      font-weight: bold;
+      color: #333;
+    }
+    .colored-toast {
+  background: #9b7878!important; 
+  color: white!important; 
+}
+
+.toast-text {
+  color: #ffffff!important;
+}
+.wishlisted{
+  position: absolute;
+  top: 90%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 1px solid black;
+  width: 200px;
+  padding: 5px 10px;
+  height: 30px;
+  font-weight: bold;
+  background-color: #dc3545;
+  color:#fff;
+  border-radius: 5px;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 1;
+  cursor: pointer;
+}
+.img-wrapper:hover .wishlisted {
+  display: flex;
+}
+#divContainer{
+  margin-left: 100px;
+  min-height: 600px;
+}
+.offerImage img {
+      width: 210px;
+      height: 210px;
+      object-fit: cover;
+      border-radius: 8px;
+      
+    }
+  </style>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+</head>
+<body>
+<%- include('../partials/userHeader') %>
+<p class="fw-bold text-dark fs-4 mt-4 ms-3">Home > Products ><span class="text-warning"> <%= products.productname %></span></p>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-2">
+      <div class="additional-images" style="margin-top: 100px;">
+        <ul>
+          <% for(let i = 0; i < products.image.length; i++) { %>
+            <li class=" p-1 my-2 mx-auto" id="borderli"><img src="/product_images/<%= products.image[i] %>" alt="" class="small_img my-3"></li>
+          <% } %>
+        </ul>
+      </div>
+    </div>
+    <div class="col-md-4" style="margin-top: 100px;">
+      <div id="first" class="border border-dark p-5">
+        <img src="/product_images/<%= products.image[0] %>" alt="" class="big_img">
+        <span id="lens"></span>
+      </div>
+    </div>
+    <div class="col-md-6" style="margin-top: 100px">
+    <div id="second"></div>
+      <div class="product_details mt-3 ms-5">
+        <h3 class="fw-bold"><%= products.productname %></h3>
+        <p class="mt-3 fs-4 price"><i class="fa-solid fa-indian-rupee-sign"></i><%= products.productprice %></p>
+        <p class="text-muted mrp">(MRP inclusive of all taxes)</p>
+
+        <% if (products.stockqty) { %>
+          <p class="text-muted"><span class="text-muted fw-bold">Stock :</span><%= products.stockqty %> Left</p>
+        <% } else { %>
+          <p>Product Unavailable</p>
+        <% } %>
+        <span class="text-muted fw-bold">Highlights</span>
+        <li class="text-muted">Language: English</li>
+        <li class="text-muted">Genre : <%= products.productcategory.categoryname %></li>
+        <li class="text-muted">Pages:4272</li>
+  
+        <p class="mt-3 text-muted description"><span class="fw-bold text-muted">Description : </span><%= products.productdescription %></p>
+        <hr>
+        <div class="icons">
+          <div>
+            <i class="fa-solid fa-hand-holding-dollar"></i>
+            <p class="text-muted">Cash On Delivery</p>
+          </div>
+          <div>
+            <i class="fa-solid fa-handshake"></i>
+            <p class="text-muted">7 Days Replacement</p>
+          </div>
+          <div>
+            <i class="fa-solid fa-rotate-left"></i>
+            <p class="text-muted">Return Available</p>
+          </div>
+
+        </div>
+        <hr>
+        <button class="btn btn-dark"onclick="addtowishlist('<%= products._id %>', this)">Wishlist</button>
+        <button class="btn btn-success mx-5"onclick="addtobag('<%= products._id %>')">Add To Cart</button>
+      </div>
+    </div>
+  </div>
+  <div class="similar row">
+    <span class="fw-bold fs-2">Similar Products</span>
+    <% similarProducts.forEach(product => { %>
+      <div class="col-md-4 mt-5 vis-products" data-categories="<%= product.productcategory.categoryname %>" data-price="<%= product.discountPrice?product.discountPrice:product.productprice %>" data-name="<%= product.productname %>" data-popularity="<%= product.popularityScore %>" data-created="<%= product.createdAt.toISOString().split('T')[0] %>">
+        <div class="card" style="width: 18rem;">
+          <% if (users) { %>
+            <% let isInWishlist = users.wishlist.some(id => id.equals(product._id)); %>
+            <div class="img-wrapper">
+              <a href="/singlepage/<%= product._id %>">
+                <img src="/product_images/<%= product.image[0] %>" class="card-img-top" alt="<%= product.productname %>">
+              </a>
+              <div class="<%= isInWishlist ? 'wishlisted' : 'wishlist' %>" onclick="addtowishlist('<%= product._id %>', this)">
+                <i class="<%= isInWishlist ? 'fa-solid' : 'fa-regular' %> fa-heart mx-1"></i>
+                <span class="wishlist-text"><%= isInWishlist ? 'WISHLISTED' : 'WISHLIST' %></span>
+              </div>
+            </div>
+          <% } else { %>
+            <div class="img-wrapper">
+              <a href="/singlepage/<%= product._id %>">
+                <img src="/product_images/<%= product.image[0] %>" class="card-img-top" alt="<%= product.productname %>">
+              </a>
+              <div class="wishlist" onclick="addtowishlist('<%= product._id %>', this)">
+                <i class="fa-regular fa-heart mx-1"></i>
+                <span class="wishlist-text">WISHLIST</span>
+              </div>
+            </div>
+          <% } %>   
+          <div class="card-body">
+            <h5 class="card-title"><%= product.productname %></h5>
+            <div class="allfeatures">
+                <% let offerSource = product.discountSource %>
+                <% if (offerSource === 'category' && product.productcategory.offer.isOfferActive) { %>
+                  <p class="price">Rs. <%= product.discountPrice %>
+                    <span class="fw-light" style="font-size: .7rem;color: orange;">
+                      <span class="text-dark mx-1" style="text-decoration: line-through;">Rs. <%= product.productprice %></span> 
+                      <% if (product.productcategory.offer.discountType === 'percentage') { %>
+                        (<%= product.productcategory.offer.discountValue %>% off)
+                      <% } else if (product.productcategory.offer.discountType === 'fixed') { %>
+                        (Rs. <%= product.productcategory.offer.discountValue %>)
+                      <% } %>
+                    </span>
+                  </p>
+                  <%} else if(offerSource==='product'&&product.offer.isOfferActive){ %>
+                    <p class="price">Rs. <%= product.discountPrice %>
+                      <span class="fw-light" style="font-size: .7rem;color: orange;">
+                        <span class="text-dark mx-1" style="text-decoration: line-through;">Rs. <%= product.productprice %></span> 
+                        <% if (product.productcategory.offer.discountType === 'percentage') { %>
+                          (<%= product.productcategory.offer.discountValue %>% off)
+                        <% } else if (product.productcategory.offer.discountType === 'fixed') { %>
+                          (Rs. <%= product.productcategory.offer.discountValue %>)
+                        <% } %>
+                      </span>
+                    </p>
+                <% } else { %>
+                  <p class="price">Rs. <%= product.productprice %></p>
+                <% } %>
+                  <% if (product.stockqty>0) { %>
+                    <span class="addtobag" onclick="addtobag('<%= product._id %>')">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bag-plus mx-1" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M8 7.5a.5.5 0 0 1 .5.5v1.5H10a.5.5 0 0 1 0 1H8.5V12a.5.5 0 0 1-1 0v-1.5H6a.5.5 0 0 1 0-1h1.5V8a.5.5 0 0 1 .5-.5"/>
+                        <path d="M8 1a2.5 2.5 0 0 1 2.5 2.5V4h-5v-.5A2.5 2.5 0 0 1 8 1m3.5 3v-.5a3.5 3.5 0 1 0-7 0V4H1v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4zM2 5h12v9a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1z"/>
+                      </svg>
+                      Add to bag
+                    </span>
+                  <% }else{ %>
+                    <p class="text-danger fw-bold">out of stock</p>
+                    <% } %>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% }) %>
+  </div>
+</div>
+
+<%- include('../partials/userfooter') %>
+<script>
+  $(document).ready(function(){
+    $('.small_img').hover(function(){
+        $(".big_img").attr('src', $(this).attr('src'));
+        $('#second').css('background-image', `url(${$(this).attr('src')})`);
+    });
+
+    $('#first').mousemove(function(e) {
+        var rect = this.getBoundingClientRect();
+        var x = e.clientX - rect.left;
+        var y = e.clientY - rect.top;
+
+        $('#lens').css({
+            left: x + 'px',
+            top: y + 'px'
+        });
+
+        $('#lens')[0].style.display = 'block';  
+
+        var bgPosX = (x - ($('#lens').width() / 2)) * -3;
+        var bgPosY = (y - ($('#lens').height() / 2)) * -3;
+        $('#second').css('background-position', bgPosX + 'px ' + bgPosY + 'px');
+    });
+    $('#first').mouseenter(function() {
+        $('#second').show();
+    });
+
+    $('#first, #second').mouseleave(function() {
+        $('#second').hide();
+        $('#lens').hide();
+    });
+
+    $('#first').mousemove(function() {
+        $('#lens').show();
+    });
+  });
+
+
+  function addtobag(productId) {
+  let userId = $('.vis-products').data('userid');
+    $.ajax({
+        url: '/add-to-cart',
+        type: 'POST',
+        data: {
+            productId: productId
+        },
+        success: function(response) {
+            $('span[onclick="addtobag(\'' + productId + '\')"]').html(`
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bag-check mx-1" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M10.854 8.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 0 1 .708-.708L7.5 10.793l2.646-2.647a.5.5 0 0 1 .708 0"/>
+                    <path d="M8 1a2.5 2.5 0 0 1 2.5 2.5V4h-5v-.5A2.5 2.5 0 0 1 8 1m3.5 3v-.5a3.5 3.5 0 1 0-7 0V4H1v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4zM2 5h12v9a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1z"/>
+                </svg>
+                Added
+            `);
+
+            Swal.fire({
+                toast: true,
+                position: 'top-end',
+                text: response.message,
+                showConfirmButton: false,
+                timer: 2000,
+                timerProgressBar: false,
+                background: '#28a745',
+                customClass: {
+                    popup: 'colored-toast',
+                    text: 'toast-text'
+                }
+            });
+        },
+        error: function(xhr) {
+            const errMsg = xhr.responseJSON.message;
+            console.log(errMsg);
+
+            if (xhr.status === 401) {
+                window.location.href = '/login';
+            }
+            else{
+              Swal.fire({
+                    toast: true,
+                    position: 'top-end',
+                    icon: 'error',
+                    text: errMsg,
+                    showConfirmButton: false,
+                    timer: 2000,
+                    timerProgressBar: false,
+                    background: '#dc3545',
+                    customClass: {
+                        popup: 'colored-toast',
+                        text: 'toast-text'
+                    }
+                });
+            }
+        }
+    });
+}
+
+
+function addtowishlist(productId,element){
+  $.ajax({
+    url:'/add-to-wishlist',
+    type:"POST",
+    data:{
+      productId:productId
+    },
+    success:function(response){
+      const icon = $(element).find('.fa-heart');
+      const text = $(element).find('.wishlist-text');
+      $(element).css({
+                'background': '#dc3545',
+                 'color': '#fff'
+                    });
+      icon.removeClass('fa-regular').addClass('fa-solid');
+      text.text('WISHLISTED');
+      Swal.fire({
+                toast: true,
+                position: 'top-end',
+                text: response.message,
+                showConfirmButton: false,
+                timer: 2000,
+                timerProgressBar: false,
+                background: '#28a745',
+                customClass: {
+                    popup: 'colored-toast',
+                    text: 'toast-text'
+                }
+            });
+    },
+    error: function(xhr) {
+            const errMsg = xhr.responseJSON.message;
+            console.log(errMsg);
+
+            if (xhr.status === 401) {
+                window.location.href = '/login';
+            } else if(xhr.status===400){
+                const icon = $(element).find('.fa-heart');
+                const text = $(element).find('.wishlist-text');
+               $(element).css({
+                'background': 'white',
+                 'color': 'black'
+                    });
+                  icon.removeClass('fa-solid').addClass('fa-regular');
+               text.text('WISHLIST');
+              Swal.fire({
+                  toast: true,
+                  position: 'top-end',
+                  icon: 'error',
+                  text: errMsg,
+                  showConfirmButton: false,
+                  timer: 2000,
+                  timerProgressBar: false,
+                  background: '#dc3545',
+                  customClass: {
+                      popup: 'colored-toast',
+                      text: 'toast-text'
+                  }
+              });
+          }else {
+                Swal.fire({
+                    toast: true,
+                    position: 'top-end',
+                    icon: 'error',
+                    text: errMsg,
+                    showConfirmButton: false,
+                    timer: 2000,
+                    timerProgressBar: false,
+                    background: '#dc3545',
+                    customClass: {
+                        popup: 'colored-toast',
+                        text: 'toast-text'
+                    }
+                });
+            }
+        }
+  })
+}
+</script>
+</body>
+</html>

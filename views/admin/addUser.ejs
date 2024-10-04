@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add Coupon - Admin Panel</title>
+  <style>
+    .couponDiv {
+      background-color: #f8f9fa;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      width: 450px;
+      margin-top: 70px;
+    }
+    .coupon-header {
+      border-bottom: 1px solid #dee2e6;
+      padding-bottom: 8px;
+      margin-bottom: 15px;
+    }
+    .form-label {
+      font-size: 0.9rem; 
+    }
+    .form-control, .form-select {
+      font-size: 0.9rem; 
+    }
+    .btn {
+      font-size: 0.9rem; 
+    }
+  </style>
+</head>
+<body>
+
+  <%- include('../partials/adminHeader') %>
+  
+  <main>
+    <div class="container mt-4">
+      <div class="row">
+        <div class="col-lg-6 mx-auto">
+          <div class="couponDiv">
+            <div class="coupon-header text-center">
+              <h5 class="fw-bold"><i class="fa-solid fa-user mx-1"></i> Add User</h5>
+            </div>
+            <form action="/admin/adduser" method="post">
+              <div class="mb-3">
+                <label for="username" class="form-label">Name</label>
+                <input type="string" class="form-control" id="username" placeholder="Name" name="username">
+              </div>
+              <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" class="form-control" id="email" placeholder="email@gmail.com" name="email">
+              </div>
+              <div class="mb-3">
+                <label for="phoneno" class="form-label">Phone No:</label>
+                <input type="number" class="form-control" id="phoneno" placeholder="Phone Number" name="phoneno" >
+              </div>
+              <div class="mb-3">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" class="form-control" id="password" name="password" placeholder="Enter password" >
+              </div>
+              <% if (adminmessage) { %>
+                <p class="text-danger fw-light"id="change" ><%= adminmessage.message %></p>
+               <% } %>
+            <div class="d-grid mt-3">
+              <button type="submit" class="btn btn-dark btn-sm"> Add User</button>
+            </div>            
+          </form>
+          </div>
+        </div>
+      </div>
+      </div>
+</main>
+<%- include('../partials/adminfooter') %>
+<script>
+      let usernameInput = document.querySelector('#username');
+      let changeElement = document.querySelector('#change');
+      
+      
+      usernameInput.addEventListener('focus', () => {
+        changeElement.innerText = '';
+      });
+</script>

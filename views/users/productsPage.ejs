@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Carousel Example</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+  <style>
+
+    .filter-box{
+        width:250px ;
+        height:auto;
+        border-radius: 5%;
+    }
+    .filter-title {
+      font-size: 1.25rem;
+      font-weight: bold;
+      text-align: center;
+      margin-bottom: 10px;
+    }
+    .card {
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      overflow: hidden;
+      transition: box-shadow 0.3s ease;
+      height: 350px;
+    }
+
+    .card:hover {
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .card img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      position: relative;
+    }
+
+    .wishlist {
+  position: absolute;
+  top: 90%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 1px solid black;
+  width: 200px;
+  padding: 5px 10px;
+  height: 30px;
+  font-weight: bold;
+  background-color: white;
+  color:black;
+  border-radius: 5px;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 1;
+  cursor: pointer;
+}
+
+.img-wrapper {
+  position: relative;
+  padding: 30px;
+}
+
+.img-wrapper:hover .wishlist {
+  display: flex;
+}
+
+
+    .allfeatures {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .addtobag {
+      color: grey;
+      font-size: 0.9rem;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .price {
+      font-weight: bold;
+      color: #333;
+    }
+    .colored-toast {
+  background: #9b7878!important; 
+  color: white!important; 
+}
+
+.toast-text {
+  color: #ffffff!important;
+}
+.wishlisted{
+  position: absolute;
+  top: 90%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 1px solid black;
+  width: 200px;
+  padding: 5px 10px;
+  height: 30px;
+  font-weight: bold;
+  background-color: #dc3545;
+  color:#fff;
+  border-radius: 5px;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 1;
+  cursor: pointer;
+}
+.img-wrapper:hover .wishlisted {
+  display: flex;
+}
+.offerImage img {
+      width: 210px;
+      height: 210px;
+      object-fit: cover;
+      border-radius: 8px;
+      
+    }
+    </style>
+
+    </head>
+    <body>
+<%- include('../partials/userHeader') %>
+<p class="fw-bold text-dark fs-5 mt-4 ms-3">Home > <span class="text-warning">Products</span></p>
+<div class="container-fluid" style="margin-top: 110px;">
+    <div class="row">
+      <div class="col-md-3">
+        <div class="filter-box border border-dark ms-4">
+         <p class="fw-bold fs-4 m-3">Filters</p>
+         <hr class="border border-dark">
+            <p class="filter-title">Categories</p>
+          <% category.forEach(element => { %>
+            <div class="form-check ms-2 mb-2">
+                <input class="form-check-input category-checkbox" type="checkbox" value="<%= element.categoryname %>"  name="category">
+                <label class="form-check-label fw-semibold" for="<%= element.categoryname %>">
+                    <%= element.categoryname %>
+                  </label>
+            </div>
+          <% }) %>
+          <button class="btn btn-light border border-dark fw-bold ms-5 mt-2 mb-3" id="apply" type="submit">Apply</button>
+          <button class="btn btn-light border border-dark fw-bold mx-2 mt-2 mb-3" id="clear" type="reset">Clear</button>
+        </div>
+        <div class="filter-box border border-dark ms-4 mt-4">
+          <p class="filter-title pt-2">Availability</p>
+          <div class="form-check ms-2 mb-2">
+            <input class="form-check-input availability-checkbox" type="radio" value="show all" name="availability" checked>
+            <label class="form-check-label fw-semibold" for="show all">Show All</label>
+          </div>
+          <div class="form-check ms-2 mb-2">
+            <input class="form-check-input availability-checkbox" type="radio" value="in stock" name="availability">
+            <label class="form-check-label fw-semibold" for="in stock">In Stock</label>
+          </div>
+          <div class="form-check ms-2 mb-2">
+            <input class="form-check-input availability-checkbox" type="radio" value="out of stock" name="availability">
+            <label class="form-check-label fw-semibold" for="out of stock">Out of Stock</label>
+          </div>
+          <button class="btn btn-light border border-dark fw-bold  ms-5 mt-2 mb-3" id="stockapply" type="submit">Apply</button>
+          <button class="btn btn-light border border-dark fw-bold  mx-2 mt-2 mb-3" id="stockclear" type="reset">Clear</button>
+        </div>
+      </div>
+      <div class="col-md-9">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <p class="fw-bold fs-4">Products</p>
+          <select id="sort-options" class="form-select w-auto" style="margin-right: 45px;">
+            <option value="default">Sort by</option>
+            <option value="price-asc">Price: Low to High</option>
+            <option value="price-desc">Price: High to Low</option>
+            <option value="name-asc">Name: A to Z</option>
+            <option value="name-desc">Name: Z to A</option>
+            <option value="new-arrivals">New Arrivals</option>
+            <option value="popularity">Popularity</option>
+          </select>
+        </div>
+          <div class="d-flex flex-wrap" id="product-container">
+            <% products.forEach(product => { %>
+              <div class="col-md-4 mt-5 vis-products" data-categories="<%= product.productcategory.categoryname %>" data-price="<%= product.discountPrice?product.discountPrice:product.productprice %>" data-name="<%= product.productname %>" data-popularity="<%= product.popularityScore %>" data-created="<%= product.createdAt.toISOString().split('T')[0] %>">
+                <div class="card" style="width: 18rem;">
+                  <% if (users) { %>
+                    <% let isInWishlist = users.wishlist.some(id => id.equals(product._id)); %>
+                    <div class="img-wrapper">
+                      <a href="/singlepage/<%= product._id %>">
+                        <img src="/product_images/<%= product.image[0] %>" class="card-img-top" alt="<%= product.productname %>">
+                      </a>
+                      <div class="<%= isInWishlist ? 'wishlisted' : 'wishlist' %>" onclick="addtowishlist('<%= product._id %>', this)">
+                        <i class="<%= isInWishlist ? 'fa-solid' : 'fa-regular' %> fa-heart mx-1"></i>
+                        <span class="wishlist-text"><%= isInWishlist ? 'WISHLISTED' : 'WISHLIST' %></span>
+                      </div>
+                    </div>
+                  <% } else { %>
+                    <div class="img-wrapper">
+                      <a href="/singlepage/<%= product._id %>">
+                        <img src="/product_images/<%= product.image[0] %>" class="card-img-top" alt="<%= product.productname %>">
+                      </a>
+                      <div class="wishlist" onclick="addtowishlist('<%= product._id %>', this)">
+                        <i class="fa-regular fa-heart mx-1"></i>
+                        <span class="wishlist-text">WISHLIST</span>
+                      </div>
+                    </div>
+                  <% } %>   
+                  <div class="card-body">
+                    <h5 class="card-title"><%= product.productname %></h5>
+                    <div class="allfeatures">
+                        <% let offerSource = product.discountSource %>
+                        <% if (offerSource === 'category' && product.productcategory.offer.isOfferActive) { %>
+                          <p class="price">Rs. <%= product.discountPrice %>
+                            <span class="fw-light" style="font-size: .7rem;color: orange;">
+                              <span class="text-dark mx-1" style="text-decoration: line-through;">Rs. <%= product.productprice %></span> 
+                              <% if (product.productcategory.offer.discountType === 'percentage') { %>
+                                (<%= product.productcategory.offer.discountValue %>% off)
+                              <% } else if (product.productcategory.offer.discountType === 'fixed') { %>
+                                (Rs. <%= product.productcategory.offer.discountValue %>)
+                              <% } %>
+                            </span>
+                          </p>
+                          <%} else if(offerSource==='product'&&product.offer.isOfferActive){ %>
+                            <p class="price">Rs. <%= product.discountPrice %>
+                              <span class="fw-light" style="font-size: .7rem;color: orange;">
+                                <span class="text-dark mx-1" style="text-decoration: line-through;">Rs. <%= product.productprice %></span> 
+                                <% if (product.productcategory.offer.discountType === 'percentage') { %>
+                                  (<%= product.productcategory.offer.discountValue %>% off)
+                                <% } else if (product.productcategory.offer.discountType === 'fixed') { %>
+                                  (Rs. <%= product.productcategory.offer.discountValue %>)
+                                <% } %>
+                              </span>
+                            </p>
+                        <% } else { %>
+                          <p class="price">Rs. <%= product.productprice %></p>
+                        <% } %>
+                          <% if (product.stockqty>0) { %>
+                            <span class="addtobag" onclick="addtobag('<%= product._id %>')">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bag-plus mx-1" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M8 7.5a.5.5 0 0 1 .5.5v1.5H10a.5.5 0 0 1 0 1H8.5V12a.5.5 0 0 1-1 0v-1.5H6a.5.5 0 0 1 0-1h1.5V8a.5.5 0 0 1 .5-.5"/>
+                                <path d="M8 1a2.5 2.5 0 0 1 2.5 2.5V4h-5v-.5A2.5 2.5 0 0 1 8 1m3.5 3v-.5a3.5 3.5 0 1 0-7 0V4H1v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4zM2 5h12v9a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1z"/>
+                              </svg>
+                              Add to bag
+                            </span>
+                          <% }else{ %>
+                            <p class="text-danger fw-bold">out of stock</p>
+                            <% } %>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            <% }) %>
+          </div>
+          <nav aria-label="...">
+            <ul class="pagination pagination-sm d-flex justify-content-center mt-3">
+              <% for (let i = 1; i <= totalPages; i++) { %>
+                <li class="page-item <%= i === currentPage ? 'active' : '' %>">
+                  <a class="page-link" href="?page=<%= i %>&limit=<%= limit %>"><%= i %></a>
+                </li>
+              <% } %>
+            </ul>
+          </nav>
+          
+          <p id="no-products-message" class="text-center mt-5 fw-bold text-danger" style="display: none; font-size: 1.5rem;">
+            <i class="fa-solid fa-exclamation-circle me-2"></i> No Products Found!
+          </p>
+     </div>
+    </div>
+  </div>
+  <script>
+    document.addEventListener('DOMContentLoaded',function(){
+      const checkboxes = document.querySelectorAll('.category-checkbox');
+      const productlist = document.querySelectorAll('.vis-products');
+      const applyButton = document.getElementById('apply');
+      const clearButton = document.getElementById('clear');
+      const pagination = document.querySelectorAll('.page-link');
+
+      const availabilityCheckbox=document.querySelectorAll('availability-checkbox')
+
+      const applyButtonStock = document.getElementById('stockapply');
+      const clearButtonStock = document.getElementById('stockclear');
+
+      const noProductsMessage = document.getElementById('no-products-message');
+    
+      applyButton.addEventListener('click', applyFilters);
+      clearButton.addEventListener('click', clearFilters);
+
+      applyButtonStock.addEventListener('click', applyFilterStock);
+      clearButtonStock.addEventListener('click', clearFiltersStock);
+    
+      function applyFilters() {
+        const selectedCategories = Array.from(checkboxes)
+          .filter(checkbox => checkbox.checked)
+          .map(checkbox => checkbox.value);
+          let productsVisible = false;
+        productlist.forEach(product => {
+          const productCategories = product.getAttribute('data-categories');
+          if (selectedCategories.length === 0 || selectedCategories.some(category => productCategories.includes(category))) {
+            product.style.display = 'block';
+            productsVisible = true;
+          } else {
+            product.style.display = 'none';
+          }
+        });
+        updateNoProductsMessage(productsVisible);
+      }
+    
+      function clearFilters() {
+        checkboxes.forEach(checkbox => checkbox.checked = false);
+        applyFilters();
+      }
+
+      function applyFilterStock() {
+       let selectedinput=document.querySelector('input[name="availability"]:checked').value
+
+       let productsVisible = false;
+
+       productlist.forEach(product=>{
+        if(selectedinput==='show all'){
+          product.style.display = 'block';
+          productsVisible = true;
+        }else if(selectedinput==='in stock'){
+          if(product.querySelector('.text-danger')){
+            product.style.display='none'
+          }else{
+            product.style.display='block'
+            productsVisible = true;
+          }
+        }else if(selectedinput==='out of stock'){
+          if (product.querySelector('.text-danger')) {
+          product.style.display = 'block';
+          productsVisible = true;
+        } else {
+          product.style.display = 'none';
+        }
+        }
+       })
+       updateNoProductsMessage(productsVisible);
+      }
+      function clearFiltersStock(){
+        console.log('hello')
+      }
+
+      function updateNoProductsMessage(productsVisible) {
+    noProductsMessage.style.display = productsVisible ? 'none' : 'block';
+      pagination.forEach(page=>{
+        page.style.display=productsVisible?"block":"none"
+      })
+}
+
+      let sortOptions=document.getElementById('sort-options')
+      let productContainer=document.getElementById('product-container')
+      let products=Array.from(productContainer.children)
+
+      sortOptions.addEventListener('change',sortProducts)
+
+      function sortProducts(){
+        let selectedOption=sortOptions.value
+
+        let sortedproducts;
+
+        switch(selectedOption){
+          case "price-asc":
+            sortedproducts=products.sort((a,b)=>parseFloat(a.dataset.price)-parseFloat(b.dataset.price))
+            break;
+          case "price-desc":
+            sortedproducts=products.sort((a,b)=> parseFloat(b.dataset.price)-parseFloat(a.dataset.price))
+            break;
+          case "name-asc":
+            sortedproducts=products.sort((a,b)=>a.dataset.name.localeCompare(b.dataset.name))
+            break;
+          case 'name-desc':
+            sortedproducts = products.sort((a, b) => b.dataset.name.localeCompare(a.dataset.name));
+            break;
+          case 'new-arrivals':
+            sortedproducts = products.sort((a, b) => {
+            let dateA = new Date(a.dataset.created).getTime();
+            let dateB = new Date(b.dataset.created).getTime();
+            return dateB - dateA;
+            });
+            break;  
+          case 'popularity':
+            sortedproducts=products.sort((a,b)=>parseFloat(b.dataset.popularity)-parseFloat(a.dataset.popularity))  
+            break
+          default:
+            sortedproducts = products;
+            break;  
+        }
+
+        productContainer.innerHTML = '';
+        sortedproducts.forEach(product => productContainer.appendChild(product));
+      }
+
+      document.getElementById('search-input').addEventListener('input', function() {
+    const searchValue = this.value.toLowerCase();
+    console.log(searchValue)
+    const products = document.querySelectorAll('.vis-products');
+
+    products.forEach(product => {
+      const productName = product.getAttribute('data-name').toLowerCase()
+      if (productName.includes(searchValue)) {
+        product.style.display = 'block';
+      } else {
+        product.style.display = 'none';
+      }
+    });
+  });
+
+    })
+
+    function addtowishlist(productId,element){
+  $.ajax({
+    url:'/add-to-wishlist',
+    type:"POST",
+    data:{
+      productId:productId
+    },
+    success:function(response){
+      const icon = $(element).find('.fa-heart');
+      const text = $(element).find('.wishlist-text');
+      $(element).css({
+                'background': '#dc3545',
+                 'color': '#fff'
+                    });
+      icon.removeClass('fa-regular').addClass('fa-solid');
+      text.text('WISHLISTED');
+      Swal.fire({
+                toast: true,
+                position: 'top-end',
+                text: response.message,
+                showConfirmButton: false,
+                timer: 2000,
+                timerProgressBar: false,
+                background: '#28a745',
+                customClass: {
+                    popup: 'colored-toast',
+                    text: 'toast-text'
+                }
+            });
+    },
+    error: function(xhr) {
+            const errMsg = xhr.responseJSON.message;
+
+            if (xhr.status === 401) {
+                window.location.href = '/login';
+            } else if(xhr.status===400){
+                const icon = $(element).find('.fa-heart');
+                const text = $(element).find('.wishlist-text');
+               $(element).css({
+                'background': 'white',
+                 'color': 'black'
+                    });
+                  icon.removeClass('fa-solid').addClass('fa-regular');
+               text.text('WISHLIST');
+              Swal.fire({
+                  toast: true,
+                  position: 'top-end',
+                  icon: 'error',
+                  text: errMsg,
+                  showConfirmButton: false,
+                  timer: 2000,
+                  timerProgressBar: false,
+                  background: '#dc3545',
+                  customClass: {
+                      popup: 'colored-toast',
+                      text: 'toast-text'
+                  }
+              });
+          }else if(xhr.status === 403){
+            window.location.href='/login'
+            }
+        }
+  })
+}
+
+function addtobag(productId) {
+  let userId = $('.vis-products').data('userid');
+    $.ajax({
+        url: '/add-to-cart',
+        type: 'POST',
+        data: {
+            productId: productId
+        },
+        success: function(response) {
+            $('span[onclick="addtobag(\'' + productId + '\')"]').html(`
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bag-check mx-1" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M10.854 8.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 0 1 .708-.708L7.5 10.793l2.646-2.647a.5.5 0 0 1 .708 0"/>
+                    <path d="M8 1a2.5 2.5 0 0 1 2.5 2.5V4h-5v-.5A2.5 2.5 0 0 1 8 1m3.5 3v-.5a3.5 3.5 0 1 0-7 0V4H1v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4zM2 5h12v9a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1z"/>
+                </svg>
+                Added
+            `);
+
+            Swal.fire({
+                toast: true,
+                position: 'top-end',
+                text: response.message,
+                showConfirmButton: false,
+                timer: 2000,
+                timerProgressBar: false,
+                background: '#28a745',
+                customClass: {
+                    popup: 'colored-toast',
+                    text: 'toast-text'
+                }
+            });
+        },
+        error: function(xhr) {
+            const errMsg = xhr.responseJSON.message;
+            console.log(errMsg);
+
+            if (xhr.status === 401) {
+                window.location.href = '/login';
+            }else if(xhr.status === 403){
+            window.location.href='/login'
+            }
+            else{
+              Swal.fire({
+                    toast: true,
+                    position: 'top-end',
+                    icon: 'error',
+                    text: errMsg,
+                    showConfirmButton: false,
+                    timer: 2000,
+                    timerProgressBar: false,
+                    background: '#dc3545',
+                    customClass: {
+                        popup: 'colored-toast',
+                        text: 'toast-text'
+                    }
+                });
+            }
+        }
+    });
+}
+</script>
+</body>
+<%- include('../partials/userfooter') %>

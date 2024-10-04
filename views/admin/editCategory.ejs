@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add Coupon - Admin Panel</title>
+  <style>
+    .couponDiv {
+      background-color: #a2c7ec;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      width: 450px;
+      margin: 0 auto;
+    }
+    .coupon-header {
+      border-bottom: 1px solid #dee2e6;
+      padding-bottom: 8px;
+      margin-bottom: 15px;
+    }
+    .form-label {
+      font-size: 0.9rem; 
+    }
+    .form-control, .form-select {
+      font-size: 0.9rem; 
+    }
+    .btn {
+      font-size: 0.9rem; 
+    }
+  </style>
+</head>
+<body>
+
+  <%- include('../partials/adminHeader') %>
+  
+  <main>
+    <div class="container mt-4">
+      <div class="row">
+        <div class="col-lg-6 mx-auto">
+          <div class="couponDiv">
+            <div class="coupon-header text-center">
+              <h5 class="fw-bold"><i class="fa-solid fa-layer-group"></i> Edit Category</h5>
+            </div>
+            <form action="/admin/editcategory/<%= categorydata._id %>" method="post" enctype="multipart/form-data">
+              <div class="mb-3">
+                <label for="categoryname" class="form-label">Category Name</label>
+                <input type="string" class="form-control" id="categoryname" placeholder="Name" name="categoryname" value="<%= categorydata.categoryname %>">
+              </div>
+              <div class="mb-3">
+                <label for="categorydescription" class="form-label">Description</label>
+                <input type="String" class="form-control" id="categorydescription" placeholder="Description" name="categorydescription" value="<%= categorydata.categorydescription %>">
+              </div>
+              <div class="mb-3">
+                <label for="image" class="form-label">Category Image</label>
+                <input type="file" class="form-control" id="image" placeholder="file not chosen" name="image">
+              </div>
+              <img src="/category_images/<%= categorydata.image %>" alt="Category Image" width="100">
+              <input type="hidden" name="old_image" value="<%= categorydata.image %>" />
+              <div class="d-grid mt-3">
+                <button type="submit" class="btn btn-dark btn-sm">Save Changes</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+</main>
+<%- include('../partials/adminfooter') %>

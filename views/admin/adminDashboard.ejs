@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel</title>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <style>
+    .topDiv {
+      display: flex;
+      justify-content: space-evenly;
+    }
+
+    .card {
+      background-color: #f8f9fa;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      width: 200px;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+
+    .card:hover {
+      transform: scale(1.05);
+    }
+
+    .card i {
+      font-size: 30px;
+      margin-bottom: 15px;
+      color: #007bff;
+    }
+
+    .card p {
+      margin: 0;
+    }
+
+    .card .value {
+      font-size: 24px;
+      font-weight: bold;
+      color: #333;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: auto;
+    }
+
+    .chart-container {
+      margin-top: 50px;
+    }
+
+    #chart-filter {
+      width: 200px;
+    }
+
+    .offcanvas-center {
+      width: 500px;
+      height: 90vh; 
+      margin: auto;
+      top: 0;
+      bottom: 0;
+      left: 20%;
+      right: 0;
+      transform: none;
+      border-radius: 10px;
+      overflow-y: auto;
+      backdrop-filter: blur(5px);
+    }
+
+    .offcanvas-header, .offcanvas-body {
+      padding: 20px;
+    }
+
+    .offcanvas-center::-webkit-scrollbar {
+      width: 10px;
+    }
+
+    .offcanvas-center::-webkit-scrollbar-thumb {
+      background-color: rgba(0, 0, 0, 0.3);
+      border-radius: 10px;
+    }
+
+    .user-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .user-list li {
+      display: flex;
+      align-items: center;
+      padding: 10px;
+      border-bottom: 1px solid #eee;
+      transition: background-color 0.2s;
+    }
+
+    .user-list li:hover {
+      background-color: #f8f9fa;
+      cursor: pointer;
+    }
+
+    .user-icon {
+      background-color: #007bff;
+      color: white;
+      border-radius: 50%;
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      width: 40px;
+      height: 40px;
+      font-size: 18px;
+      margin-right: 15px;
+    }
+
+    .user-name {
+      font-size: 18px;
+      font-weight: 500;
+      color: #333;
+    }
+
+    .no-users {
+      text-align: center;
+      font-size: 16px;
+      color: #666;
+    }
+
+    .product-list {
+  padding-left: 0;
+  margin: 0;
+  list-style-type: none;
+}
+
+.product-item {
+  display: flex;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.product-icon {
+  font-size: 1.8rem;
+  color: #007bff;
+  margin-right: 15px;
+}
+
+.product-details {
+  flex-grow: 1;
+}
+
+.product-name {
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #333;
+}
+
+.product-info {
+  font-size: 0.9rem;
+  color: #777;
+}
+
+.no-products {
+  text-align: center;
+  color: #777;
+  margin-top: 20px;
+  font-size: 1rem;
+}
+
+  </style>
+</head>
+<body>
+  <%- include('../partials/adminHeader') %>
+  <main>
+    <div class="container">
+      <div class="d-flex justify-content-between align-items-center my-5">
+        <h3 class="me-auto">Dashboard</h3>
+      </div>
+
+      <div class="row">
+        <div class="topDiv">
+
+          <div class="card">
+            <i class="fas fa-dollar-sign"></i>
+            <p>Revenue</p>
+            <p class="value">₹<span id="totalRevenue"></span></p>
+          </div>
+
+          <div class="card" data-bs-toggle="offcanvas" data-bs-target="#offcanvasproducts" aria-controls="offcanvasproductslabel">
+            <i class="fas fa-box-open"></i>
+            <p>Top 10 </p>
+            <p class="value">Products</p>
+          </div>
+
+          <div class="card" data-bs-toggle="offcanvas" data-bs-target="#offcanvascategory" aria-controls="offcanvascategorylabel">
+            <i class="fas fa-tags"></i>
+            <p>Top 10 </p>
+            <p class="value">Category</p>
+          </div>
+
+          <div class="card" data-bs-toggle="offcanvas" data-bs-target="#offcanvasEditAddress" aria-controls="offcanvasEditAddress">
+            <i class="fas fa-users"></i>
+            <p>Users</p>
+            <p class="value"><%= users.length %></p>
+          </div>
+
+        </div>
+
+        <div class="chart-container mt-5">
+          <div class="d-flex justify-content-between align-items-center">
+            <h4>Sales Overview</h4>
+            <select id="chart-filter" class="form-select" onchange="updateChart()">
+              <option value="monthly">Monthly</option>
+              <option value="yearly">Yearly</option>
+            </select>
+          </div>
+          <canvas id="myChart"></canvas>
+        </div>
+      </div>
+
+
+      <div class="offcanvas offcanvas-center"  data-bs-backdrop="static" tabindex="-1" id="offcanvasEditAddress" aria-labelledby="offcanvasEditAddressLabel">
+        <div class="offcanvas-header">
+          <h5 class="offcanvas-title" id="offcanvasEditAddressLabel">Users</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+          <% if (users.length > 0) { %>
+            <ul class="user-list">
+              <% users.forEach(user => { %>
+                <li>
+                  <div class="user-icon"><i class="fas fa-user"></i></div>
+                  <div class="user-name"><%= user.username %></div>
+                </li>
+              <% }) %>
+            </ul>
+          <% } else { %>
+            <p class="no-users">No users found.</p>
+          <% } %>
+        </div>
+      </div>
+
+      <div class="offcanvas offcanvas-center"  data-bs-backdrop="static" tabindex="-1" id="offcanvascategory" aria-labelledby="offcanvascategorylabel">
+        <div class="offcanvas-header">
+          <h5 class="offcanvas-title" id="offcanvascategorylabel">Top 10 Category</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+          <% if (categories.length > 0) { %>
+            <ol class="product-list">
+              <% categories.forEach(category => { %>
+                <li class="product-item">
+                  <div class="product-icon"><i class="fas fa-tags"></i></div>
+                  <div class="product-details">
+                    <div class="product-name"><%= category._id %></div>
+                    <div class="product-info">
+                      Total Products Sold: <%= category.totalSold %>
+                    </div>
+                  </div>
+                </li>
+              <% }) %>
+            </ol>
+          <% } else { %>
+            <p class="no-products">No categories found.</p>
+          <% } %>
+        </div>
+      </div>
+
+
+      <div class="offcanvas offcanvas-center" data-bs-backdrop="static" tabindex="-1" id="offcanvasproducts" aria-labelledby="offcanvasproductslabel">
+        <div class="offcanvas-header">
+          <h5 class="offcanvas-title" id="offcanvasproductslabel">Top 10 Products</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+          <% if (products.length > 0) { %>
+            <ol class="product-list">
+              <% products.forEach(product => { %>
+                <li class="product-item">
+                  <div class="product-icon"><i class="fas fa-box"></i></div>
+                  <div class="product-details">
+                    <div class="product-name"><%= product.productname %></div>
+                    <div class="product-info">
+                      Price: ₹<%= product.productprice %> | Popularity: <%= product.popularityScore %>
+                    </div>
+                  </div>
+                </li>
+              <% }) %>
+            </ol>
+          <% } else { %>
+            <p class="no-products">No products found.</p>
+          <% } %>
+        </div>
+      </div>
+      </div>
+      
+  </main>
+
+  <%- include('../partials/adminfooter') %>
+
+  <script>
+    let myChart;
+    async function fetchSalesData(filter) {
+      const response = await fetch(`/admin/sales-data?filter=${filter}`);
+      const data = await response.json();
+      return data;
+    }
+
+    async function updateChart() {
+      const filter = document.getElementById('chart-filter').value;
+      const salesData = await fetchSalesData(filter);
+
+      const labels = salesData.map(item => filter === 'monthly' ? `${item._id.month}/${item._id.year}` : `${item._id.year}`);
+      const values = salesData.map(item => item.totalSales);
+      let totalAmount = salesData.reduce((acc, curr) => {
+        acc += curr.totalSales;
+        return acc;
+      }, 0);
+
+      document.getElementById('totalRevenue').innerText = totalAmount;
+
+      const chartData = {
+        labels: labels,
+        datasets: [{
+          label: `Sales (${filter})`,
+          data: values,
+          backgroundColor: 'rgba(75, 192, 192, 0.2)',
+          borderColor: 'rgba(75, 192, 192, 1)',
+          borderWidth: 2
+        }]
+      };
+
+      if (myChart) {
+        myChart.data = chartData;
+        myChart.update();
+      } else {
+        const ctx = document.getElementById('myChart').getContext('2d');
+        myChart = new Chart(ctx, {
+          type: 'bar',
+          data: chartData,
+          options: {
+            scales: {
+              y: {
+                beginAtZero: true
+              }
+            }
+          }
+        });
+      }
+    }
+
+    updateChart();
+  </script>
+</body>
+</html>

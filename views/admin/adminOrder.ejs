@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel</title>
+  <link rel="stylesheet" href="path/to/your/css/styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+<style>
+  .btn-no-caret::after {
+      content: none !important; 
+  }
+</style>
+</head>
+<body>
+<%- include('../partials/adminHeader') %>
+<main>
+<div class="container">
+  <% if (adminmessage) { %>
+    <div class="alert m-4 alert-dismissible fade show alert-<%= adminmessage.type %>" role="alert">
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      <strong><%= adminmessage.message %></strong>
+    </div>
+  <% } %>
+  <div class="d-flex justify-content-end m-5">
+    <h3 class="me-auto">Order Management</h3>
+  </div>
+  <div class="row m-4">
+    <div class="col-lg-12">
+    <div class="table-responsive">
+        <table class="table table-striped text-center" id="table-data">
+          <thead>
+            <tr class="table-dark">
+                <th >Order ID</th>
+                <th >Username</th>
+                <th >Products</th>
+                <th >Total</th>
+                <th >Status</th>
+                <th >Payment Method</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% orders.forEach(order => { %>
+                <tr>
+                    <td ><%= order.orderId %></td>
+                    <td ><%= order.userId.username %></td>
+                    <td class="text-start">
+                        <% order.products.forEach(product => { %>
+                            <div><%= product.productName %> (Qty: <%= product.quantity %>)</div>
+                        <% }) %>
+                    </td>
+                    <td ><span class="mx-1">₹</span><%= order.totalAmount %></td>
+                    <td>
+                      <div class="btn-group">
+                        <button type="button" class="btn  btn-no-caret dropdown-toggle status-button text-success fw-semibold " data-bs-toggle="dropdown" aria-expanded="false">
+                          <%= order.status %>
+                        </button>
+                        <ul class="dropdown-menu">
+                          <li><a href="#" class="dropdown-item " data-status="Shipped" data-order-id="<%= order._id %>">Shipped</a></li>
+                          <li><a href="#" class="dropdown-item " data-status="Delivered" data-order-id="<%= order._id %>">Delivered</a></li>
+                          <li><a href="#" class="dropdown-item " data-status="Canceled" data-order-id="<%= order._id %>">Canceled</a></li>
+                        </ul>
+                      </div>
+                    </td>
+                    <td class="text-center text-uppercase"><%= order.paymentMethod %></td>
+                    <td ><a type="button" href="/admin/orders/details/<%= order._id %>" class="btn btn-danger btn-sm">View Details</a></td>
+                </tr>
+            <% }) %>
+        </tbody>
+        </table>
+      </div>
+</div>
+</div>
+
+</div>
+</main>
+<%- include('../partials/adminfooter') %>
+<script>
+$(document).ready(function() {
+  $('.btn-group button.status-button').each(function() {
+    if ($(this).text().trim() === 'Canceled' || $(this).text().trim() === 'Delivered') {
+      $(this).prop('disabled', true); 
+    }
+  });
+
+  $('.dropdown-item').on('click', function(e) {
+    e.preventDefault(); 
+    const status = $(this).data('status');
+    const orderId = $(this).data('order-id');
+    const statusButton = $(this).closest('.btn-group').find('.status-button');
+    $.ajax({
+      url: '/admin/update-order-status',
+      type: 'POST',
+      data: { orderId: orderId, status: status },
+      success: function(response) {
+        statusButton.text(status); 
+        if (status === 'Delivered' || status === 'Canceled') {
+          statusButton.prop('disabled', true); 
+        }
+      },
+      error: function(error) {
+        console.error( error);
+      }
+    });
+  });
+});
+</script>
+</body>
+</html>
