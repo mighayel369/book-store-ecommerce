@@ -17,10 +17,10 @@ const userSchema = new mongoose.Schema({
     email: { type: String},
     phoneno:{type:Number,sparse:true,default:null},
     googleId:{
-      type:String,unique:true
+      type:String
     },
     facebookId:{
-      type:String,unique:true
+      type:String
     },
     password: { type: String},
     role: { type: String, enum: ['admin', 'user'], default: 'user' },
