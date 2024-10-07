@@ -5,7 +5,6 @@ let usermodel=require('../../models/userdetails')
 module.exports={
 
    getHome:async (req,res)=>{
-    console.log(req.user)
       let {search=''}=req.query
       let users;
       try{
