@@ -8,7 +8,7 @@ dotenv.config();
 passport.use(new FacebookStrategy({
   clientID: process.env.FACEBOOK_CLIENT_ID,
   clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
-  callbackURL: '/auth/facebook/callback',
+  callbackURL: 'https://shoerack.live/auth/facebook/callback',
   profileFields: ['id', 'emails', 'name'] 
 }, async (accessToken, refreshToken, profile, done) => {
   try {
