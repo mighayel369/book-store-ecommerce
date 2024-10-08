@@ -115,7 +115,7 @@ module.exports={
             }
         let {search=''}=req.query
         users=await usermodel.findById(req.session.userId)
-        res.render('users/success-order',{search,users})
+        res.render('users/successorder',{search,users})
     }catch(error){
         console.log(error)
     }
