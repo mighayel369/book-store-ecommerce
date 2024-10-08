@@ -76,45 +76,11 @@
             <h2>Thank You for Your Order!</h2>
             <p class="text-center">Your order has been successfully placed.</p>
 
-            <div class="order-summary">
-                <h4>Order Summary</h4>
-                <p>Order Number: <strong><%= orderDetails.orderId %></strong></p>
-                <p>Order Date: <strong><%= orderDetails.createdAt.toISOString().split('T')[0] %></strong></p>
-                
-                <div class="product-list">
-                    <% orderDetails.products.forEach(product => { %>
-                        <div class="product-item">
-                            <p>Product Name: <strong><%= product.productName %></strong></p>
-                            <p>Quantity: <%= product.quantity %></p>
-                            <p>Price: <%= product.discountPrice?product.discountPrice:product.productprice %></p>
-                        </div>
-                    <% }) %>
-                </div>
-        
-                <p>Total Amount: <strong><%= orderDetails.finalPrice?orderDetails.finalPrice:orderDetails.totalAmount%> (including taxes and shipping)</strong></p>
-            </div>
-            <div class="payment-shipping-info">
-                <h4>Payment Information</h4>
-                <p>Payment Method:<%= orderDetails.paymentMethod %></p>
 
-                <h4>Shipping Information</h4>
-                <p>Shipping Address:</p>             
-                    <p class="mb-0 fw-bold"><%= orderDetails.shippingAddress.fullname %></p>
-                    <p class="mb-0"><%= orderDetails.shippingAddress.houseno %>, <%= orderDetails.shippingAddress.area %>, <%= orderDetails.shippingAddress.landmark %></p>
-                    <p class="mb-0"><%= orderDetails.shippingAddress.town %>, <%= orderDetails.shippingAddress.state %></p>
-                    <p class="mb-0"><%= orderDetails.shippingAddress.phoneno %></p>
-                    <p class="mb-0"><%= orderDetails.shippingAddress.pincode %></p>
-                  </p>
-                <p>Estimated Delivery: <%= orderDetails.deliveryExpected.toISOString().split('T')[0] %></p>
-            </div>
 
-            <div class="track-order-support">
-                <a class="btn btn-primary" href="/account/<%=orderDetails._id  %>">Track Your Order</a>
-                <p>If you have any questions, please <a href="#">contact us</a>.</p>
-            </div>
-
+    
             <div class="continue-shopping">
-                <a href="/" class="btn btn-secondary">Continue Shopping</a>
+                <a  class="btn btn-secondary">Continue Shopping</a>
             </div>
         </div>
     </div>
