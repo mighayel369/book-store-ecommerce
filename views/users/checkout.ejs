@@ -525,7 +525,7 @@
                                                 text: 'Your payment has been verified.',
                                                 confirmButtonText: 'OK'
                                             }).then(() => {
-                                                window.location.href = `/order-success/${verifyResponse.orderId}`;
+                                                location.assign(`/ordersuccess?id=${response.orderId}`)
                                             });
                                         },
                                         error: function (error) {
@@ -570,7 +570,7 @@
                             }).then((result) => {
                                 let orderId = response.orderId;
                                 if (result.isConfirmed) {
-                                    window.location.href = `/ordersuccess/${orderId}`; 
+                                    location.assign(`/ordersuccess?id=${orderId}`)
                                 }
                             });
                         }

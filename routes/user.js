@@ -124,7 +124,7 @@ router.get('/checkout/removeCoupon',checkoutController.removeCoupon)
 //---------------------------------------checkout----------------------------------//
  router.get('/orders/:id/product/:productId/cancel-reason',orderController.cancelOrderReason)
  router.post('/order/cancel',orderController.cancelOrder)
- router.get('/ordersuccess/:id',orderController.showSuccesPage)
+ router.get('/ordersuccess',orderController.showSuccesPage)
  router.post('/verify-payment',orderController.verifyPayment)
  router.get('/downloadinvoice/:id',orderController.downloadInvoice)
 
