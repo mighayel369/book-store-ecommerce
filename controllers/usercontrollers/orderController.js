@@ -114,10 +114,7 @@ module.exports={
                 return res.redirect('/login')
             }
         let {search=''}=req.query
-        let orderId=req.query.id
-        let users = await usermodel.findById(req.session.userId)
-        let orderDetails = await order.findById(orderId).populate('shippingAddress');
-        console.log(orderDetails)
+        users=await usermodel.findById(req.session.userId)
         res.render('users/success-order',{search,users})
     }catch(error){
         console.log(error)
