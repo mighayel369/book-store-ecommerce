@@ -78,7 +78,7 @@ if(!req.session.userId){
                         await users.save();
                         res.status(200).json({ message: 'Product added successfully' });
                     } else {
-                        res.status(409).json({ message: 'User limit reached' });
+                        res.status(409).json({ message: 'product already in the cart' });
                     }
                 } else {
                     users.cart.push({
