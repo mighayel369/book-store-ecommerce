@@ -73,7 +73,7 @@ router.use((req,res,next)=>{
   delete req.session.adminmessage
   next()
 })
-router.use('/admin/*', authMiddleware.isAdmin)
+
 //------------------------------------------login----------------------------------------------//
 router.get('/login',authMiddleware.isAlreadylogged,(req,res)=>{
   res.render('admin/login')
@@ -89,7 +89,7 @@ router.get('/logout',adminAuthController.logout)
 
 //------------------------------------------login----------------------------------------------//
 //---------------------------users--------------------------------------------------------//
-router.get('/users',adminAuthController.getAdminUser)
+router.get('/users',authMiddleware.isAdmin,adminAuthController.getAdminUser)
 
 router.get('/adduser',(req,res)=>{
   res.render('admin/addUser')
@@ -108,7 +108,7 @@ router.get('/unblock/:id',adminAuthController.unblockuser)
 
 //---------------------------users--------------------------------------------------------//
 //------------------------------------category-------------------------------------------//
-router.get('/category',categoryController.getAllcategory)
+router.get('/category',authMiddleware.isAdmin,categoryController.getAllcategory)
 
 router.get('/addcategory',(req,res)=>{
   res.render('admin/addCategory')
@@ -124,7 +124,7 @@ router.post('/editcategory/:id',upload,categoryController.postEditCategory)
 router.get('/deletecategory/:id',categoryController.deleteCategory)
 //------------------------------------category-------------------------------------------//
 //------------------------------------product------------------------------------------//
-router.get('/products',productController.getProducts)
+router.get('/products',authMiddleware.isAdmin,productController.getProducts)
 
 router.get('/addproduct',productController.getAddProduct)
 
@@ -138,7 +138,7 @@ router.get('/deleteproduct/:id',productController.deleteProduct)
 //------------------------------------product------------------------------------------//
 //------------------------------------order------------------------------------------//
 
-router.get('/orders',orderController.getOrder)
+router.get('/orders',authMiddleware.isAdmin,orderController.getOrder)
 
 router.post('/update-order-status',orderController.updateStatus)
 
@@ -147,7 +147,7 @@ router.get('/orderdetails/:id',orderController.orderDetails)
 router.get('/orders/details/:id',orderController.getSingleOrder)
 
 //------------------------------------order------------------------------------------//
-router.get('/coupon',couponController.getCoupon)
+router.get('/coupon',authMiddleware.isAdmin,couponController.getCoupon)
 router.get('/addcoupon',couponController.addCoupon)
 router.post('/addcoupon',couponController.postAddCoupon)
 router.get('/editcoupon/:id',couponController.getEditCoupon)
@@ -155,25 +155,25 @@ router.post('/editcoupon/:id',couponController.postEditCoupon)
 router.get('/deletecoupon/:id',couponController.deleteCoupon)
 //------------------------------------coupon------------------------------------------//
 
-router.get('/offer/category',offerController.getCategoryOffer)
+router.get('/offer/category',authMiddleware.isAdmin,offerController.getCategoryOffer)
 router.get('/offers/addoffer/:id',offerController.addOffer)
 router.post('/offers/addoffer',bannerUpload,offerController.postAddOffer)
 
 
 
-router.get('/offer/product',offerController.getProductOffer)
+router.get('/offer/product',authMiddleware.isAdmin,offerController.getProductOffer)
 router.get('/productoffers/addoffer/:id',offerController.addProductOffer)
 router.post('/offers/addproductoffer',bannerUpload,offerController.postProductOffer)
 //---------------------------------------offer----------------------------------------//
 
-router.get('/sales',salesController.getSales)
+router.get('/sales',authMiddleware.isAdmin,salesController.getSales)
 router.get('/download-report',salesController.downloadReport)
 
 router.get('/approve/:id/product/:productid',salesController.approveReturn)
 router.get('/reject/:id/product/:productid',salesController.rejectReturn)
 //--------------------------------------sales-----------------------------------------//
 
-router.get('/dashboard',salesController.getDashboard)
+router.get('/dashboard',authMiddleware.isAdmin,salesController.getDashboard)
 
 router.get('/sales-data',salesController.getSalesData)
 
