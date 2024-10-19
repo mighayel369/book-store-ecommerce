@@ -266,7 +266,7 @@
                   <div class="col-md-4 mt-5 vis-products" data-categories="<%= product.productcategory.categoryname %>"
                     data-price="<%= product.discountPrice?product.discountPrice:product.productprice %>"
                     data-name="<%= product.productname %>" data-popularity="<%= product.popularityScore %>"
-                    data-created="<%= product.createdAt.toISOString().split('T')[0] %>">
+                    data-created="<%= product.createdAt %>">
                     <div class="card" style="width: 18rem;">
                       <% if (users) { %>
                         <% let isInWishlist=users.wishlist.some(id=> id.equals(product._id)); %>
