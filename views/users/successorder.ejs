@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Order Success</title>
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <title>Shoe Rack</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -14,6 +14,7 @@
       background-color: #f8f9fa;
       color: #343a40;
     }
+
     .container {
       background-color: #ffffff;
       border-radius: 8px;
@@ -22,41 +23,44 @@
       margin-top: 100px;
       min-height: 700px;
     }
+
     .btn-primary {
       background-color: #007bff;
       border-color: #007bff;
     }
+
     .btn-primary:hover {
       background-color: #0056b3;
       border-color: #0056b3;
     }
+
     .btn-secondary {
       background-color: #6c757d;
       border-color: #6c757d;
     }
+
     .btn-secondary:hover {
       background-color: #5a6268;
       border-color: #545b62;
     }
   </style>
 </head>
+
 <body>
 
-<%- include('../partials/userHeader') %>
+  <%- include('../partials/userHeader') %>
 
-<div class="container text-center mt-5">
-    <h1 class="display-4">Your Order Has Been Placed!</h1>
-    <p class="lead">Thank you for your purchase. We appreciate your business.</p>
-    <div class="mt-4">
+    <div class="container text-center mt-5">
+      <h1 class="display-4">Your Order Has Been Placed!</h1>
+      <p class="lead">Thank you for your purchase. We appreciate your business.</p>
+      <div class="mt-4">
         <a href="/products" class="btn btn-primary btn-lg mr-3">Continue Shopping</a>
         <a href="/account" class="btn btn-secondary btn-lg">View Order</a>
+      </div>
     </div>
-</div>
 
-<%- include('../partials/userfooter') %>
+    <%- include('../partials/userfooter') %>
 
 </body>
+
 </html>
-
-
-

@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Wallet</title>
+    <title>Shoe Rack</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -97,116 +99,159 @@
             min-height: 150px;
         }
 
-        .table th, .table td {
+        .table th,
+        .table td {
             vertical-align: middle;
         }
+        .colored-toast {
+         background: rgba(236, 17, 90, 0.9) !important; 
+          color: white !important;
+         }
 
+          .toast-text {
+          color: #ffffff !important;
+          }
     </style>
 </head>
+
 <body>
     <%- include('../partials/userHeader') %>
-    <p class="fw-bold text-dark fs-5 mt-4 ms-3">Home > <span>Account ></span><span class="text-warning fs-5"> Wallet</span></p>
+        <p class="fw-bold text-dark fs-5 mt-4 ms-3">Home > <span>Account ></span><span class="text-warning fs-5">
+                Wallet</span></p>
 
-    <div class="container-fluid">
-        <% if (message) { %>
-            <div class="alert m-4 alert-dismissible fade show alert-<%= message.type %>" role="alert">
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                <strong><%= message.message %></strong>
-            </div>
-        <% } %>
-        <div class="row">
-            <div class="col-md-3">
-                <%- include('../partials/account-nav') %>
-            </div>
-            <div class="col-md-9">
-                <div class="addressDiv">
-                    <div class="header-section">
-                        <h5 class="fw-bold">Wallet</h5>
-                    </div>
-                    <div class="walletDiv">
-                        <div class="wallet-balance">
-                            Wallet Balance: ₹<%= users.wallet.balance %>
+        <div class="container-fluid">
+            <% if (message) { %>
+                <script>
+                  Swal.fire({
+                    toast: true,
+                    position: 'top-end',
+                    title: '<%= message.message %>',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    timerProgressBar: false,
+                    background: '#28a745',
+                    customClass: {
+                      popup: 'colored-toast',
+                      text: 'toast-text'
+                    }
+                  });
+                </script>
+                <% } %>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <%- include('../partials/account-nav') %>
                         </div>
-                        <h5 class="mt-4 fw-bold" style="text-align: left;">Transaction History</h5>
-                        <div class="transactions-table">
-                            <table class="table table-striped">
-                                <thead>
-                                    <tr>
-                                        <th>Date</th>
-                                        <th>Description</th>
-                                        <th>Type</th>
-                                        <th>Amount</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
+                        <div class="col-md-9">
+                            <div class="addressDiv">
+                                <div class="header-section">
+                                    <h5 class="fw-bold">Wallet</h5>
+                                </div>
+                                <div class="walletDiv">
+                                    <div class="wallet-balance">
+                                        Wallet Balance: ₹<%= users.wallet.balance %>
+                                    </div>
+                                    <h5 class="mt-4 fw-bold" style="text-align: left;">Transaction History</h5>
+                                    <div class="transactions-table">
+                                        <table class="table table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>Date</th>
+                                                    <th>Description</th>
+                                                    <th>Type</th>
+                                                    <th>Amount</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <% if (transactionData.length>0) { %>
+                                                    <% transactionData.forEach(transaction=> { %>
+                                                        <tr>
+                                                            <td>
+                                                                <%= new Date(transaction.date).toLocaleDateString() %>
+                                                            </td>
+                                                            <td>
+                                                                <%= transaction.description %>
+                                                            </td>
+                                                            <td>
+                                                                <%= transaction.transactionType %>
+                                                            </td>
+                                                            <td>
+                                                                <%= transaction.amount ? transaction.amount.toFixed(2)
+                                                                    : '0.00' %>
+                                                            </td>
+
+                                                        </tr>
+                                                        <% }) %>
+                                                            <% }else{ %>
+                                                                <tr>
+                                                                    <td colspan="4"
+                                                                        class="text-center mt-5 fw-bold text-danger">
+                                                                        <i
+                                                                            class="fa-solid fa-exclamation-circle me-2"></i>
+                                                                        No Transactions Found!
+                                                                    </td>
+                                                                </tr>
+                                                                <% } %>
+                                            </tbody>
+                                        </table>
+                                    </div>
                                     <% if (transactionData.length>0) { %>
-                                     <% transactionData.forEach(transaction => { %>
-                                        <tr>
-                                            <td><%= new Date(transaction.date).toLocaleDateString() %></td>
-                                            <td><%= transaction.description %></td>
-                                            <td><%= transaction.transactionType %></td>
-                                            <td><%= transaction.amount ? transaction.amount.toFixed(2) : '0.00' %></td>
-
-                                        </tr>
-                                        <% }) %>
-                                    <% }else{ %>
-                                        <tr>
-                                            <td colspan="4" class="text-center mt-5 fw-bold text-danger">
-                                                <i class="fa-solid fa-exclamation-circle me-2"></i> No Transactions Found!
-                                            </td>
-                                        </tr>
-                                    <% } %>
-                                </tbody>
-                            </table>
-                        </div>
-                        <% if (transactionData.length>0) { %>
-                            <nav aria-label="Page navigation example">
-                                <ul class="pagination d-flex justify-content-end">
-                                  <li class="page-item <%= currentPage === 1 ? 'disabled' : '' %>">
-                                    <a class="page-link" href="?page=<%= currentPage - 1 %>&limit=<%= limit %>&search=<%= search %>" aria-label="Previous">
-                                      <span aria-hidden="true">&laquo;</span>
-                                    </a>
-                                  </li>
-                                  <% for (let i = 1; i <= totalPages; i++) { %>
-                                    <li class="page-item <%= currentPage === i ? 'active' : '' %>">
-                                      <a class="page-link" href="?page=<%= i %>&limit=<%= limit %>&search=<%= search %>"><%= i %></a>
-                                    </li>
-                                  <% } %>
-                                  <li class="page-item <%= currentPage === totalPages ? 'disabled' : '' %>">
-                                    <a class="page-link" href="?page=<%= currentPage + 1 %>&limit=<%= limit %>&search=<%= search %>" aria-label="Next">
-                                      <span aria-hidden="true">&raquo;</span>
-                                    </a>
-                                  </li>
-                                </ul>
-                              </nav>
-                        <% } %>
-                        <div class="text-end">
-                            <a type="button" href="/wallet/clearhistory/<%= users._id %>" class="btn btn-danger fw-bold">Clear-History</a>
+                                        <nav aria-label="Page navigation example">
+                                            <ul class="pagination d-flex justify-content-end">
+                                                <li class="page-item <%= currentPage === 1 ? 'disabled' : '' %>">
+                                                    <a class="page-link"
+                                                        href="?page=<%= currentPage - 1 %>&limit=<%= limit %>&search=<%= search %>"
+                                                        aria-label="Previous">
+                                                        <span aria-hidden="true">&laquo;</span>
+                                                    </a>
+                                                </li>
+                                                <% for (let i=1; i <=totalPages; i++) { %>
+                                                    <li class="page-item <%= currentPage === i ? 'active' : '' %>">
+                                                        <a class="page-link"
+                                                            href="?page=<%= i %>&limit=<%= limit %>&search=<%= search %>">
+                                                            <%= i %>
+                                                        </a>
+                                                    </li>
+                                                    <% } %>
+                                                        <li
+                                                            class="page-item <%= currentPage === totalPages ? 'disabled' : '' %>">
+                                                            <a class="page-link"
+                                                                href="?page=<%= currentPage + 1 %>&limit=<%= limit %>&search=<%= search %>"
+                                                                aria-label="Next">
+                                                                <span aria-hidden="true">&raquo;</span>
+                                                            </a>
+                                                        </li>
+                                            </ul>
+                                        </nav>
+                                        <% } %>
+                                            <div class="text-end">
+                                                <a type="button" href="/wallet/clearhistory/<%= users._id %>"
+                                                    class="btn btn-danger fw-bold">Clear-History</a>
+                                            </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div>
-        </div>   
-    </div>
+        </div>
 
-    <%- include('../partials/userfooter') %>
-<script>
-     $(document).ready(function(){
+        <%- include('../partials/userfooter') %>
+            <script>
+                $(document).ready(function () {
 
-const navItems = $('.account-navitem a');
-navItems.each(function() {
-    if (window.location.pathname === $(this).attr('href')) {
-        $(this).parent().addClass('active');
-    }
-});
+                    const navItems = $('.account-navitem a');
+                    navItems.each(function () {
+                        if (window.location.pathname === $(this).attr('href')) {
+                            $(this).parent().addClass('active');
+                        }
+                    });
 
-navItems.on('click', function() {
-    navItems.parent().removeClass('active'); 
-    $(this).parent().addClass('active');
-});
-     })
+                    navItems.on('click', function () {
+                        navItems.parent().removeClass('active');
+                        $(this).parent().addClass('active');
+                    });
+                })
 
 
-</script>
+            </script>
 </body>
+
 </html>

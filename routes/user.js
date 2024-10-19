@@ -12,6 +12,23 @@ const router=express.Router()
 const passport=require('passport')
 let googlepassport=require('../config/passport'); 
 let facebook_passport=require('../config/facebookPassport')
+let multer=require('multer')
+
+
+router.use(express.static('public/profilepictures'))
+
+let storage=multer.diskStorage({
+  destination:(req,file,callback)=>{
+    callback(null,'public/profilepictures')
+  },
+  filename:(req,file,callback)=>{
+    callback(null,file.fieldname+ "_" +Date.now() +"_"+ file.originalname)
+  }
+})
+
+var upload=multer({
+  storage:storage
+}).single('photo')
 
 router.use(session({
   name:"sid2",
@@ -105,7 +122,7 @@ router.get('/delete-address/:id',accountController.deleteAddress)
 router.post('/edit-address/:id',accountController.editAddress)
 router.get('/account/:id',accountController.getSingleOrder)
 router.get('/profile',accountController.getProfile)
-router.post('/edit-profile',accountController.editProfile)
+router.post('/edit-profile',upload,accountController.editProfile)
 router.post('/change-password',accountController.postChangePassword)
 router.get('/change-password',accountController.changePassword)
 
@@ -139,7 +156,9 @@ router.get('/wallet/clearhistory/:id',accountController.clearHistory)
 //------------------------------------wishlist----------------------------------//
 router.get('/wishlist',accountController.getWishlist)
 router.post('/add-to-wishlist',accountController.postWishlist)
-
-
+//------------------------------------others----------------------------------------//
+router.get('/brands',productcontroller.getBrand)
+router.get('/about',productcontroller.getAbout)
+router.get('/contact',productcontroller.getContact)
 
 module.exports=router

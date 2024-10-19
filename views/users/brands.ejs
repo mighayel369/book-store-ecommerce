@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shoe Rack</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .brands {
+            margin-top: 60px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+
+        .category-item {
+            max-width: 30%;
+            margin: 15px 10px;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .category-item:hover {
+            transform: translateY(-10px);
+        }
+
+        #category_image {
+            width: 100%;
+            height: auto;
+            border-radius: 10%;
+            object-fit: cover;
+        }
+
+        .category-name {
+            font-weight: bold;
+            margin-top: 10px;
+            color: #333;
+            font-size: 1.2em;
+        }
+
+        .no-category {
+            text-align: center;
+            font-size: 1.5em;
+            color: #999;
+            margin-top: 50px;
+        }
+    </style>
+</head>
+
+<body>
+    <%- include('../partials/userHeader') %>
+
+        <p class="fw-bold text-dark fs-5 mt-4 ms-3">Home > <span class="text-warning fs-5"> Brands</span></p>
+
+        <div class="container">
+            <div class="brands">
+                <% if (category.length===0) { %>
+                    <p class="no-category">No categories found.</p>
+                    <% } else { %>
+                        <% category.forEach(element=> { %>
+                            <div class="category-item">
+                                <img id="category_image" src="/category_images/<%= element.image %>"
+                                    alt="<%= element.categoryname %>">
+                                <p class="category-name">
+                                    <%= element.categoryname %>
+                                </p>
+                            </div>
+                            <% }) %>
+                                <% } %>
+            </div>
+        </div>
+
+        <%- include('../partials/userfooter') %>
+</body>
+
+</html>

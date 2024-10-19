@@ -1,74 +1,86 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin Panel</title>
+  <title>Shoe Rack</title>
   <link rel="stylesheet" href="path/to/your/css/styles.css">
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
+
 <body>
-<%- include('../partials/adminHeader') %>
-<main>
-<div class="container">
-  <% if (adminmessage) { %>
-    <div class="alert m-4 alert-dismissible fade show alert-<%= adminmessage.type %>" role="alert">
-      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-      <strong><%= adminmessage.message %></strong>
-    </div>
-  <% } %>
-    <div class="d-flex justify-content-end m-5">
-        <h3 class="me-auto">Category Management</h3>
-        <a href="/admin/addcategory" class="btn btn-dark">Add Category</a>
+  <%- include('../partials/adminHeader') %>
+    <main>
+      <div class="container">
+        <% if (adminmessage) { %>
+          <div class="alert m-4 alert-dismissible fade show alert-<%= adminmessage.type %>" role="alert">
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            <strong>
+              <%= adminmessage.message %>
+            </strong>
+          </div>
+          <% } %>
+            <div class="d-flex justify-content-end m-5">
+              <h3 class="me-auto">Category Management</h3>
+              <a href="/admin/addcategory" class="btn btn-dark">Add Category</a>
+            </div>
+            <div class="row m-4">
+              <div class="col-lg-12">
+                <div class="table-responsive">
+                  <table class="table table-stripped text-center" id="table-data">
+                    <thead>
+                      <tr class="table-dark">
+                        <td class="text-center">Id</td>
+                        <th class="text-center">Name</th>
+                        <th class="text-center">Image</th>
+                        <th class="text-center">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <% category.forEach((element,index)=> { %>
+                        <tr class="align-middle">
+                          <td class="text-center">
+                            <%= index %>
+                          </td>
+                          <td class="text-center">
+                            <%=element.categoryname %>
+                          </td>
+                          <td class="text-center"><img src="<%= element.image %>" alt="" width="50px" height="50px"
+                              class="img-thumbnail"></td>
+                          <td class="text-center">
+                            <a href="/admin/editcategory/<%= element._id %>" class="text-muted m-2"><i
+                                class="fa-solid fa-pen-to-square"></i></a>
+                            <a href=#" class="text-muted" onclick="deleteCategory('<%= element._id %>')"><i
+                                class="fa-solid fa-trash"></i></a>
+                          </td>
+                        </tr>
+                        <% }) %>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
       </div>
-  <div class="row m-4">
-    <div class="col-lg-12">
-   <div class="table-responsive">
-        <table class="table table-stripped text-center" id="table-data">
-          <thead>
-            <tr class="table-dark">
-              <td class="text-center">Id</td>
-              <th class="text-center">Name</th>
-              <th class="text-center">Image</th>
-              <th class="text-center">Action</th>
-            </tr>
-          </thead>
-            <tbody>
-                <% category.forEach((element,index) => { %>
-                    <tr class="align-middle">
-                      <td class="text-center"><%= index  %></td>
-                        <td class="text-center"><%=element.categoryname %></td>
-                        <td class="text-center"><img src="<%= element.image %>" alt="" width="50px" height="50px" class="img-thumbnail"></td>
-                        <td class="text-center">
-                            <a href="/admin/editcategory/<%= element._id %>" class="text-muted m-2"><i class="fa-solid fa-pen-to-square"></i></a>
-                            <a href=#" class="text-muted" onclick="deleteCategory('<%= element._id %>')"><i class="fa-solid fa-trash"></i></a>
-                        </td>
-                    </tr>
-                <% }) %>
-            </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-</div>
-</main>
-<script>
-  function deleteCategory(userid){
-    let url=`/admin/deletecategory/${userid}`
-    Swal.fire({
-      title: `Are you sure you want to delete`,
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes'
-    }).then((result) => {
-      if (result.isConfirmed) {
-        window.location.href = url;
+    </main>
+    <script>
+      function deleteCategory(userid) {
+        let url = `/admin/deletecategory/${userid}`
+        Swal.fire({
+          title: `Are you sure you want to delete`,
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Yes'
+        }).then((result) => {
+          if (result.isConfirmed) {
+            window.location.href = url;
+          }
+        });
       }
-    });
-  }
-</script>
+    </script>
 </body>
 <%- include('../partials/adminfooter') %>
+
 </html>

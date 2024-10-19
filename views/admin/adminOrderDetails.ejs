@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin Panel - Order Details</title>
-  <link rel="stylesheet" href="path/to/your/css/styles.css">
+  <title>Shoe Rack</title>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
   <style>
@@ -33,7 +33,9 @@
       color: #333;
     }
 
-    .order-info p, .customer p, .deliverto p {
+    .order-info p,
+    .customer p,
+    .deliverto p {
       margin: 0;
       line-height: 1.6;
       font-size: 1rem;
@@ -55,7 +57,8 @@
       margin-top: 20px;
     }
 
-    table.table th, table.table td {
+    table.table th,
+    table.table td {
       text-align: center;
       padding: 12px;
       font-size: 1rem;
@@ -85,141 +88,187 @@
       font-size: 1.2rem;
       color: #007bff;
     }
-  .return-box {
-    background-color: #f9f9f9;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-  }
 
-  .return-reason {
-    font-size: 0.9rem;
-    color: #555;
-  }
+    .return-box {
+      background-color: #f9f9f9;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
 
-  .btn-sm {
-    font-size: 0.8rem;
-    padding: 5px 10px;
-  }
-</style>
+    .return-reason {
+      font-size: 0.9rem;
+      color: #555;
+    }
+
+    .btn-sm {
+      font-size: 0.8rem;
+      padding: 5px 10px;
+    }
+
+    .order-details-product-name {
+      font-size: 1rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 190px;
+
+
+    }
+  </style>
 
   </style>
 </head>
+
 <body>
 
-<%- include('../partials/adminHeader') %>
+  <%- include('../partials/adminHeader') %>
 
-<main>
-  <div class="container">
-    <div class="row mb-4">
-      <h5 class="text-center text-uppercase fw-bold">Order Details</h5>
-    </div>
-    <div class="orderdetails">
-      <p><strong>Order ID:</strong> <%= orderDetails.orderId %></p>
-      <div class="orders d-flex justify-content-between">
-        <div class="shippingdetails">
-          <div class="customer">
-            <p><strong>Customer</strong></p>
-            <p><%= users.username %></p>
-            <p><%= users.email %></p>
-            <p><%= users.phoneno %></p>
-          </div>
+    <main>
+      <div class="container">
+        <div class="row mb-4">
+          <h5 class="text-center fw-bold">Order Details</h5>
         </div>
-        <div class="order-info">
-          <p><strong>Shipping:</strong> Fargo Express</p>
-          <p><strong>Payment Method:</strong> <%=orderDetails.paymentMethod  %></p>
-          <p><strong>Status:</strong></p>
-          <p class="fs-5">Completed</p>
-        </div>
-        <div class="deliverto">
-          <p><strong>Deliver To</strong></p>
-          <h6>Delivery Address</h6>
-          <p><%= orderDetails.shippingAddress.houseno %>,<%= orderDetails.shippingAddress.area %></p>
-          <p><%= orderDetails.shippingAddress.landmark %></p>
-          <p><%= orderDetails.shippingAddress.town %>,<%= orderDetails.shippingAddress.state %></p>
-          <p><%= orderDetails.shippingAddress.pincode %></p>
-        </div>
-      </div>
-
-      <div class="orderdata">
-        <table class="table table-striped">
-          <thead class="table-dark">
-            <tr>
-              <th>Product</th>
-              <th>Price</th>
-              <th>Quantity</th>
-              <th>Total</th>
-              <th>Return/Cancel</th>
-            </tr>
-          </thead>
-         <tbody>
-  <% orderDetails.products.forEach(product => { %>
-    <tr>
-      <td><%= product.productName %></td>
-      <td><%= product.discountPrice ? product.discountPrice : product.productprice %></td>
-      <td><%= product.quantity %></td>
-      <td><%= product.discountPrice ? product.discountPrice * product.quantity : product.productprice * product.quantity %></td>
-      <td>
-        <% if (product.returnRequest) { %>
-          <div class="return-box">
-            <p><strong>Return Reason:</strong></p>
-            <p class="return-reason"><%= product.reason %></p>
-          </div>
-          <% if (product.returnRequest === "Pending") { %>
-            <div class="d-flex justify-content-center mt-2">
-              <button type="button" class="btn btn-success btn-sm me-2" onclick="approve('<%=orderDetails._id%>','<%=product.productId%>')">Approve</button>
-              <button type="button" class="btn btn-danger btn-sm" onclick="reject('<%=orderDetails._id%>','<%=product.productId%>')">Reject</button>
+        <div class="orderdetails">
+          <p><strong>Order ID:</strong>
+            <%= orderDetails.orderId %>
+          </p>
+          <div class="orders d-flex justify-content-between">
+            <div class="shippingdetails">
+              <div class="customer">
+                <p><strong>Customer</strong></p>
+                <p>
+                  <%= users.username %>
+                </p>
+                <p>
+                  <%= users.email %>
+                </p>
+                <p>
+                  <%= users.phoneno %>
+                </p>
+              </div>
             </div>
-          <% } else { %>
-            <p class="mt-2"><%= product.returnRequest %></p>
-          <% } %>
-        <% } else { %>
-          <p>No Return Request</p>
-        <% } %>
-      </td>
-    </tr>
-  <% }) %>
-</tbody>
+            <div class="order-info">
+              <p><strong>Shipping:</strong> Fargo Express</p>
+              <p><strong>Payment Method:</strong>
+                <%=orderDetails.paymentMethod %>
+              </p>
+              <p><strong>Status:</strong></p>
+              <p class="fs-5">Completed</p>
+            </div>
+            <div class="deliverto">
+              <p><strong>Deliver To</strong></p>
+              <h6>Delivery Address</h6>
+              <p>
+                <%= orderDetails.shippingAddress.houseno %>,<%= orderDetails.shippingAddress.area %>
+              </p>
+              <p>
+                <%= orderDetails.shippingAddress.landmark %>
+              </p>
+              <p>
+                <%= orderDetails.shippingAddress.town %>,<%= orderDetails.shippingAddress.state %>
+              </p>
+              <p>
+                <%= orderDetails.shippingAddress.pincode %>
+              </p>
+            </div>
+          </div>
 
-        </table>
+          <div class="orderdata">
+            <table class="table table-striped">
+              <thead class="table-dark">
+                <tr>
+                  <th>Product</th>
+                  <th>Price</th>
+                  <th>Quantity</th>
+                  <th>Total</th>
+                  <th>Return/Cancel</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% orderDetails.products.forEach(product=> { %>
+                  <tr>
+                    <td class="order-details-product-name">
+                      <%= product.productName %>
+                    </td>
+                    <td>
+                      <%= product.discountPrice ? product.discountPrice : product.productprice %>
+                    </td>
+                    <td>
+                      <%= product.quantity %>
+                    </td>
+                    <td>
+                      <%= product.discountPrice ? product.discountPrice * product.quantity : product.productprice *
+                        product.quantity %>
+                    </td>
+                    <td>
+                      <% if (product.returnRequest) { %>
+                        <div class="return-box">
+                          <p><strong>Return Reason:</strong></p>
+                          <p class="return-reason">
+                            <%= product.reason %>
+                          </p>
+                        </div>
+                        <% if (product.returnRequest==="Pending" ) { %>
+                          <div class="d-flex justify-content-center mt-2">
+                            <button type="button" class="btn btn-success btn-sm me-2"
+                              onclick="approve('<%=orderDetails._id%>','<%=product.productId%>')">Approve</button>
+                            <button type="button" class="btn btn-danger btn-sm"
+                              onclick="reject('<%=orderDetails._id%>','<%=product.productId%>')">Reject</button>
+                          </div>
+                          <% } else { %>
+                            <p class="mt-2">
+                              <%= product.returnRequest %>
+                            </p>
+                            <% } %>
+                              <% } else { %>
+                                <p>No Return Request</p>
+                                <% } %>
+                    </td>
+                  </tr>
+                  <% }) %>
+              </tbody>
+
+            </table>
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
-</main>
+    </main>
 
-<%- include('../partials/adminfooter') %>
+    <%- include('../partials/adminfooter') %>
 
 </body>
 <script>
-  function approve(orderId,productId){
-    let url=`/admin/approve/${orderId}/product/${productId}`
-        Swal.fire({
-          title: `Are you sure you want to approve return`,
-          icon: 'warning',
-          showCancelButton: true,
-          confirmButtonColor: '#3085d6',
-          cancelButtonColor: '#d33',
-          confirmButtonText: 'Yes'
-        }).then((result) => {
-          if (result.isConfirmed) {
-            window.location.href = url;
-          }
-        });
+  function approve(orderId, productId) {
+    let url = `/admin/approve/${orderId}/product/${productId}`
+    Swal.fire({
+      title: `Are you sure you want to approve return`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        window.location.href = url;
       }
+    });
+  }
 
-      function reject(orderId,productId){
-    let url=`/admin/reject/${orderId}/product/${productId}`
-        Swal.fire({
-          title: `Are you sure you want to reject return`,
-          icon: 'warning',
-          showCancelButton: true,
-          confirmButtonColor: '#3085d6',
-          cancelButtonColor: '#d33',
-          confirmButtonText: 'Yes'
-        }).then((result) => {
-          if (result.isConfirmed) {
-            window.location.href = url;
-          }
-        });
+  function reject(orderId, productId) {
+    let url = `/admin/reject/${orderId}/product/${productId}`
+    Swal.fire({
+      title: `Are you sure you want to reject return`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        window.location.href = url;
       }
+    });
+  }
 </script>
+
 </html>

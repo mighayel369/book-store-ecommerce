@@ -61,7 +61,6 @@ if(!req.session.userId){
             if (!req.session.userId) {
                 return res.status(401).json({message:"user not authenticated"})
             }
-    
             let userId = req.session.userId;
             let productId = req.body.productId;
     

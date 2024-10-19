@@ -1,90 +1,107 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin Panel</title>
-  <link rel="stylesheet" href="path/to/your/css/styles.css">
+  <title>Shoe Rack</title>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
   <style>
 
   </style>
 </head>
+
 <body>
-<%- include('../partials/adminHeader') %>
-<main>
-<div class="container">
-  <% if (adminmessage) { %>
-    <div class="alert m-4 alert-dismissible fade show alert-<%= adminmessage.type %>" role="alert">
-      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-      <strong><%= adminmessage.message %></strong>
-    </div>
-  <% } %>
-  <div class="d-flex justify-content-end m-5">
-    <h3 class="me-auto">Completed Transactions</h3>
-    <button id="download" class="btn btn-primary ms-auto">Download Report</button>
-  </div>
-  <div class="row m-4">
-    <div class="col-lg-12">
-      <div class="table-responsive">
-        <table class="table table-striped" id="table-data">
-          <thead>
-            <tr class="table-dark">
-                <th >Order ID</th>
-                <th >Customer Name</th>
-                <th >Date</th>
-                <th >Total</th>
-                <th >Payment Method</th>
-                <th>Return Status</th>
-                <th >Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            <% completedOrders.forEach(order => { %>
-             <tr>
-                <td class="fw-semibold"><%= order.orderId %></td>
-                <td class="fw-semibold"><%= order.userId.username %></td>
-                <td class="fw-semibold"><%= order.createdAt.toISOString().split('T')[0] %></td>
-                <td class="fw-semibold"><span class="mx-1">₹</span><%= order.finalPrice ? order.finalPrice : order.totalAmount %></td>
-                <td class="fw-semibold"><%= order.paymentMethod==='cod'?"Cash On Delivery":order.paymentMethod%></td>
-                <td class="fw-semibold">
-                  <% let returnRequestStatus = null; %>
+  <%- include('../partials/adminHeader') %>
+    <main>
+      <div class="container">
+        <% if (adminmessage) { %>
+          <div class="alert m-4 alert-dismissible fade show alert-<%= adminmessage.type %>" role="alert">
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            <strong>
+              <%= adminmessage.message %>
+            </strong>
+          </div>
+          <% } %>
+            <div class="d-flex justify-content-end m-5">
+              <h3 class="me-auto">Completed Transactions</h3>
+              <button id="download" class="btn btn-primary ms-auto">Download Report</button>
+            </div>
+            <div class="row m-4">
+              <div class="col-lg-12">
+                <div class="table-responsive">
+                  <table class="table table-striped" id="table-data">
+                    <thead>
+                      <tr class="table-dark">
+                        <th>Order ID</th>
+                        <th>Customer Name</th>
+                        <th>Date</th>
+                        <th>Total</th>
+                        <th>Payment Method</th>
+                        <th>Return Status</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <% completedOrders.forEach(order=> { %>
+                        <tr>
+                          <td>
+                            <%= order.orderId %>
+                          </td>
+                          <td>
+                            <%= order.userId.username %>
+                          </td>
+                          <td>
+                            <%= order.createdAt.toISOString().split('T')[0] %>
+                          </td>
+                          <td>
+                            <%= order.finalPrice ? order.finalPrice : order.totalAmount %>
+                          </td>
+                          <td>
+                            <%= order.paymentMethod==='cod' ?"Cash On Delivery":order.paymentMethod%>
+                          </td>
+                          <td>
+                            <% let returnRequestStatus=null; %>
 
-                   <% order.products.forEach(product => { %>
-                   <% if (product.returnRequest === "Pending") { %>
-                   <% returnRequestStatus = "Pending"; %>
-                    <% } else if (!returnRequestStatus && (product.returnRequest === "Approved" || product.returnRequest === "Rejected")) { %>
-                    <% returnRequestStatus = product.returnRequest; %>
-                   <% } %>
-                   <% }) %>
+                              <% order.products.forEach(product=> { %>
+                                <% if (product.returnRequest==="Pending" ) { %>
+                                  <% returnRequestStatus="Pending" ; %>
+                                    <% } else if (!returnRequestStatus && (product.returnRequest==="Approved" ||
+                                      product.returnRequest==="Rejected" )) { %>
+                                      <% returnRequestStatus=product.returnRequest; %>
+                                        <% } %>
+                                          <% }) %>
 
-                   <% if (returnRequestStatus) { %>
-                     <span class="badge <%= returnRequestStatus === 'Pending' ? 'bg-warning' : returnRequestStatus === 'Approved' ? 'bg-success' : 'bg-danger' %>">
-                    <%= returnRequestStatus %>
-                    </span>
-                  <% } else { %>
-                  <span class="text-muted">No Return Request</span>
-                  <% } %>
+                                            <% if (returnRequestStatus) { %>
+                                              <span
+                                                class="badge <%= returnRequestStatus === 'Pending' ? 'bg-warning' : returnRequestStatus === 'Approved' ? 'bg-success' : 'bg-danger' %>">
+                                                <%= returnRequestStatus %>
+                                              </span>
+                                              <% } else { %>
+                                                <span class="text-muted">No Return Request</span>
+                                                <% } %>
 
-                </td>
-                <td ><a href="/admin/orderdetails/<%= order._id %>" class="btn btn-danger btn-sm">View Details</a></td>
-             </tr>
-            <% }) %>
-          </tbody>
-        </table>
+                          </td>
+                          <td><a href="/admin/orderdetails/<%= order._id %>" class="btn btn-danger btn-sm">View
+                              Details</a></td>
+                        </tr>
+                        <% }) %>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
       </div>
-    </div>
-  </div>
-</div>
-</main>
-<%- include('../partials/adminfooter') %>
-<script>
-    $(document).ready(function () {
-    $('#download').on('click', function () {
-      window.location.href = '/admin/download-report';
-    });
-  });
-</script>
+    </main>
+    <%- include('../partials/adminfooter') %>
+      <script>
+        $(document).ready(function () {
+          $('#download').on('click', function () {
+            window.location.href = '/admin/download-report';
+          });
+        });
+      </script>
 </body>
+
 </html>

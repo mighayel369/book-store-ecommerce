@@ -123,7 +123,6 @@ module.exports={
 verifyPayment:async(req,res)=>{
    try{
     let {orderId,razorpay_payment_id,razorpay_order_id,razorpay_signature,totalPrice,finalPrice}=req.body
-    console.log(req.body)
     let generatedSignture=crypto.createHmac('sha256',process.env.RAZORPAY_KEYSECRET)
     .update(razorpay_order_id+"|"+razorpay_payment_id)
     .digest('hex');

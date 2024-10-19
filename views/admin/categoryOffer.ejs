@@ -1,17 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin Panel - Category Offers</title>
-  <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="path/to/your/css/styles.css">
+  <title>Shoe Rack</title>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
   <style>
     .categoryBox {
       margin-bottom: 30px;
     }
+
     .card {
       border: none;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -21,84 +21,94 @@
       height: 100%;
       width: 280px;
     }
+
     .card:hover {
       transform: translateY(-5px);
     }
+
     .card-img-top {
       width: 100%;
-      height: 150px; 
+      height: 150px;
       object-fit: cover;
     }
+
     .card-body {
       padding: 1.25rem;
       text-align: center;
       flex-grow: 1;
       display: flex;
       flex-direction: column;
-      justify-content: space-between; 
+      justify-content: space-between;
     }
+
     .btn-dark {
       width: 100%;
       margin-top: 10px;
       padding: 10px 0;
       border-radius: 0;
     }
+
     .add-category-btn {
       margin-left: 10px;
     }
+
     .offer-status {
-  font-weight: bold; 
-}
+      font-weight: bold;
+    }
 
-.offer-status.actives {
-  color: yellowgreen;
-}
+    .offer-status.actives {
+      color: yellowgreen;
+    }
 
-.offer-status.inactive {
-  color: red;
-}
+    .offer-status.inactive {
+      color: red;
+    }
   </style>
 </head>
+
 <body>
   <%- include('../partials/adminHeader') %>
 
-  <main>
-    <div class="container">
-      <% if (adminmessage) { %>
-        <div class="alert alert-dismissible fade show alert-<%= adminmessage.type %> mt-4" role="alert">
-          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-          <strong><%= adminmessage.message %></strong>
-        </div>
-      <% } %>
-      <div class="d-flex justify-content-between align-items-center my-4">
-        <h3 class="m-0">Category Offers</h3>
-      </div>
-      <div class="row ms-5 mt-5">
-        <% category.forEach(element => { %>
-          <div class="col-md-4">
-            <div class="categoryBox w-100">
-              <div class="card">
-                <img src="/category_images/<%= element.image %>" alt="<%= element.categoryname %> Image" class="card-img-top">
-                <div class="card-body">
-                  <h5 class="fw-bold"><%= element.categoryname %></h5>
-                  <p class="text-muted fw-bold">Offer Status: 
-                    <span class="offer-status <%= element.offer.isOfferActive ? 'actives' : 'inactive' %>">
-                      <%= element.offer.isOfferActive ? 'Active' : 'InActive' %>
-                    </span>
-                  </p>
-                  <a class="btn btn-dark" href="/admin/offers/addoffer/<%= element._id %>">ADD OFFERS</a>
-                </div>
-              </div>
-            </div>
+    <main>
+      <div class="container">
+        <% if (adminmessage) { %>
+          <div class="alert alert-dismissible fade show alert-<%= adminmessage.type %> mt-4" role="alert">
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            <strong>
+              <%= adminmessage.message %>
+            </strong>
           </div>
-        <% }) %>
+          <% } %>
+            <div class="d-flex justify-content-between align-items-center my-4">
+              <h3 class="m-0">Category Offers</h3>
+            </div>
+            <div class="row ms-5 mt-5">
+              <% category.forEach(element=> { %>
+                <div class="col-md-4">
+                  <div class="categoryBox w-100">
+                    <div class="card">
+                      <img src="/category_images/<%= element.image %>" alt="<%= element.categoryname %> Image"
+                        class="card-img-top">
+                      <div class="card-body">
+                        <h5 class="fw-bold">
+                          <%= element.categoryname %>
+                        </h5>
+                        <p class="text-muted fw-bold">Offer Status:
+                          <span class="offer-status <%= element.offer.isOfferActive ? 'actives' : 'inactive' %>">
+                            <%= element.offer.isOfferActive ? 'Active' : 'InActive' %>
+                          </span>
+                        </p>
+                        <a class="btn btn-dark" href="/admin/offers/addoffer/<%= element._id %>">ADD OFFERS</a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <% }) %>
+            </div>
       </div>
-    </div>
-  </main>
+    </main>
 
-  <%- include('../partials/adminfooter') %>
-
-  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.min.js"></script>
+    <%- include('../partials/adminfooter') %>
 </body>
+
 </html>

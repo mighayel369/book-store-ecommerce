@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - Shoe Rack</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .contact {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .contact .address {
+            flex: 1;
+            text-align: center;
+        }
+
+        .contact i {
+            font-size: 2.5em;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .contact p {
+            margin: 0;
+            font-size: 1.1em;
+            color: #777;
+        }
+
+        .contact .fw-bold {
+            font-size: 1.2em;
+            color: #333;
+            margin-top: 10px;
+            margin-bottom: 5px;
+        }
+
+        .container1 {
+            margin: 150px 0px;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <%- include('../partials/userHeader') %>
+
+        <p class="fw-bold text-dark fs-5 mt-4 ms-3">Home > <span class="text-warning fs-5"> Contact</span></p>
+
+        <div class="container1">
+            <div class="contact">
+                <div class="address">
+                    <span><i class="fa-solid fa-location-dot"></i></span>
+                    <p class="fw-bold">ADDRESS</p>
+                    <p>Arabian Palace, Kakkanad, Ernakulam</p>
+                </div>
+                <div class="address">
+                    <span><i class="fa-solid fa-phone"></i></span>
+                    <p class="fw-bold">PHONE</p>
+                    <p>+145 258996</p>
+                </div>
+                <div class="address">
+                    <span><i class="fa-solid fa-envelope"></i></span>
+                    <p class="fw-bold">EMAIL</p>
+                    <p>neymarjr@gmail.com</p>
+                </div>
+            </div>
+        </div>
+
+        <%- include('../partials/userfooter') %>
+</body>
+
+</html>

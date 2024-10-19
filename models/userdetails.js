@@ -56,6 +56,9 @@ const userSchema = new mongoose.Schema({
       description: String,
     }]
   },
+  photo:{
+    type:String
+  },
   wishlist: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'productdetails'

@@ -15,9 +15,52 @@ module.exports={
             users=await usermodel.findById(req.user._id)
             req.session.userId=users._id
           }
+          let offers = await product.aggregate([
+            { 
+              $match: { 
+                "offer.isOfferActive": true, 
+                "offer.endDate": { $gte: new Date() }
+              } 
+            },
+            {
+              $project: {
+                productname: 1,
+                productprice: 1,
+                image: 1,
+                "offer.discountType": 1,
+                "offer.discountValue": 1,
+                "offer.bannerImage": 1,
+                "offer.offerDescription": 1
+              }
+            },
+            { $limit: 3 }
+          ]);
+
+          let upcomingOffers = await product.aggregate([
+      { 
+        $match: { 
+          "offer.isOfferActive": false, 
+          "offer.startDate": { $gt: new Date() }, 
+          "offer.endDate": { $gte: new Date() } 
+        }
+      },
+      {
+        $project: {
+          productname: 1,
+          productprice: 1,
+          image: 1,
+          "offer.discountType": 1,
+          "offer.discountValue": 1,
+          "offer.startDate": 1, 
+          "offer.bannerImage": 1,
+          "offer.offerDescription": 1
+        }
+      },
+      { $limit: 3 }
+    ]);
           let products=await product.find().populate('productcategory').sort({ popularityScore: -1 }).limit(3)
           let category=await categories.find().limit(4)
-          res.render('users/userHome',{products,category,users,search})
+          res.render('users/userHome',{products,category,users,search,offers,upcomingOffers})
       }catch(error){
          res.send('Internal Server Error')
       }
@@ -25,7 +68,7 @@ module.exports={
 
    getProducts: async (req, res) => {
       try {
-        let { page = 1, limit = 8, search = '' } = req.query;
+        let { page = 1, limit = 9, search = '' } = req.query;
         let currentPage = parseInt(page, 10);
         let limitNumber = parseInt(limit, 10);
         let skip = (currentPage - 1) * limitNumber;
@@ -65,6 +108,41 @@ module.exports={
       let similarProducts=await product.find({productcategory:products.productcategory}).populate('productcategory')
       res.render('users/singleProduct',{products,similarProducts,users,search})
    },
+
+   getBrand:async(req,res)=>{
+    try{
+      let {search=''}=req.query
+      let {userId}=req.session
+      var users=await usermodel.findById(userId)
+      let category=await categories.find()
+      res.render('users/brands',{category,users,search})
+    }
+    catch(error){
+      console.log(error)
+    }
+   },
+   getAbout:async(req,res)=>{
+    try{
+      let {search=''}=req.query
+      let {userId}=req.session
+      var users=await usermodel.findById(userId)
+      res.render('users/about',{users,search})
+    }
+    catch(error){
+      console.log(error)
+    }
+   },
+   getContact:async(req,res)=>{
+    try{
+      let {search=''}=req.query
+      let {userId}=req.session
+      var users=await usermodel.findById(userId)
+      res.render('users/contact',{users,search})
+    }
+    catch(error){
+      console.log(error)
+    }
+   }
 
 
 }

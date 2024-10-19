@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Add Offer - Admin Panel</title>
+  <title>Shoe Rack</title>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -14,6 +15,7 @@
       object-fit: cover;
       border-radius: 8px;
     }
+
     .offer-details {
       background-color: rgb(217, 236, 236);
       padding: 20px;
@@ -22,127 +24,152 @@
       padding: 50px;
       width: 900px;
     }
+
     .offer-details h5,
     .create-offer-form h5 {
       margin-bottom: 20px;
     }
+
     .form-control {
       margin-bottom: 15px;
     }
+
     .create-offer-form {
       width: 600px;
     }
+
     .currentOfferDetails {
       margin-top: 40px;
       margin-left: 30px;
-    } 
+    }
+
     .currentOfferDetails p {
-      margin: 0; 
-      display: flex; 
-      justify-content: space-between; 
+      margin: 0;
+      display: flex;
+      justify-content: space-between;
       padding: 8px 0;
       line-height: 12px;
     }
+
     .currentOfferDetails p span:first-child {
-      font-weight: 600; 
+      font-weight: 600;
     }
   </style>
 </head>
+
 <body>
 
   <%- include('../partials/adminHeader') %>
-  
-  <main>
-    <div class="container mt-5">
-      <div class="addOfferPage">
-        <div class="offer-details mx-auto">
 
-          <% if (category.offer && (category.offer.isOfferActive || category.offer.discountType || category.offer.discountValue)) { %>
-            <h4 class="fw-bold">Current Offer</h4>
-            <div class="d-flex align-items-center my-3">
-              <div class="offerImage me-3">
-                <img src="/offerBannerImages/<%= category.offer.bannerImage %>" alt="Current Offer Image" style="width: 150px; height: auto;">
-              </div>
-              <div class="currentOfferDetails">
-                <h5 class="fw-semibold" style="color: rgb(136, 158, 161);"><%= category.offer.offerDescription %></h5>
-                <p><span>Offer Status:</span><span class="badge text-bg-warning text-white"><%= category.offer.isOfferActive?"Active":"InActive" %></span></p>
-                <p><span>Offer Value:</span><span class="text-danger"><%= category.offer.discountValue %></span></p>
-                <p><span>Offer Start date:</span><span class="ms-3"><%= category.offer.startDate.toISOString().split('T')[0] %></span></p>
-                <p><span>Offer End Date:</span><span><%= category.offer.endDate.toISOString().split('T')[0] %></span></p>
-              </div>
-            </div>
-          <% } %>
+    <main>
+      <div class="container mt-5">
+        <div class="addOfferPage">
+          <div class="offer-details mx-auto">
 
-          <div class="create-offer-form">
-            <h4 class="fw-bold">Create New Offer</h4>
-            <form action="/admin/offers/addoffer" method="post" class="mt-5" enctype="multipart/form-data" id="formOffer"  data-has-active-offer="<%= category.offer && category.offer.isOfferActive %>">
-              <div class="form-floating mb-3">
-                <select class="form-select" id="offerType" name="offerType">
-                  <option value="percentage">Percentage</option>
-                  <option value="fixed">Fixed Amount</option>
-                </select>
-                <label for="offerType">Offer Type</label>
+            <% if (category.offer && (category.offer.isOfferActive || category.offer.discountType ||
+              category.offer.discountValue)) { %>
+              <h4 class="fw-bold">Current Offer</h4>
+              <div class="d-flex align-items-center my-3">
+                <div class="offerImage me-3">
+                  <img src="/offerBannerImages/<%= category.offer.bannerImage %>" alt="Current Offer Image"
+                    style="width: 150px; height: auto;">
+                </div>
+                <div class="currentOfferDetails">
+                  <h5 class="fw-semibold" style="color: rgb(136, 158, 161);">
+                    <%= category.offer.offerDescription %>
+                  </h5>
+                  <p><span>Offer Status:</span><span class="badge text-bg-warning text-white">
+                      <%= category.offer.isOfferActive?"Active":"InActive" %>
+                    </span></p>
+                  <p><span>Offer Value:</span><span class="text-danger">
+                      <%= category.offer.discountValue %>
+                    </span></p>
+                  <p><span>Offer Start date:</span><span class="ms-3">
+                      <%= category.offer.startDate.toISOString().split('T')[0] %>
+                    </span></p>
+                  <p><span>Offer End Date:</span><span>
+                      <%= category.offer.endDate.toISOString().split('T')[0] %>
+                    </span></p>
+                </div>
               </div>
-              <div class="form-floating mb-3">
-                <input type="number" class="form-control" id="offerValue" name="offerValue" placeholder="Offer Value">
-                <label for="offerValue">Offer Value</label>
-              </div>
-              <div class="form-floating mb-3">
-                <input type="date" class="form-control" id="startDate" name="startDate" >
-                <label for="startDate">Start Date</label>
-              </div>
-              <div class="form-floating mb-3">
-                <input type="date" class="form-control" id="endDate" name="endDate" >
-                <label for="endDate">End Date</label>
-              </div>
-              <div class="form-floating mb-3">
-                <textarea class="form-control" id="offerDescription" name="offerDescription" placeholder="Offer Description" style="height: 100px;" ></textarea>
-                <label for="offerDescription">Offer Description</label>
-              </div>
-              <div class="mb-3">
-                <label for="image" class="form-label">Banner Image</label>
-                <input type="file" class="form-control" id="image" name="image" >
-              </div>
-              <% if (adminmessage) { %>
-                <p class="text-danger fw-light"><%= adminmessage.message %></p>
-               <% } %>
-             <input type="hidden" value="<%=category._id %>" name="categoryId">
-              <button type="submit" class="btn btn-dark w-100">Create Offer</button>
-            </form>
+              <% } %>
+
+                <div class="create-offer-form">
+                  <h4 class="fw-bold">Create New Offer</h4>
+                  <form action="/admin/offers/addoffer" method="post" class="mt-5" enctype="multipart/form-data"
+                    id="formOffer" data-has-active-offer="<%= category.offer && category.offer.isOfferActive %>">
+                    <div class="form-floating mb-3">
+                      <select class="form-select" id="offerType" name="offerType">
+                        <option value="percentage">Percentage</option>
+                        <option value="fixed">Fixed Amount</option>
+                      </select>
+                      <label for="offerType">Offer Type</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                      <input type="number" class="form-control" id="offerValue" name="offerValue"
+                        placeholder="Offer Value">
+                      <label for="offerValue">Offer Value</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                      <input type="date" class="form-control" id="startDate" name="startDate">
+                      <label for="startDate">Start Date</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                      <input type="date" class="form-control" id="endDate" name="endDate">
+                      <label for="endDate">End Date</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                      <textarea class="form-control" id="offerDescription" name="offerDescription"
+                        placeholder="Offer Description" style="height: 100px;"></textarea>
+                      <label for="offerDescription">Offer Description</label>
+                    </div>
+                    <div class="mb-3">
+                      <label for="image" class="form-label">Banner Image</label>
+                      <input type="file" class="form-control" id="image" name="image">
+                    </div>
+                    <% if (adminmessage) { %>
+                      <p class="text-danger fw-light">
+                        <%= adminmessage.message %>
+                      </p>
+                      <% } %>
+                        <input type="hidden" value="<%=category._id %>" name="categoryId">
+                        <button type="submit" class="btn btn-dark w-100">Create Offer</button>
+                  </form>
+                </div>
           </div>
         </div>
       </div>
-    </div>
-  </main>
+    </main>
 
-  <%- include('../partials/adminfooter') %>
-  <script>
-  $(document).ready(function() {    
-  let isOffer = $('#formOffer').data('has-active-offer');
+    <%- include('../partials/adminfooter') %>
+      <script>
+        $(document).ready(function () {
+          let isOffer = $('#formOffer').data('has-active-offer');
 
-  $('#formOffer').on('submit', function(e) {
-    if (isOffer) {
-      e.preventDefault();
-      const form = this;
+          $('#formOffer').on('submit', function (e) {
+            if (isOffer) {
+              e.preventDefault();
+              const form = this;
 
-      Swal.fire({
-        title: 'Warning',
-        text: 'This Product Already Have An Active Offer Are You Sure Your Want To Replace?',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'Yes, Create New Offer',
-        cancelButtonText: 'No, Cancel'
-      }).then((result) => {
-        if (result.isConfirmed) {
-          form.submit(); 
-        }
-      });
-    }
-  });
-});
-
+              Swal.fire({
+                title: 'Warning',
+                text: 'This Product Already Have An Active Offer Are You Sure Your Want To Replace?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, Create New Offer',
+                cancelButtonText: 'No, Cancel'
+              }).then((result) => {
+                if (result.isConfirmed) {
+                  form.submit();
+                }
+              });
+            }
+          });
+        });
 
 
-    </script>
-  </body>
-  </html>
+
+      </script>
+</body>
+
+</html>

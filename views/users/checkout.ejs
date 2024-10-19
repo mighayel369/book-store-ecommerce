@@ -1,16 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Checkout</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Shoe Rack</title>
     <style>
         .container {
             min-height: 100vh;
             padding-top: 30px;
         }
-        .shipping-details, .order-summary {
+
+        .shipping-details,
+        .order-summary {
             border: 1px solid #ccc;
             padding: 20px;
             border-radius: 15px;
@@ -18,61 +20,72 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             margin-bottom: 30px;
         }
-        .address-list {
-    display: flex;
-    align-items: start;
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    padding: 15px;
-    background-color: #fff;
-    margin-top: 20px;
-}
 
-.address-list input[type="radio"] {
-    margin-right: 10px;
-    margin-top: 5px; 
-}
-     .address-list p {
+        .address-list {
+            display: flex;
+            align-items: start;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 15px;
+            background-color: #fff;
+            margin-top: 20px;
+        }
+
+        .address-list input[type="radio"] {
+            margin-right: 10px;
+            margin-top: 5px;
+        }
+
+        .address-list p {
             margin-bottom: 0.5rem;
             line-height: 1.4;
             font-weight: 500;
             color: #333;
         }
+
         .order-summary .order-details {
             display: flex;
             align-items: center;
             margin-top: 20px;
         }
+
         .order-summary img {
             border-radius: 10px;
             margin-right: 15px;
             height: 100px;
             width: 70px;
         }
-        .order-summary p, .order-total p {
+
+        .order-summary p,
+        .order-total p {
             margin-bottom: 0.5rem;
         }
+
         .order-total {
             margin-top: 30px;
             padding-top: 20px;
             border-top: 1px solid #ddd;
         }
+
         .order-total .subtotal {
             margin-bottom: 20px;
         }
+
         .order-total p {
             display: flex;
             justify-content: space-between;
             font-weight: 500;
         }
-        .defaultButton{
+
+        .defaultButton {
             position: absolute;
             left: 47%;
             margin-top: 10px;
         }
+
         .offcanvas-center {
             width: 500px;
-            height: 90vh; 
+            height: 90vh;
             margin: auto;
             top: 0;
             bottom: 0;
@@ -82,7 +95,9 @@
             border-radius: 10px;
             overflow-y: auto;
         }
-        .offcanvas-header, .offcanvas-body {
+
+        .offcanvas-header,
+        .offcanvas-body {
             padding: 20px;
         }
 
@@ -94,593 +109,714 @@
             background-color: rgba(0, 0, 0, 0.3);
             border-radius: 10px;
         }
-        #offcanvasapplycoupon{
+
+        #offcanvasapplycoupon {
             margin-top: 70px;
             height: 500px;
             width: 450px;
         }
+
         .apply-coupon {
-        cursor: pointer;
-    }
-    .checkboxes{
-        background-color:rgb(205, 243, 238);
-        border-radius: 10px;
-    }
-    .colored-toast {
-    background-color: #cf6868!important; 
-    color: white!important; 
-    border-radius: 8px!important; 
-    padding: 10px 20px!important; 
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1)!important; 
-}
+            cursor: pointer;
+        }
 
-.toast-title {
-    font-weight: bold!important;
-    font-size: 16px!important;
-}
+        .checkboxes {
+            background-color: rgb(205, 243, 238);
+            border-radius: 10px;
+        }
 
-.toast-icon {
-    color:white!important;
-}
+        .product-name {
+            font-size: 1rem;
+            font-weight: 700;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 300px;
+            display: inline-block;
+            color: #212529;
+        }
+        .colored-toast {
+         background: rgba(207, 117, 43, 0.9) !important; 
+          color: white !important;
+         }
 
-.swal2-title {
-    margin-bottom: 0!important;
-}
-
-.swal2-popup {
-    padding: 10px!important; 
-}
-
+          .toast-text {
+          color: #ffffff !important;
+          }
     </style>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
+
 <body>
     <%- include('../partials/userHeader') %>
-    <p class="fw-bold text-dark fs-5 mt-4 ms-3">Home > Cart > <span class="text-warning">Checkout</span></p>
-    <div class="container">
-        <% if (message) { %>
-            <script>
-                Swal.fire({
+        <p class="fw-bold text-dark fs-5 mt-4 ms-3">Home > Cart > <span class="text-warning">Checkout</span></p>
+        <div class="container">
+            <% if (message) { %>
+                <script>
+                  Swal.fire({
                     toast: true,
                     position: 'top-end',
-                    icon: 'success',
                     title: '<%= message.message %>',
                     showConfirmButton: false,
                     timer: 2000,
+                    timerProgressBar: false,
+                    background: '#28a745',
                     customClass: {
-                        popup: 'colored-toast',  
-                        title: 'toast-title',   
-                        icon: 'toast-icon'    
+                      popup: 'colored-toast',
+                      text: 'toast-text'
                     }
-                });
-            </script>
-        <% } %>
-        
-        
-        <div class="row">
-            <div class="col-md-7">
-                <div class="shipping-details">
-                    <p class="fw-bold fs-5">Shipping Info</p>
-                    <p class="fw-semibold text-muted">Select Shipping Address</p>
-                    <form action="/updateDefaultaddress" method="post">
-                    <% users.address.forEach(element => { %>
-                        
-                        <div class="address-list">
-                            <input type="radio" name="selectedAddress" value="<%= element._id %>" <%= element.default ? 'checked' : '' %> class="me-2">
-                            <div>
-                                <p class="mb-0 fw-bold"><%= element.fullname %></p>
-                                <p class="mb-0"><%= element.houseno %>, <%= element.area %>, <%= element.landmark %></p>
-                                <p class="mb-0"><%= element.town %>, <%= element.state %></p>
-                                <p class="mb-0"><%= element.phoneno %></p>
-                                <p class="mb-0"><%= element.pincode %></p>
-                            </div>
-                                <div class="ms-auto">
-                                    <a href="" type="button" class="mx-1 mt-1 text-muted" data-bs-toggle="offcanvas" data-bs-target="#offcanvasEditAddress"  aria-controls="offcanvasEditAddress"  data-id="<%= element._id %>"  data-fullname="<%= element.fullname %>"  data-houseno="<%= element.houseno %>" data-area="<%= element.area %>" data-landmark="<%= element.landmark %>"data-town="<%= element.town %>"data-state="<%= element.state %>"data-pincode="<%= element.pincode %>"data-phoneno="<%= element.phoneno %>"data-default= " <%= element.default %>" 
-                         onclick="populateEditForm(this)"><i class="fa-solid fa-pen-to-square"></i></a>
-                                    <a  onclick="deleteAddress('<%= element._id %>')"  class="mx-1 mt-1 text-muted"><i class="fa-solid fa-trash"></i></a>
-                                </div>
-                       </div>
-                        <% }) %>
-                        <button type="submit" class="btn btn-primary btn-sm defaultButton">Save Default</button>
-                    </form>
-                    <button class="btn btn-dark ms-auto mx-3 mt-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasWithBothOptions" aria-controls="offcanvasWithBothOptions">Add Address</button>
-                    <div class="offcanvas offcanvas-center" data-bs-scroll="true" tabindex="-1" id="offcanvasWithBothOptions" aria-labelledby="offcanvasWithBothOptionsLabel">
-                        <div class="offcanvas-header">
-                            <h5 class="offcanvas-title" id="offcanvasWithBothOptionsLabel">Add New Address</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-                        </div>
-                        <div class="offcanvas-body">
-                            <form action="/addaddress" method="post">
-                            <div class="form-floating mb-3">
-                                <input type="text" class="form-control" id="fullname" placeholder="name" name="fullname" required>
-                                <label for="fullname">Name</label>
-                            </div>
-                            <div class="form-floating mb-3">
-                                <input type="number" class="form-control" id="phoneno" name="phoneno" placeholder="Phone Number" required>
-                                <label for="phoneno">Phone Number</label>
-                            </div>
-                            <div class="form-floating mb-3">
-                                <input type="text" class="form-control" id="houseno" name="houseno" placeholder="Flat, House No, Company, Building, Apartment" required>
-                                <label for="houseno">Flat, House No, Company, Building, Apartment</label>
-                            </div>
-                            <div class="form-floating mb-3">
-                                <input type="text" class="form-control" id="area" name="area" placeholder="Area, Street, Sector, Village" required>
-                                <label for="area">Area, Street, Sector, Village</label>
-                            </div>
-                            <div class="form-floating mb-3">
-                                <input type="text" class="form-control" id="landmark" name="landmark" placeholder="Landmark" required>
-                                <label for="landmark">Landmark</label>
-                            </div>
-                            <div class="form-floating mb-3">
-                                <input type="text" class="form-control" id="town" name="town" placeholder="Town, City" required>
-                                <label for="town">Town, City</label>
-                            </div>
-                            <div class="row">
-                                <div class="form-floating mb-3 col-md-6">
-                                    <select class="form-select" id="state" name="state">
-                                        <option value="kerala">Kerala</option>
-                                        <option value="Tamil Nadu">Tamil Nadu</option>
-                                        <option value="kerala">Kerala</option>
-                                        <option value="Tamil Nadu">Tamil Nadu</option>
-                                        <option value="kerala">Kerala</option>
-                                        <option value="Tamil Nadu">Tamil Nadu</option>
-                                        <option value="kerala">Kerala</option>
-                                        <option value="Tamil Nadu">Tamil Nadu</option>
-                                        <option value="kerala">Kerala</option>
-                                        <option value="Tamil Nadu">Tamil Nadu</option>
-                                    </select>
-                                    <label for="state" class="mx-2 mb-1">State</label>
-                                </div>
-                                <div class="form-floating mb-3 col-md-6">
-                                    <input type="number" class="form-control" id="pincode" name="pincode" placeholder="Pincode" required>
-                                    <label for="pincode" class="mx-2">Pincode</label>
-                                </div>
-                            </div>
-                            <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="true" id="checkadd" name="default">
-                             <label class="form-check-label" for="checkadd">
-                               set as default
-                             </label>
-                                </div>
-                            <div class="d-flex justify-content-center w-100">
-                                <button class="btn btn-dark" type="submit">Add Address</button>
-                            </div>
-                            </form>
-                        </div>
-                    </div>
-                    <div class="offcanvas offcanvas-center" data-bs-scroll="true" tabindex="-1" id="offcanvasEditAddress" aria-labelledby="offcanvasEditAddressLabel">
-                        <div class="offcanvas-header">
-                            <h5 class="offcanvas-title" id="offcanvasEditAddressLabel">Edit Address</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-                        </div>
-                        <div class="offcanvas-body">
-                            <form  method="post" action="#" id="edit-address-form">
-                                <div class="form-floating mb-3">
-                                    <input type="text" class="form-control" id="edit-fullname" name="fullname" placeholder="Full Name">
-                                    <label for="edit-fullname">Name</label>
-                                </div>
-                                <div class="form-floating mb-3">
-                                    <input type="number" class="form-control" id="edit-phoneno" name="phoneno" placeholder="Phone Number">
-                                    <label for="edit-phoneno">Phone Number</label>
-                                </div>
-                                <div class="form-floating mb-3">
-                                    <input type="text" class="form-control" id="edit-houseno" name="houseno" placeholder="Flat, House No, Company, Building, Apartment">
-                                    <label for="edit-houseno">Flat, House No, Company, Building, Apartment</label>
-                                </div>
-                                <div class="form-floating mb-3">
-                                    <input type="text" class="form-control" id="edit-area" name="area" placeholder="Area, Street, Sector, Village">
-                                    <label for="edit-area">Area, Street, Sector, Village</label>
-                                </div>
-                                <div class="form-floating mb-3">
-                                    <input type="text" class="form-control" id="edit-landmark" name="landmark" placeholder="Landmark">
-                                    <label for="edit-landmark">Landmark</label>
-                                </div>
-                                <div class="form-floating mb-3">
-                                    <input type="text" class="form-control" id="edit-town" name="town" placeholder="Town, City">
-                                    <label for="edit-town">Town, City</label>
-                                </div>
-                                <div class="row">
-                                    <div class="form-floating mb-3 col-md-6">
-                                        <select class="form-select" id="edit-state" name="state">
-                                            <option value="kerala">Kerala</option>
-                                            <option value="Tamil Nadu">Tamil Nadu</option>
-                                        </select>
-                                        <label for="edit-state" class="mx-2 mb-1">State</label>
+                  });
+                </script>
+                <% } %>
+
+
+                    <div class="row">
+                        <div class="col-md-7">
+                            <div class="shipping-details">
+                                <p class="fw-bold fs-5">Shipping Info</p>
+                                <p class="fw-semibold text-muted">Select Shipping Address</p>
+                                <form action="/updateDefaultaddress" method="post">
+                                    <% users.address.forEach(element=> { %>
+
+                                        <div class="address-list">
+                                            <input type="radio" name="selectedAddress" value="<%= element._id %>"
+                                                <%=element.default ? 'checked' : '' %> class="me-2">
+                                            <div>
+                                                <p class="mb-0 fw-bold">
+                                                    <%= element.fullname %>
+                                                </p>
+                                                <p class="mb-0">
+                                                    <%= element.houseno %>, <%= element.area %>, <%= element.landmark %>
+                                                </p>
+                                                <p class="mb-0">
+                                                    <%= element.town %>, <%= element.state %>
+                                                </p>
+                                                <p class="mb-0">
+                                                    <%= element.phoneno %>
+                                                </p>
+                                                <p class="mb-0">
+                                                    <%= element.pincode %>
+                                                </p>
+                                            </div>
+                                            <div class="ms-auto">
+                                                <a href="" type="button" class="mx-1 mt-1 text-muted"
+                                                    data-bs-toggle="offcanvas" data-bs-target="#offcanvasEditAddress"
+                                                    aria-controls="offcanvasEditAddress" data-id="<%= element._id %>"
+                                                    data-fullname="<%= element.fullname %>"
+                                                    data-houseno="<%= element.houseno %>"
+                                                    data-area="<%= element.area %>"
+                                                    data-landmark="<%= element.landmark %>"
+                                                    data-town="<%= element.town %>" data-state="<%= element.state %>"
+                                                    data-pincode="<%= element.pincode %>"
+                                                    data-phoneno="<%= element.phoneno %>"
+                                                    data-default=" <%= element.default %>"
+                                                    onclick="populateEditForm(this)"><i
+                                                        class="fa-solid fa-pen-to-square"></i></a>
+                                                <a onclick="deleteAddress('<%= element._id %>')"
+                                                    class="mx-1 mt-1 text-muted"><i class="fa-solid fa-trash"></i></a>
+                                            </div>
+                                        </div>
+                                        <% }) %>
+                                            <button type="submit" class="btn btn-primary btn-sm defaultButton">Save
+                                                Default</button>
+                                </form>
+                                <button class="btn btn-dark ms-auto mx-3 mt-2" type="button" data-bs-toggle="offcanvas"
+                                    data-bs-target="#offcanvasWithBothOptions"
+                                    aria-controls="offcanvasWithBothOptions">Add Address</button>
+                                <div class="offcanvas offcanvas-center" data-bs-scroll="true" tabindex="-1"
+                                    id="offcanvasWithBothOptions" aria-labelledby="offcanvasWithBothOptionsLabel">
+                                    <div class="offcanvas-header">
+                                        <h5 class="offcanvas-title" id="offcanvasWithBothOptionsLabel">Add New Address
+                                        </h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="offcanvas"
+                                            aria-label="Close"></button>
                                     </div>
-                                    <div class="form-floating mb-3 col-md-6">
-                                        <input type="number" class="form-control" id="edit-pincode" name="pincode" placeholder="Pincode">
-                                        <label for="edit-pincode" class="mx-2">Pincode</label>
+                                    <div class="offcanvas-body">
+                                        <form action="/addaddress" method="post">
+                                            <div class="form-floating mb-3">
+                                                <input type="text" class="form-control" id="fullname" placeholder="name"
+                                                    name="fullname" required>
+                                                <label for="fullname">Name</label>
+                                            </div>
+                                            <div class="form-floating mb-3">
+                                                <input type="number" class="form-control" id="phoneno" name="phoneno"
+                                                    placeholder="Phone Number" required>
+                                                <label for="phoneno">Phone Number</label>
+                                            </div>
+                                            <div class="form-floating mb-3">
+                                                <input type="text" class="form-control" id="houseno" name="houseno"
+                                                    placeholder="Flat, House No, Company, Building, Apartment" required>
+                                                <label for="houseno">Flat, House No, Company, Building,
+                                                    Apartment</label>
+                                            </div>
+                                            <div class="form-floating mb-3">
+                                                <input type="text" class="form-control" id="area" name="area"
+                                                    placeholder="Area, Street, Sector, Village" required>
+                                                <label for="area">Area, Street, Sector, Village</label>
+                                            </div>
+                                            <div class="form-floating mb-3">
+                                                <input type="text" class="form-control" id="landmark" name="landmark"
+                                                    placeholder="Landmark" required>
+                                                <label for="landmark">Landmark</label>
+                                            </div>
+                                            <div class="form-floating mb-3">
+                                                <input type="text" class="form-control" id="town" name="town"
+                                                    placeholder="Town, City" required>
+                                                <label for="town">Town, City</label>
+                                            </div>
+                                            <div class="row">
+                                                <div class="form-floating mb-3 col-md-6">
+                                                    <select class="form-select" id="state" name="state">
+                                                        <option value="kerala">Kerala</option>
+                                                        <option value="Tamil Nadu">Tamil Nadu</option>
+                                                        <option value="kerala">Kerala</option>
+                                                        <option value="Tamil Nadu">Tamil Nadu</option>
+                                                        <option value="kerala">Kerala</option>
+                                                        <option value="Tamil Nadu">Tamil Nadu</option>
+                                                        <option value="kerala">Kerala</option>
+                                                        <option value="Tamil Nadu">Tamil Nadu</option>
+                                                        <option value="kerala">Kerala</option>
+                                                        <option value="Tamil Nadu">Tamil Nadu</option>
+                                                    </select>
+                                                    <label for="state" class="mx-2 mb-1">State</label>
+                                                </div>
+                                                <div class="form-floating mb-3 col-md-6">
+                                                    <input type="number" class="form-control" id="pincode"
+                                                        name="pincode" placeholder="Pincode" required>
+                                                    <label for="pincode" class="mx-2">Pincode</label>
+                                                </div>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" value="true"
+                                                    id="checkadd" name="default">
+                                                <label class="form-check-label" for="checkadd">
+                                                    set as default
+                                                </label>
+                                            </div>
+                                            <div class="d-flex justify-content-center w-100">
+                                                <button class="btn btn-dark" type="submit">Add Address</button>
+                                            </div>
+                                        </form>
                                     </div>
                                 </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" value="true" id="flexCheckDefault" name="default">
-                                     <label class="form-check-label" for="default">
-                                       set as default
-                                     </label>
-                                </div>
-                                    <div class="d-flex justify-content-center w-100">
-                                        <button class="btn btn-dark" type="submit">Update Address</button>
+                                <div class="offcanvas offcanvas-center" data-bs-scroll="true" tabindex="-1"
+                                    id="offcanvasEditAddress" aria-labelledby="offcanvasEditAddressLabel">
+                                    <div class="offcanvas-header">
+                                        <h5 class="offcanvas-title" id="offcanvasEditAddressLabel">Edit Address</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="offcanvas"
+                                            aria-label="Close"></button>
                                     </div>
-                                    </form>
-                            </div>
-                            </div>
-
-
-
-                    <div class="payment mt-5">
-                        <form id="orderForm">
-                        <p class="fw-bold fs-5">Payment</p>
-                        <p class="fw-semibold text-muted">Select Payment Options</p>
-                         <div class="form-check">
-                            <input  class="form-check-input" type="radio" name="paymentMethod" id="cod" value="cod" checked>
-                            <label for="cod" class="form-check-label">Cash On Delivery</label>
-                         </div>
-                            <div class="form-check">
-                            <input  class="form-check-input" type="radio" name="paymentMethod" id="wallet" value="wallet">
-                            <label for="walet" class="form-check-label">Wallet</label>
-                         </div>  
-                            <div class="form-check">
-                            <input  class="form-check-input" type="radio" name="paymentMethod" id="razorpay" value="razorpay">
-                            <label for="razorpay" class="form-check-label">Razorpay</label>
-                         </div>     
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-5">
-                <div class="order-summary">
-                    <p class="fw-bold fs-5">Bag Summary</p>
-                    <p class="text-muted fw-semibold" style="font-size: 13px;">Arrives in 4-7 days</p>
-                    <% let subtotal=0 %>
-                    <% cartData.forEach(element => { %>
-                        <div class="order-details">
-                            <img src="/product_images/<%= element.image[0] %>" alt="Product Image" width="100">
-                            <div>
-                                <p class="fw-bold mb-0">Product Name: <%= element.productname %></p>
-                                <% if (element.offer.isOfferActive && element.discountSource === 'category') { %>
-                                    <span class="me-2 text-muted">
-                                        ₹ <%= element.discountPrice %>
-                                        <span class="fw-light" style="font-size: .9rem; color: orange;">
-                                            <span class="text-dark mx-1" style="text-decoration: line-through;">
-                                                ₹ <%= element.productprice %>
-                                            </span>
-                                            <% if (element.offer.discountType === 'percentage') { %>
-                                                <%= element.offer.discountValue %>% OFF
-                                            <% } else if (element.offer.discountType === 'fixed') { %>
-                                                ₹ <%= element.offer.discountValue %> OFF
-                                            <% } %>
-                                        </span>
-                                    </span>
-                                <% } else if (element.productoffer.isOfferActive && element.discountSource === 'product') { %>
-                                    <span class="me-2 text-muted">
-                                        ₹ <%= element.discountPrice %>
-                                        <span class="fw-light" style="font-size: .9rem; color: orange;">
-                                            <span class="text-dark mx-1" style="text-decoration: line-through;">
-                                                ₹ <%= element.productprice %>
-                                            </span>
-                                            <% if (element.productoffer.discountType === 'percentage') { %>
-                                                <%= element.productoffer.discountValue %>% OFF
-                                            <% } else if (element.productoffer.discountType === 'fixed') { %>
-                                                ₹ <%= element.productoffer.discountValue %> OFF
-                                            <% } %>
-                                        </span>
-                                    </span>
-                                <% } else { %>
-                                    <p class="text-muted mb-0">Price: ₹ <%= element.productprice %></p>
-                                <% } %>
-                                <p class="text-muted">Quantity: <%= element.quantity %></p>
-                            </div>
-                        </div>
-                        <% 
-
-                        let itemPrice = (element.offer.isOfferActive && element.discountSource === 'category') || 
-                                        (element.productoffer.isOfferActive && element.discountSource === 'product') 
-                                        ? element.discountPrice 
-                                        : element.productprice;
-                        subtotal += itemPrice * element.quantity;
-                        %>
-                    <% }) %>
-                    <div class="order-total">
-                        <p class="fw-bold fs-5">Order Summary</p>
-                        <div class="subtotal mt-5">
-                            <p>Subtotal <span style="font-size: 1rem;"><%= subtotal %></span></p>
-                            <p>Coupon Discount <span style="font-size: 1rem;" class="text-warning apply-coupon" data-bs-toggle="offcanvas" data-bs-target="#offcanvasapplycoupon"><%=deductedValue?deductedValue:'Apply Coupon'  %></span></p>
-                            <p>Shipping Fee <span>Free</span></p>
-                        </div>
-                        <input type="hidden" name="totalPrice" value="<%= subtotal %>">
-                        <% if (finalTotal) { %>
-                            <input type="hidden" name="finalPrice" value="<%= finalTotal %>">
-                        <% } %>
-                        <p class="fw-bold">Total <span><%= finalTotal?finalTotal:subtotal %><span></p>
-                        <button type="submit" class="btn btn-dark mt-3 w-100 fw-bold">Place Order</button>
-                    </div>
-                </form>
-                <div class="coupon mt-4 p-3 border-top">
-                    <div class="couponDiv">
-                        <p class="fw-bold fs-5 mb-3">Coupons</p>
-                        <div class="applyCoupon d-flex align-items-center justify-content-between">
-                            <div class="d-flex align-items-start flex-column">
-                                <div class="d-flex align-items-center">
-                                    <i class="fa-solid fa-ticket-simple fs-4"></i>
-                                    <% if (deductedValue) { %>
-                                        <span class="fw-bold mx-2 fs-6">1 Coupon applied</span>
-                                    <% } else { %>
-                                        <span class="fw-bold mx-2 fs-6">Apply Coupons</span>
-                                    <% } %>
+                                    <div class="offcanvas-body">
+                                        <form method="post" action="#" id="edit-address-form">
+                                            <div class="form-floating mb-3">
+                                                <input type="text" class="form-control" id="edit-fullname"
+                                                    name="fullname" placeholder="Full Name">
+                                                <label for="edit-fullname">Name</label>
+                                            </div>
+                                            <div class="form-floating mb-3">
+                                                <input type="number" class="form-control" id="edit-phoneno"
+                                                    name="phoneno" placeholder="Phone Number">
+                                                <label for="edit-phoneno">Phone Number</label>
+                                            </div>
+                                            <div class="form-floating mb-3">
+                                                <input type="text" class="form-control" id="edit-houseno" name="houseno"
+                                                    placeholder="Flat, House No, Company, Building, Apartment">
+                                                <label for="edit-houseno">Flat, House No, Company, Building,
+                                                    Apartment</label>
+                                            </div>
+                                            <div class="form-floating mb-3">
+                                                <input type="text" class="form-control" id="edit-area" name="area"
+                                                    placeholder="Area, Street, Sector, Village">
+                                                <label for="edit-area">Area, Street, Sector, Village</label>
+                                            </div>
+                                            <div class="form-floating mb-3">
+                                                <input type="text" class="form-control" id="edit-landmark"
+                                                    name="landmark" placeholder="Landmark">
+                                                <label for="edit-landmark">Landmark</label>
+                                            </div>
+                                            <div class="form-floating mb-3">
+                                                <input type="text" class="form-control" id="edit-town" name="town"
+                                                    placeholder="Town, City">
+                                                <label for="edit-town">Town, City</label>
+                                            </div>
+                                            <div class="row">
+                                                <div class="form-floating mb-3 col-md-6">
+                                                    <select class="form-select" id="edit-state" name="state">
+                                                        <option value="kerala">Kerala</option>
+                                                        <option value="Tamil Nadu">Tamil Nadu</option>
+                                                    </select>
+                                                    <label for="edit-state" class="mx-2 mb-1">State</label>
+                                                </div>
+                                                <div class="form-floating mb-3 col-md-6">
+                                                    <input type="number" class="form-control" id="edit-pincode"
+                                                        name="pincode" placeholder="Pincode">
+                                                    <label for="edit-pincode" class="mx-2">Pincode</label>
+                                                </div>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" value="true"
+                                                    id="flexCheckDefault" name="default">
+                                                <label class="form-check-label" for="default">
+                                                    set as default
+                                                </label>
+                                            </div>
+                                            <div class="d-flex justify-content-center w-100">
+                                                <button class="btn btn-dark" type="submit">Update Address</button>
+                                            </div>
+                                        </form>
+                                    </div>
                                 </div>
-                                <% if (deductedValue) { %>
-                                    <span class="text-muted ms-4" style="font-size: .75rem;">You saved an additional ₹ <%= deductedValue %></span>
-                                <% } %>
+
+
+
+                                <div class="payment mt-5">
+                                    <form id="orderForm">
+                                        <p class="fw-bold fs-5">Payment</p>
+                                        <p class="fw-semibold text-muted">Select Payment Options</p>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="paymentMethod" id="cod"
+                                                value="cod" checked>
+                                            <label for="cod" class="form-check-label text-dark fw-semibold">Cash On
+                                                Delivery</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="paymentMethod"
+                                                id="wallet" value="wallet">
+                                            <label for="walet"
+                                                class="form-check-label text-dark fw-semibold">Wallet</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="paymentMethod"
+                                                id="razorpay" value="razorpay">
+                                            <label for="razorpay"
+                                                class="form-check-label text-dark fw-semibold">Online</label>
+                                        </div>
+                                </div>
                             </div>
-                            <% if (!deductedValue) { %>
-                                <button type="button" class="btn btn-outline-dark btn-sm" data-bs-toggle="offcanvas" data-bs-target="#offcanvasapplycoupon" aria-controls="offcanvasapplycoupon">APPLY</button>
-                            <% } else { %>
-                                <button type="button" class="btn btn-outline-dark btn-sm" data-bs-toggle="offcanvas" data-bs-target="#offcanvasapplycoupon" aria-controls="offcanvasapplycoupon">EDIT</button>
-                            <% } %>
                         </div>
+                        <div class="col-md-5">
+                            <div class="order-summary">
+                                <p class="fw-bold fs-5">Bag Summary</p>
+                                <p class="text-muted fw-semibold" style="font-size: 13px;">Arrives in 4-7 days</p>
+                                <% let subtotal=0 %>
+                                    <% cartData.forEach(element=> { %>
+                                        <div class="order-details">
+                                            <img src="/product_images/<%= element.image[0] %>" alt="Product Image"
+                                                width="100">
+                                            <div>
+                                                <p class="product-name fw-bold mb-0"><span class="text-muted">Product
+                                                        Name</span>: <%= element.productname %>
+                                                </p>
+                                                <% if (element.offer.isOfferActive &&
+                                                    element.discountSource==='category' ) { %>
+                                                    <span class="me-2 text-muted">
+                                                        ₹ <%= element.discountPrice %>
+                                                            <span class="fw-light"
+                                                                style="font-size: .9rem; color: orange;">
+                                                                <span class="text-dark mx-1"
+                                                                    style="text-decoration: line-through;">
+                                                                    ₹ <%= element.productprice %>
+                                                                </span>
+                                                                <% if (element.offer.discountType==='percentage' ) { %>
+                                                                    <%= element.offer.discountValue %>% OFF
+                                                                        <% } else if
+                                                                            (element.offer.discountType==='fixed' ) { %>
+                                                                            ₹ <%= element.offer.discountValue %> OFF
+                                                                                <% } %>
+                                                            </span>
+                                                    </span>
+                                                    <% } else if (element.productoffer.isOfferActive &&
+                                                        element.discountSource==='product' ) { %>
+                                                        <span class="me-2 text-muted">
+                                                            ₹ <%= element.discountPrice %>
+                                                                <span class="fw-light"
+                                                                    style="font-size: .9rem; color: orange;">
+                                                                    <span class="text-dark mx-1"
+                                                                        style="text-decoration: line-through;">
+                                                                        ₹ <%= element.productprice %>
+                                                                    </span>
+                                                                    <% if
+                                                                        (element.productoffer.discountType==='percentage'
+                                                                        ) { %>
+                                                                        <%= element.productoffer.discountValue %>% OFF
+                                                                            <% } else if
+                                                                                (element.productoffer.discountType==='fixed'
+                                                                                ) { %>
+                                                                                ₹ <%= element.productoffer.discountValue
+                                                                                    %> OFF
+                                                                                    <% } %>
+                                                                </span>
+                                                        </span>
+                                                        <% } else { %>
+                                                            <p class="text-muted mb-0">Price: ₹ <%= element.productprice
+                                                                    %>
+                                                            </p>
+                                                            <% } %>
+                                                                <p class="text-muted">Quantity: <%= element.quantity %>
+                                                                </p>
+                                            </div>
+                                        </div>
+                                        <% let itemPrice=(element.offer.isOfferActive &&
+                                            element.discountSource==='category' ) || (element.productoffer.isOfferActive
+                                            && element.discountSource==='product' ) ? element.discountPrice :
+                                            element.productprice; subtotal +=itemPrice * element.quantity; %>
+                                            <% }) %>
+                                                <div class="order-total">
+                                                    <p class="fw-bold fs-5">Order Summary</p>
+                                                    <div class="subtotal mt-5">
+                                                        <p>Subtotal <span style="font-size: 1rem;">
+                                                                <%= subtotal %>
+                                                            </span></p>
+                                                        <p>Coupon Discount <span style="font-size: 1rem;"
+                                                                class="text-warning apply-coupon"
+                                                                data-bs-toggle="offcanvas"
+                                                                data-bs-target="#offcanvasapplycoupon">
+                                                                <%=deductedValue?deductedValue:'Apply Coupon' %>
+                                                            </span></p>
+                                                        <p>Shipping Fee <span>Free</span></p>
+                                                    </div>
+                                                    <input type="hidden" name="totalPrice" value="<%= subtotal %>">
+                                                    <% if (finalTotal) { %>
+                                                        <input type="hidden" name="finalPrice"
+                                                            value="<%= finalTotal %>">
+                                                        <% } %>
+                                                            <p class="fw-bold">Total <span>
+                                                                    <%= finalTotal?finalTotal:subtotal %><span></p>
+                                                            <button type="submit"
+                                                                class="btn btn-dark mt-3 w-100 fw-bold">Place
+                                                                Order</button>
+                                                </div>
+                                                </form>
+                                                <div class="coupon mt-4 p-3 border-top">
+                                                    <div class="couponDiv">
+                                                        <p class="fw-bold fs-5 mb-3">Coupons</p>
+                                                        <div
+                                                            class="applyCoupon d-flex align-items-center justify-content-between">
+                                                            <div class="d-flex align-items-start flex-column">
+                                                                <div class="d-flex align-items-center">
+                                                                    <i class="fa-solid fa-ticket-simple fs-4"></i>
+                                                                    <% if (deductedValue) { %>
+                                                                        <span class="fw-bold mx-2 fs-6">1 Coupon
+                                                                            applied</span>
+                                                                        <% } else { %>
+                                                                            <span class="fw-bold mx-2 fs-6">Apply
+                                                                                Coupons</span>
+                                                                            <% } %>
+                                                                </div>
+                                                                <% if (deductedValue) { %>
+                                                                    <span class="text-muted ms-4"
+                                                                        style="font-size: .75rem;">You saved an
+                                                                        additional ₹ <%= deductedValue %></span>
+                                                                    <% } %>
+                                                            </div>
+                                                            <% if (!deductedValue) { %>
+                                                                <button type="button"
+                                                                    class="btn btn-outline-dark btn-sm"
+                                                                    data-bs-toggle="offcanvas"
+                                                                    data-bs-target="#offcanvasapplycoupon"
+                                                                    aria-controls="offcanvasapplycoupon">APPLY</button>
+                                                                <% } else { %>
+                                                                    <button type="button"
+                                                                        class="btn btn-outline-dark btn-sm"
+                                                                        data-bs-toggle="offcanvas"
+                                                                        data-bs-target="#offcanvasapplycoupon"
+                                                                        aria-controls="offcanvasapplycoupon">EDIT</button>
+                                                                    <% } %>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="offcanvas offcanvas-center" data-bs-scroll="true" tabindex="-1"
+                            id="offcanvasapplycoupon" aria-labelledby="offcanvasapplycouponLabel">
+                            <div class="offcanvas-header border-bottom">
+                                <h5 class="offcanvas-title fw-bold" id="offcanvasapplycouponLabel"
+                                    style="font-size: .8rem;">APPLY COUPON</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="offcanvas"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="offcanvas-body couponBody d-flex flex-column justify-content-between">
+
+                                <div class="input-group">
+                                    <input type="text" class="form-control p-2" placeholder="   Enter coupon code"
+                                        aria-label="Enter coupon code" aria-describedby="inputGroup-sizing-default"
+                                        style="border-right: none;">
+                                    <span class="input-group-text text-muted fw-bold" id="inputGroup-sizing-default"
+                                        style="background-color: transparent;border-left: none;cursor: pointer;font-size: .8rem;letter-spacing: 0.1rem;">CHECK</span>
+                                </div>
+                                <div class="coupondetails">
+                                    <% if (coupons.length>0) { %>
+                                        <% coupons.forEach(coupon=> { %>
+                                            <div class="form-check my-4 d-flex align-items-start checkboxes"
+                                                style="padding:15px;">
+                                                <input class="form-check-input me-3 mt-1" type="checkbox"
+                                                    value="<%= coupon._id %>" id="<%= coupon._id %>"
+                                                    <%=users.coupon?.couponId?.toString()===coupon._id.toString()
+                                                    ? 'checked' : '' %> data-couponvalue="<%=
+                                                    coupon.discountType==="percentage"
+                                                    ?Math.floor(subtotal*coupon.discountValue /100):coupon.discountValue
+                                                    %>">
+                                                    <label class="form-check-label" for="<%= coupon._id %>"
+                                                        style="display: block; font-size: 0.9rem; line-height: 1.4; color: #333;">
+                                                        <span
+                                                            style="border: 1px dashed #101611; padding:10px 15px; display: inline-block; font-size: .8rem; font-weight: bold; color: #a18766; margin-bottom: 5px; border-radius: .4rem;">
+                                                            <%= coupon.code %>
+                                                        </span>
+                                                        <div class="mt-2"
+                                                            style="font-weight: bold; color: #dc3545; margin-bottom: 3px;">
+                                                            Save ₹ <% if (coupon.discountType==='percentage' ) { %>
+                                                                <%= Math.floor(subtotal * coupon.discountValue / 100) %>
+                                                                    <% }else{ %>
+                                                                        <%= coupon.discountValue %>
+                                                                            <% } %>
+                                                        </div>
+                                                        <div style="font-size: 0.85rem; color: #555;">
+                                                            <%= coupon.description %> <br>
+                                                                Expires on: <%= new
+                                                                    Date(coupon.endDate).toLocaleDateString('en-IN', {
+                                                                    day: 'numeric' , month: 'long' , year: 'numeric' })
+                                                                    %> |
+                                                                    <%= new
+                                                                        Date(coupon.endDate).toLocaleTimeString('en-IN',
+                                                                        { hour: '2-digit' , minute: '2-digit' , hour12:
+                                                                        true }) %>
+                                                        </div>
+                                                    </label>
+                                            </div>
+                                            <% }) %>
+                                                <% } else{%>
+                                                    <div class="alert alert-info text-center my-4" role="alert"
+                                                        style="padding: 20px; border-radius: .5rem;">
+                                                        <i class="fas fa-info-circle"></i> No Coupons Available at the
+                                                        Moment
+                                                    </div>
+                                                    <% } %>
+                                </div>
+                                <div class="bottomButton mt-auto">
+                                    <div
+                                        class="max-savings d-flex flex-column justify-content-center align-items-center text-center">
+                                        Maximum Savings: <br>
+                                        <span class="fw-bold" id="savings">0</span>
+                                    </div>
+                                    <button class="btn btn-danger apply-btn w-100 mt-3" type="button"
+                                        onclick="applyCoupon()">APPLY</button>
+                                </div>
+
+                            </div>
+                        </div>
+
                     </div>
-                </div>
-                
-            </div>
         </div>
-
-        <div class="offcanvas offcanvas-center" data-bs-scroll="true" tabindex="-1" id="offcanvasapplycoupon" aria-labelledby="offcanvasapplycouponLabel">
-            <div class="offcanvas-header border-bottom">
-                <h5 class="offcanvas-title fw-bold" id="offcanvasapplycouponLabel" style="font-size: .8rem;">APPLY COUPON</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-            </div>
-            <div class="offcanvas-body couponBody d-flex flex-column justify-content-between">
-          
-                <div class="input-group">
-                    <input type="text" class="form-control p-2" placeholder="   Enter coupon code" aria-label="Enter coupon code" aria-describedby="inputGroup-sizing-default" style="border-right: none;">
-                    <span class="input-group-text text-muted fw-bold" id="inputGroup-sizing-default" style="background-color: transparent;border-left: none;cursor: pointer;font-size: .8rem;letter-spacing: 0.1rem;">CHECK</span>
-                </div>
-                <div class="coupondetails">
-                   <% if (coupons.length>0) { %>
-                    <% coupons.forEach(coupon => { %>
-                        <div class="form-check my-4 d-flex align-items-start checkboxes"style="padding:15px;">
-                            <input class="form-check-input me-3 mt-1" type="checkbox" value="<%= coupon._id %>" id="<%= coupon._id %>" <%= users.coupon?.couponId?.toString() === coupon._id.toString() ? 'checked' : '' %> data-couponvalue="<%= coupon.discountType==="percentage"?Math.floor(subtotal*coupon.discountValue /100):coupon.discountValue %>">
-                            <label class="form-check-label" for="<%= coupon._id %>" style="display: block; font-size: 0.9rem; line-height: 1.4; color: #333;">
-                                <span style="border: 1px dashed #101611; padding:10px 15px; display: inline-block; font-size: .8rem; font-weight: bold; color: #a18766; margin-bottom: 5px; border-radius: .4rem;"><%= coupon.code %></span>
-                                <div class="mt-2" style="font-weight: bold; color: #dc3545; margin-bottom: 3px;">Save ₹ <% if (coupon.discountType==='percentage') { %>
-                                 <%= Math.floor(subtotal * coupon.discountValue / 100) %>
-                                <% }else{ %>
-                                    <%= coupon.discountValue  %>
-                                    <% } %>
-                            </div>
-                                <div style="font-size: 0.85rem; color: #555;">
-                                  <%= coupon.description %> <br>
-                                    Expires on: <%= new Date(coupon.endDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' }) %> | 
-                                    <%= new Date(coupon.endDate).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true }) %> 
-                                </div>
-                            </label>
-                        </div>
-                    <% }) %>
-                   <% } else{%>
-                    <div class="alert alert-info text-center my-4" role="alert" style="padding: 20px; border-radius: .5rem;">
-                        <i class="fas fa-info-circle"></i> No Coupons Available at the Moment
-                      </div>
-                    <% } %>
-                </div>
-                <div class="bottomButton mt-auto">
-                    <div class="max-savings d-flex flex-column justify-content-center align-items-center text-center">
-                        Maximum Savings: <br>
-                        <span class="fw-bold" id="savings">0</span>
-                    </div>
-                    <button class="btn btn-danger apply-btn w-100 mt-3" type="button" onclick="applyCoupon()">APPLY</button>
-                </div>
-         
-        </div>
-    </div>
-
-    </div>
-    </div>
-    <%- include('../partials/userfooter') %>
-    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-    <script>
-     $(document).ready(function() {
-    $('#orderForm').on('submit', function(e) {
-        e.preventDefault();
-        var formData = $(this).serialize();
-        Swal.fire({
-            title: `Order Confirmation`,
-            icon: 'warning',
-            text: 'Are you sure you want to order the products',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                $.ajax({
-                    type: 'POST',
-                    url: '/place-order',
-                    data: formData,
-                    success: function(response) {
-                        if (response.message === 'Razorpay order created') {
-                            var options = {
-                                "key": "rzp_test_x7mcrmmJeFQpUZ",
-                                "amount": response.amount * 100,
-                                "currency": "INR",
-                                "name": "Book Club",
-                                "description": "Purchase Description",
-                                "order_id": response.razorpayOrderId,
-                                "handler": function (razorpayResponse) {
-                                    $.ajax({
-                                        type: 'POST',
-                                        url: '/verify-payment',
-                                        data: {
-                                            orderId: response.orderId,
-                                            razorpay_payment_id: razorpayResponse.razorpay_payment_id,
-                                            razorpay_order_id: razorpayResponse.razorpay_order_id,
-                                            razorpay_signature: razorpayResponse.razorpay_signature,
-                                            totalPrice:response.totalPrice,
-                                            finalPrice:response.finalPrice
-                                        },
-                                        success: function (verifyResponse) {
+        <%- include('../partials/userfooter') %>
+            <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+            <script>
+                $(document).ready(function () {
+                    $('#orderForm').on('submit', function (e) {
+                        e.preventDefault();
+                        var formData = $(this).serialize();
+                        Swal.fire({
+                            title: `Order Confirmation`,
+                            icon: 'warning',
+                            text: 'Are you sure you want to order the products',
+                            showCancelButton: true,
+                            confirmButtonColor: '#3085d6',
+                            cancelButtonColor: '#d33',
+                            confirmButtonText: 'Yes'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                $.ajax({
+                                    type: 'POST',
+                                    url: '/place-order',
+                                    data: formData,
+                                    success: function (response) {
+                                        if (response.message === 'Razorpay order created') {
+                                            var options = {
+                                                "key": "rzp_test_x7mcrmmJeFQpUZ",
+                                                "amount": response.amount * 100,
+                                                "currency": "INR",
+                                                "name": "Shoe Rack",
+                                                "description": "Purchase Description",
+                                                "order_id": response.razorpayOrderId,
+                                                "handler": function (razorpayResponse) {
+                                                    $.ajax({
+                                                        type: 'POST',
+                                                        url: '/verify-payment',
+                                                        data: {
+                                                            orderId: response.orderId,
+                                                            razorpay_payment_id: razorpayResponse.razorpay_payment_id,
+                                                            razorpay_order_id: razorpayResponse.razorpay_order_id,
+                                                            razorpay_signature: razorpayResponse.razorpay_signature,
+                                                            totalPrice: response.totalPrice,
+                                                            finalPrice: response.finalPrice
+                                                        },
+                                                        success: function (verifyResponse) {
+                                                            Swal.fire({
+                                                                icon: 'success',
+                                                                title: 'Payment Successful!',
+                                                                text: 'Your payment has been verified.',
+                                                                confirmButtonText: 'OK'
+                                                            }).then(() => {
+                                                                window.location.href = `/ordersuccess`
+                                                            });
+                                                        },
+                                                        error: function (error) {
+                                                            Swal.fire({
+                                                                icon: 'error',
+                                                                title: 'Payment Verification Failed',
+                                                                text: 'Please contact support.',
+                                                                confirmButtonText: 'OK'
+                                                            });
+                                                        }
+                                                    });
+                                                },
+                                                "modal": {
+                                                    "ondismiss": function () {
+                                                        Swal.fire({
+                                                            icon: 'warning',
+                                                            title: 'Payment Cancelled',
+                                                            text: 'You cancelled the payment. Please try again.',
+                                                            confirmButtonText: 'OK'
+                                                        }).then(() => {
+                                                            window.location.href = `/account`
+                                                        })
+                                                    }
+                                                },
+                                                "prefill": {
+                                                    "name": "Customer Name",
+                                                    "email": "customer@example.com",
+                                                    "contact": "9999999999"
+                                                },
+                                                "theme": {
+                                                    "color": "#3399cc"
+                                                }
+                                            };
+                                            var rzp1 = new Razorpay(options);
+                                            rzp1.open();
+                                        } else {
                                             Swal.fire({
                                                 icon: 'success',
-                                                title: 'Payment Successful!',
-                                                text: 'Your payment has been verified.',
+                                                title: 'Order Placed Successfully!',
+                                                text: 'Your order has been placed.',
                                                 confirmButtonText: 'OK'
-                                            }).then(() => {
-                                                window.location.href=`/ordersuccess`
-                                            });
-                                        },
-                                        error: function (error) {
-                                            Swal.fire({
-                                                icon: 'error',
-                                                title: 'Payment Verification Failed', 
-                                                text: 'Please contact support.',
-                                                confirmButtonText: 'OK'
+                                            }).then((result) => {
+                                                let orderId = response.orderId;
+                                                if (result.isConfirmed) {
+                                                    window.location.href = `/ordersuccess`
+                                                }
                                             });
                                         }
-                                    });
-                                },
-                                "modal": {
-                                    "ondismiss": function() {
-                                     Swal.fire({
-                                     icon: 'warning',
-                                      title: 'Payment Cancelled',
-                                     text: 'You cancelled the payment. Please try again.',
-                                    confirmButtonText: 'OK'
-                               }).then(()=>{
-                                window.location.href=`/account`
-                               })
-                                }
-                               },
-                                "prefill": {
-                                    "name": "Customer Name",
-                                    "email": "customer@example.com",
-                                    "contact": "9999999999"
-                                },
-                                "theme": {
-                                    "color": "#3399cc"
-                                }
-                            };
-                            var rzp1 = new Razorpay(options);
-                            rzp1.open();
-                        } else {
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Order Placed Successfully!',
-                                text: 'Your order has been placed.',
-                                confirmButtonText: 'OK'
-                            }).then((result) => {
-                                let orderId = response.orderId;
-                                if (result.isConfirmed) {
-                                    window.location.href=`/ordersuccess`
-                                }
-                            });
-                        }
-                    },
-                    error: function(xhr) {
-                        let errorMessage = xhr.responseJSON.message || 'Something went wrong. Please try again.';
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Order Failed',
-                            text: errorMessage,
-                            confirmButtonText: 'OK'
+                                    },
+                                    error: function (xhr) {
+                                        let errorMessage = xhr.responseJSON.message || 'Something went wrong. Please try again.';
+                                        Swal.fire({
+                                            icon: 'error',
+                                            title: 'Order Failed',
+                                            text: errorMessage,
+                                            confirmButtonText: 'OK'
+                                        });
+                                    }
+                                });
+                            }
                         });
+                    });
+
+                    $(window).on('beforeunload', function () {
+                        $.ajax({
+                            type: 'GET',
+                            url: '/checkout/removeCoupon',
+                            success: function (response) {
+                                console.log('Coupon removed successfully.');
+                            },
+                            error: function (xhr) {
+                                console.log('Failed to remove the coupon.');
+                            }
+                        });
+                    });
+
+                    function initialSavings() {
+                        let checkboxes = $('.checkboxes input[type="checkbox"]:checked');
+                        if (checkboxes.length > 0) {
+                            let couponValue = checkboxes.data('couponvalue');
+                            $('#savings').text('₹' + couponValue);
+                        } else {
+                            $('#savings').text('0');
+                        }
                     }
+
+                    initialSavings();
+
+                    $(document).on('change', '.checkboxes input[type="checkbox"]', function () {
+                        if ($(this).is(':checked')) {
+                            let couponValue = $(this).data('couponvalue');
+                            console.log(couponValue);
+                            $('#savings').text('₹' + couponValue);
+
+                            $('.checkboxes input[type="checkbox"]').not(this).prop('checked', false);
+                        } else {
+                            $('#savings').text('0');
+                        }
+                    });
                 });
-            }
-        });
-    });
 
-    $(window).on('beforeunload', function() {
-        $.ajax({
-            type: 'GET',
-            url: '/checkout/removeCoupon',
-            success: function(response) {
-                console.log('Coupon removed successfully.');
-            },
-            error: function(xhr) {
-                console.log('Failed to remove the coupon.');
-            }
-        });
-    });
+                function populateEditForm(button) {
+                    console.log('triggered');
+                    let addressId = button.getAttribute('data-id');
+                    const fullname = button.getAttribute('data-fullname');
+                    const houseno = button.getAttribute('data-houseno');
+                    const area = button.getAttribute('data-area');
+                    const landmark = button.getAttribute('data-landmark');
+                    const town = button.getAttribute('data-town');
+                    const state = button.getAttribute('data-state');
+                    const pincode = button.getAttribute('data-pincode');
+                    const phoneno = button.getAttribute('data-phoneno');
+                    const Isdefault = button.getAttribute('data-default');
+                    console.log(Isdefault);
+                    console.log('Type of Isdefault:', typeof Isdefault);
 
-    function initialSavings() {
-        let checkboxes = $('.checkboxes input[type="checkbox"]:checked');
-        if (checkboxes.length > 0) {
-            let couponValue = checkboxes.data('couponvalue');
-            $('#savings').text('₹' + couponValue);
-        } else {
-            $('#savings').text('0');
-        }
-    }
+                    document.getElementById('edit-fullname').value = fullname;
+                    document.getElementById('edit-houseno').value = houseno;
+                    document.getElementById('edit-area').value = area;
+                    document.getElementById('edit-landmark').value = landmark;
+                    document.getElementById('edit-town').value = town;
+                    document.getElementById('edit-state').value = state;
+                    document.getElementById('edit-pincode').value = pincode;
+                    document.getElementById('edit-phoneno').value = phoneno;
 
-    initialSavings();
+                    if (String(Isdefault).trim() === 'true') {
+                        document.getElementById('flexCheckDefault').checked = true;
+                    } else {
+                        document.getElementById('flexCheckDefault').checked = false;
+                    }
 
-    $(document).on('change', '.checkboxes input[type="checkbox"]', function() {
-        if ($(this).is(':checked')) {
-            let couponValue = $(this).data('couponvalue');
-            console.log(couponValue);
-            $('#savings').text('₹' + couponValue);
+                    let url = `/edit-address/${addressId}`;
+                    document.getElementById('edit-address-form').action = url;
+                }
 
-            $('.checkboxes input[type="checkbox"]').not(this).prop('checked', false);
-        } else {
-            $('#savings').text('0');
-        }
-    });
-});
+                function deleteAddress(addressId) {
+                    let url = `/delete-address/${addressId}`;
+                    const isConfirmed = window.confirm('Do you really want to delete the address?');
+                    if (isConfirmed) {
+                        window.location.href = url;
+                    } else {
+                        console.log("canceled");
+                    }
+                }
 
-function populateEditForm(button) {
-    console.log('triggered');
-    let addressId = button.getAttribute('data-id');
-    const fullname = button.getAttribute('data-fullname');
-    const houseno = button.getAttribute('data-houseno');
-    const area = button.getAttribute('data-area');
-    const landmark = button.getAttribute('data-landmark');
-    const town = button.getAttribute('data-town');
-    const state = button.getAttribute('data-state');
-    const pincode = button.getAttribute('data-pincode');
-    const phoneno = button.getAttribute('data-phoneno');
-    const Isdefault = button.getAttribute('data-default');
-    console.log(Isdefault);
-    console.log('Type of Isdefault:', typeof Isdefault);
+                function applyCoupon() {
+                    let checkedCheckboxes = $('.coupondetails .form-check-input:checked');
+                    let couponId = checkedCheckboxes.val();
+                    if (!couponId) {
+                        window.location.href = `/checkout/removeCoupon`;
+                    } else {
+                        window.location.href = `/checkout/applycoupon/${couponId}`;
+                    }
+                }
 
-    document.getElementById('edit-fullname').value = fullname;
-    document.getElementById('edit-houseno').value = houseno;
-    document.getElementById('edit-area').value = area;
-    document.getElementById('edit-landmark').value = landmark;
-    document.getElementById('edit-town').value = town;
-    document.getElementById('edit-state').value = state;
-    document.getElementById('edit-pincode').value = pincode;
-    document.getElementById('edit-phoneno').value = phoneno;
-
-    if (String(Isdefault).trim() === 'true') {
-        document.getElementById('flexCheckDefault').checked = true;
-    } else {
-        document.getElementById('flexCheckDefault').checked = false;
-    }
-
-    let url = `/edit-address/${addressId}`;
-    document.getElementById('edit-address-form').action = url;
-}
-
-function deleteAddress(addressId) {
-    let url = `/delete-address/${addressId}`;
-    const isConfirmed = window.confirm('Do you really want to delete the address?');
-    if (isConfirmed) {
-        window.location.href = url;
-    } else {
-        console.log("canceled");
-    }
-}
-
-function applyCoupon() {
-    let checkedCheckboxes = $('.coupondetails .form-check-input:checked');
-    let couponId = checkedCheckboxes.val();
-    if (!couponId) { 
-        window.location.href = `/checkout/removeCoupon`; 
-    } else {
-        window.location.href = `/checkout/applycoupon/${couponId}`;
-    }
-}
-
-    </script>
+            </script>
 </body>
+
 </html>

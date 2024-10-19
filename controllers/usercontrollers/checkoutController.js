@@ -130,7 +130,7 @@ module.exports={
                 let orders = {
                     orderId: generateOrderId(),
                     userId: req.session.userId,
-                    paymentMethod: paymentMethod,
+                    paymentMethod: "Cod",
                     deliveryExpected: deliveryDate, 
                     totalAmount: totalPrice,
                     finalPrice:finalPrice||null,
@@ -185,7 +185,7 @@ module.exports={
                    let orders = {
                        orderId: generateOrderId(),
                        userId: req.session.userId,
-                       paymentMethod: paymentMethod,
+                       paymentMethod: "Wallet",
                        deliveryExpected: deliveryDate, 
                        totalAmount: totalPrice,
                        finalPrice:finalPrice||null,
@@ -232,7 +232,7 @@ module.exports={
                 let orders = {
                     orderId: generateOrderId(),
                     userId: req.session.userId,
-                    paymentMethod: paymentMethod,
+                    paymentMethod: "Online",
                     deliveryExpected: deliveryDate, 
                     totalAmount: totalPrice,
                     finalPrice:finalPrice||null,

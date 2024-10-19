@@ -1,81 +1,104 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Bootstrap demo</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <style>
-      .dropdown-item:hover {
-        background-color:yellowgreen;
-        color:white;
-      }
-      </style>
-  </head>
-  <body>
-    <nav class="navbar navbar-expand-lg bg-dark pb-0 pt-3">
-      <div class="container-fluid">
-        <div>
-        <a class="navbar-brand fw-bold text-white fs-3" href="#">Book Club</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bootstrap demo</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+    integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <style>
+    .dropdown-item:hover {
+      background-color: yellowgreen;
+      color: white;
+    }
+  </style>
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg bg-dark pb-0 pt-3">
+    <div class="container-fluid">
+      <div>
+        <a class="navbar-brand d-flex align-items-center fw-bold text-white fs-3" href="#">
+          <img
+            src="https://media.istockphoto.com/id/1199509219/vector/running-shoes-icon-in-line-style.jpg?s=612x612&w=0&k=20&c=QgRq_L_-2wHTm2ORbeHfpU6JHjQVFEm2OC007fy5JOI="
+            alt="Shoe Rack Logo" style="width: 40px; height: 40px; margin-right: 10px; border-radius: 50%;"> <span
+            style="letter-spacing: 2px; font-weight: 700; color: #f0f0f0; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);">
+            Shoe <span style="color: #33e71c;">Rack</span>
+          </span>
+        </a>
+
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
-        </div>
-       <div  style="width: 500px;margin-left:260px ;">
+      </div>
+      <div style="width: 500px;margin-left:200px ;">
         <form role="search" style="width: 100%;" id="fullsearch">
-          <input class="form-control" type="search" placeholder="Search" aria-label="Search" value="<%= search %>" name="allsearch" id="search-input">
+          <input class="form-control" type="search" placeholder="Search" aria-label="Search" value="<%= search %>"
+            name="allsearch" id="search-input">
         </form>
-       </div>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-            <% if (users) { %>
-             <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="font-size:20px;">
-               Hello<span class="fw-bold mx-2"><%= users.username %></span>
+      </div>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+          <% if (users) { %>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown"
+                aria-expanded="false" style="font-size:20px;">
+                Hello<span class="fw-bold mx-2">
+                  <%= users.username %>
+                </span>
               </a>
               <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="/account">Account</a></li>
+                <li><a class="dropdown-item" href="/profile">Account</a></li>
                 <li><a class="dropdown-item" href="/wishlist">Wishlist</a></li>
-                <li><hr class="dropdown-divider"></li>
+                <li>
+                  <hr class="dropdown-divider">
+                </li>
                 <li><a class="dropdown-item" href="/logout">Logout</a></li>
               </ul>
             </li>
             <% } else {%>
               <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="font-size:20px;">
-                Account
-              </a>
-              <ul class="dropdown-menu">
-                <li><a class="dropdown-item " href="/login">Login</a></li>
-                <li><a class="dropdown-item " href="/signup">Signup</a></li>
-              </ul>
-            </li>
+                <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown"
+                  aria-expanded="false" style="font-size:20px;">
+                  Account
+                </a>
+                <ul class="dropdown-menu">
+                  <li><a class="dropdown-item " href="/login">Login</a></li>
+                  <li><a class="dropdown-item " href="/signup">Signup</a></li>
+                </ul>
+              </li>
               <% } %>
-             
-            <li class="nav-item mx-2">
-              <a class="nav-link text-white" aria-current="page" href="/cart" style="font-size:20px;"><i class="fa-solid fa-cart-shopping"></i></a>
-            </li>
-          </ul>
-      </div>
-      </div>
-    </nav>
-    <div class="bg-dark text-white mt-0">
-      <ul class="navbar-nav d-flex flex-row justify-content-center">
-        <li class="nav-item">
-          <a class="nav-link mx-3  fw-bold" href="/">Home</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link mx-3 fw-bold"  href="/products">Products</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link mx-3 fw-bold" href="/categories">Categories</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link mx-3  fw-bold" href="/about">About</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link mx-3  fw-bold" href="/contact">Contact</a>
-        </li>
+
+                <li class="nav-item mx-2">
+                  <a class="nav-link text-white" aria-current="page" href="/cart" style="font-size:20px;"><i
+                      class="fa-solid fa-cart-shopping"></i></a>
+                </li>
         </ul>
+      </div>
     </div>
+  </nav>
+  <div class="bg-dark text-white mt-0">
+    <ul class="navbar-nav d-flex flex-row justify-content-center">
+      <li class="nav-item">
+        <a class="nav-link mx-3  fw-bold" href="/">Home</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link mx-3 fw-bold" href="/products">Products</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link mx-3 fw-bold" href="/brands">Brands</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link mx-3  fw-bold" href="/about">About</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link mx-3  fw-bold" href="/contact">Contact</a>
+      </li>
+    </ul>
+  </div>

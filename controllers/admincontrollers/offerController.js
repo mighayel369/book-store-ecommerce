@@ -4,7 +4,7 @@ const cron = require('node-cron');
 let fs=require('fs')
 let coupon=require('../../models/coupon')
 const {check,validationResult,body } = require('express-validator')
-cron.schedule('0 0 * * *', async () => {
+cron.schedule('* * * * *', async () => {
   try {
     const currentDate = new Date();
     let expiredProducts = await productmodel.find({

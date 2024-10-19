@@ -7,7 +7,7 @@ const bcrypt = require('bcrypt')
 const {check,validationResult } = require('express-validator');
 let Razorpay=require('razorpay')
 const crypto = require('crypto');
-const fs = require('fs');
+const fs = require('fs/promises')
 const dotenv = require('dotenv');
 dotenv.config()
 
@@ -214,12 +214,26 @@ getSingleOrder:async(req,res)=>{
     editProfile:
       async(req,res)=>{
       try{
-        let {username,email,phoneno,currentpassword,newpassword,confirmpassword}=req.body
+        let {username,email,phoneno}=req.body
         let users=await usermodel.findById(req.session.userId)
-        if(users){
-        let userData={
-          username,email,phoneno
-        }
+        if (users) {
+          let userData = { username, email, phoneno };
+
+          if (req.file) {
+            if (users.photo) {
+              try {
+                await fs.unlink('public/profilepictures/' + users.photo);
+              } catch (err) {
+                console.error(err);
+                req.session.message={
+                  type:"danger",
+                  message:"Profile picture updation failed"
+                }
+                return res.redirect('/profile')
+              }
+            }
+            userData.photo = req.file.filename;
+          }         
         await usermodel.findByIdAndUpdate(req.session.userId,userData)
         req.session.message={
           type:"success",

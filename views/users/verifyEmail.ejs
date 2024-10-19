@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Verify Email</title>
+    <title>Shoe Rack</title>
     <style>
         body {
             background-color: #eef2f7;
@@ -84,24 +85,28 @@
         }
     </style>
 </head>
+
 <body>
     <%- include('../partials/userHeader') %>
-    <div class="container">
-        <div class="otp-form">
-            <h3 class="fw-bold">Verify Your Email</h3>
-            <p>Please enter your registered email address:</p>
-            <form action="/verify-email" method="post">
-                <div class="mb-3">
-                    <input type="text" class="form-control" id="email" placeholder="Enter email" name="email">
-                </div>
-                <% if (message) { %>
-                    <div class="text-danger change"><%= message.message %></div>
-                <% } %>
-                <div id="timer" class="mt-3"></div>
-                <button type="submit" class="btn btn-dark" id="verify">Verify</button>
-            </form>
+        <div class="container">
+            <div class="otp-form">
+                <h3 class="fw-bold">Verify Your Email</h3>
+                <p>Please enter your registered email address:</p>
+                <form action="/verify-email" method="post">
+                    <div class="mb-3">
+                        <input type="text" class="form-control" id="email" placeholder="Enter email" name="email">
+                    </div>
+                    <% if (message) { %>
+                        <div class="text-danger change">
+                            <%= message.message %>
+                        </div>
+                        <% } %>
+                            <div id="timer" class="mt-3"></div>
+                            <button type="submit" class="btn btn-dark" id="verify">Verify</button>
+                </form>
+            </div>
         </div>
-    </div>
-    <%- include('../partials/userfooter') %>
+        <%- include('../partials/userfooter') %>
 </body>
+
 </html>

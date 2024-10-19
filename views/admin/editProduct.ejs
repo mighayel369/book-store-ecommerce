@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Add Coupon - Admin Panel</title>
+  <title>Shoe Rack</title>
   <style>
     .couponDiv {
       background-color: #a2c7ec;
@@ -13,89 +14,104 @@
       width: 450px;
       margin: 0 auto;
     }
+
     .coupon-header {
       border-bottom: 1px solid #dee2e6;
       padding-bottom: 8px;
       margin-bottom: 15px;
     }
+
     .form-label {
-      font-size: 0.9rem; 
+      font-size: 0.9rem;
     }
-    .form-control, .form-select {
-      font-size: 0.9rem; 
+
+    .form-control,
+    .form-select {
+      font-size: 0.9rem;
     }
+
     .btn {
-      font-size: 0.9rem; 
+      font-size: 0.9rem;
     }
   </style>
 </head>
+
 <body>
 
   <%- include('../partials/adminHeader') %>
-  
-  <main>
-    <div class="container mt-4">
-      <div class="row">
-        <div class="col-lg-6 mx-auto">
-          <div class="couponDiv">
-            <div class="coupon-header text-center">
-              <h5 class="fw-bold"><i class="fa-solid fa-book mx-1"></i> Edit Product</h5>
-            </div>
-            <form action="/admin/editproduct/<%= productdata._id %>" method="post" enctype="multipart/form-data">
-              <div class="mb-3">
-                <label for="productname" class="form-label">Product Name</label>
-                <input type="string" class="form-control" id="productname"  name="productname" value="<%= productdata.productname %>">
+
+    <main>
+      <div class="container mt-4">
+        <div class="row">
+          <div class="col-lg-6 mx-auto">
+            <div class="couponDiv">
+              <div class="coupon-header text-center">
+                <h5 class="fw-bold"><i class="fa-solid fa-book mx-1"></i> Edit Product</h5>
               </div>
-              <div class="mb-3">
-                <label for="productdescription" class="form-label">Description</label>
-                <input type="String" class="form-control" id="productdescription"  name="productdescription" value="<%= productdata.productdescription %>">
-              </div>
-              <div class="mb-3">
-                <label for="productcategory" class="form-label">Product Category</label>
+              <form action="/admin/editproduct/<%= productdata._id %>" method="post" enctype="multipart/form-data">
+                <div class="mb-3">
+                  <label for="productname" class="form-label">Product Name</label>
+                  <input type="string" class="form-control" id="productname" name="productname"
+                    value="<%= productdata.productname %>">
+                </div>
+                <div class="mb-3">
+                  <label for="productdescription" class="form-label">Description</label>
+                  <input type="String" class="form-control" id="productdescription" name="productdescription"
+                    value="<%= productdata.productdescription %>">
+                </div>
+                <div class="mb-3">
+                  <label for="productcategory" class="form-label">Product Category</label>
                   <select class="form-select" aria-label="Default select example" name="productcategory">
-                    <% availableCategory.forEach(element => { %>
-                    <option value="<%= element.categoryname %>"><%= element.categoryname %></option>
-                    <% }) %>
-                    </select>
-              </div>
-              <div class="mb-3">
-                <label for="productprice" class="form-label">Price</label>
-                <input type="number" class="form-control" id="productprice" name="productprice" value="<%= productdata.productprice %>">
-              </div>
-              <div class="mb-3">
-                <label for="stockqty" class="form-label">Stock Qty</label>
-                <input type="number" class="form-control" id="stockqty" name="stockqty" value="<%= productdata.stockqty %>">
-              </div>
+                    <% availableCategory.forEach(element=> { %>
+                      <option value="<%= element.categoryname %>">
+                        <%= element.categoryname %>
+                      </option>
+                      <% }) %>
+                  </select>
+                </div>
+                <div class="mb-3">
+                  <label for="productprice" class="form-label">Price</label>
+                  <input type="number" class="form-control" id="productprice" name="productprice"
+                    value="<%= productdata.productprice %>">
+                </div>
+                <div class="mb-3">
+                  <label for="stockqty" class="form-label">Stock Qty</label>
+                  <input type="number" class="form-control" id="stockqty" name="stockqty"
+                    value="<%= productdata.stockqty %>">
+                </div>
                 <div class="mb-1">
-                    <label for="cover_image" class="form-label">Cover Image</label>
-                    <input type="file" class="form-control" id="cover_image" placeholder="file not chosen" name="cover_image">
-                    <img src="/product_images/<%= productdata.image[0] %>"  width="50px" height="50px" class="mt-3">
-                    <input type="hidden" name="old_image" value="<%= productdata.image[0] %>" />
-                  </div>
-                  <div class="mb-1">
-                    <label for="image1" class="form-label">Image 1</label>
-                    <input type="file" class="form-control" id="image1" placeholder="file not chosen" name="image1" onchange="viewImage(event)">
-                    <img src="/product_images/<%= productdata.image[1] %>"  width="50px" height="50px" class="mt-3" id="img-view">
-                    <input type="hidden" name="old_image" value="<%=productdata.image[1] %>" />
-                  </div>
-                  <div class="mb-1">
-                    <label for="image2" class="form-label">Image 2</label>
-                    <input type="file" class="form-control" id="image2" placeholder="file not chosen" name="image2">
-                    <img src="/product_images/<%= productdata.image[2] %>"  width="50px" height="50px" class="mt-3">
-                    <input type="hidden" name="old_image" value="<%= productdata.image[2] %>" />
-                  </div>
-                  <div class="d-grid mt-3">
-                    <button type="submit" class="btn btn-dark btn-sm"> Save Changes</button>
-                  </div>           
-                 </form>
+                  <label for="cover_image" class="form-label">Cover Image</label>
+                  <input type="file" class="form-control" id="cover_image" placeholder="file not chosen"
+                    name="cover_image">
+                  <img src="/product_images/<%= productdata.image[0] %>" width="50px" height="50px" class="mt-3">
+                  <input type="hidden" name="old_image" value="<%= productdata.image[0] %>" />
+                </div>
+                <div class="mb-1">
+                  <label for="image1" class="form-label">Image 1</label>
+                  <input type="file" class="form-control" id="image1" placeholder="file not chosen" name="image1"
+                    onchange="viewImage(event)">
+                  <img src="/product_images/<%= productdata.image[1] %>" width="50px" height="50px" class="mt-3"
+                    id="img-view">
+                  <input type="hidden" name="old_image" value="<%=productdata.image[1] %>" />
+                </div>
+                <div class="mb-1">
+                  <label for="image2" class="form-label">Image 2</label>
+                  <input type="file" class="form-control" id="image2" placeholder="file not chosen" name="image2">
+                  <img src="/product_images/<%= productdata.image[2] %>" width="50px" height="50px" class="mt-3">
+                  <input type="hidden" name="old_image" value="<%= productdata.image[2] %>" />
+                </div>
+                <div class="d-grid mt-3">
+                  <button type="submit" class="btn btn-dark btn-sm"> Save Changes</button>
+                </div>
+              </form>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-</main>
-<script>
-  function viewImage(event){
-    document.getElementById('img-view').src=URL.createObjectURL(event.target.files[0])
-  }
-</script>
-<%- include('../partials/adminfooter') %>
+    </main>
+    <script>
+      function viewImage(event) {
+        document.getElementById('img-view').src = URL.createObjectURL(event.target.files[0])
+      }
+    </script>
+    <%- include('../partials/adminfooter') %>

@@ -1,71 +1,94 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin Panel</title>
+  <title>Shoe Rack</title>
   <link rel="stylesheet" href="path/to/your/css/styles.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 </head>
+
 <body>
-   
+
   <%- include('../partials/adminHeader') %>
     <main>
-    <div class="container">
-      <% if (adminmessage) { %>
-        <div class="alert m-4 alert-dismissible fade show alert-<%= adminmessage.type %>" role="alert">
-          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-          <strong><%= adminmessage.message %></strong>
-        </div>
-      <% } %>
-      <div class="d-flex justify-content-end m-5">
-        <h3 class="me-auto">Coupon Management</h3>
-        <a href="/admin/addcoupon" class="btn btn-dark">Add Coupon</a>
-      </div>
-      <div class="row m-4">
-        <div class="col-lg-12">
-            <div class="table-responsive">
-                <table class="table table-striped text-center">
-                  <thead>
-                    <tr class="table-dark">
-                      <th >Code</th>
-                      <th>Type</th>
-                      <th >Value</th>
-                      <th >Min-Amount</th>
-                      <th >Description</th>
-                      <th >Usage/Limit</th>
-                      <th >End Date</th>
-                      <th >Status</th>
-                      <th >Action</th>
-                    </tr>
-                  </thead>
-                 <tbody>
-                  <% Coupons.forEach(coupon => { %>
-                    <tr>
-                      <td><%= coupon.code %></td>
-                      <td ><%= coupon.discountType %></td>
-                      <td ><%= coupon.discountValue %></td>
-                      <td ><%= coupon.minimumPurchaseAmount %></td>
-                      <td ><%= coupon.description %></td>
-                      <td ><%= coupon.usageLimit %></td>
-                      <td ><%= coupon.endDate.toISOString().split('T')[0] %></td>
-                      <td class="text-warning" ><%= coupon.isActive===true?'Active':'Expired' %></td>
-                      <td ><a href="/admin/editcoupon/<%= coupon._id %>" class="text-muted m-2"><i class="fa-solid fa-pen-to-square"></i></a>
-                        <a href='#' class="text-muted" onclick="deleteCoupon('<%= coupon._id %>')"><i class="fa-solid fa-trash"></i></a></td>
-                     </tr>
-                  <% }) %>
-                 </tbody>
-                </table>
+      <div class="container">
+        <% if (adminmessage) { %>
+          <div class="alert m-4 alert-dismissible fade show alert-<%= adminmessage.type %>" role="alert">
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            <strong>
+              <%= adminmessage.message %>
+            </strong>
+          </div>
+          <% } %>
+            <div class="d-flex justify-content-end m-5">
+              <h3 class="me-auto">Coupon Management</h3>
+              <a href="/admin/addcoupon" class="btn btn-dark">Add Coupon</a>
+            </div>
+            <div class="row m-4">
+              <div class="col-lg-12">
+                <div class="table-responsive">
+                  <table class="table table-striped text-center">
+                    <thead>
+                      <tr class="table-dark">
+                        <th>Code</th>
+                        <th>Type</th>
+                        <th>Value</th>
+                        <th>Min-Amount</th>
+                        <th>Description</th>
+                        <th>Usage/Limit</th>
+                        <th>End Date</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <% Coupons.forEach(coupon=> { %>
+                        <tr>
+                          <td>
+                            <%= coupon.code %>
+                          </td>
+                          <td>
+                            <%= coupon.discountType %>
+                          </td>
+                          <td>
+                            <%= coupon.discountValue %>
+                          </td>
+                          <td>
+                            <%= coupon.minimumPurchaseAmount %>
+                          </td>
+                          <td>
+                            <%= coupon.description %>
+                          </td>
+                          <td>
+                            <%= coupon.usageLimit %>
+                          </td>
+                          <td>
+                            <%= coupon.endDate.toISOString().split('T')[0] %>
+                          </td>
+                          <td class="text-warning">
+                            <%= coupon.isActive===true?'Active':'Expired' %>
+                          </td>
+                          <td><a href="/admin/editcoupon/<%= coupon._id %>" class="text-muted m-2"><i
+                                class="fa-solid fa-pen-to-square"></i></a>
+                            <a href='#' class="text-muted" onclick="deleteCoupon('<%= coupon._id %>')"><i
+                                class="fa-solid fa-trash"></i></a>
+                          </td>
+                        </tr>
+                        <% }) %>
+                    </tbody>
+                  </table>
+                </div>
               </div>
             </div>
-          </div>
-          </div>
-          </main>
-          <script>
-            function deleteCoupon(couponId){
-        let url=`/admin/deletecoupon/${couponId}`
+      </div>
+    </main>
+    <script>
+      function deleteCoupon(couponId) {
+        let url = `/admin/deletecoupon/${couponId}`
         Swal.fire({
           title: `Are you sure you want to delete`,
           icon: 'warning',
@@ -79,7 +102,8 @@
           }
         });
       }
-          </script>
-          </body>
-          <%- include('../partials/adminfooter') %>
-      </html>
+    </script>
+</body>
+<%- include('../partials/adminfooter') %>
+
+</html>

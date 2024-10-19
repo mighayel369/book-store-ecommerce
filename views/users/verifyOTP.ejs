@@ -1,99 +1,108 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Shoe Rack</title>
     <style>
-    .otp-form{
+        .otp-form {
             width: 400px;
         }
-    .container {
-    
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 60vh;
-    }
-    .disable{
-        pointer-events: none;
-        cursor: default;
-    }
+
+        .container {
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 60vh;
+        }
+
+        .disable {
+            pointer-events: none;
+            cursor: default;
+        }
     </style>
 </head>
+
 <body>
     <%- include('../partials/userHeader') %>
-    <div class="container">
-        <div class="text-center">
-            <h3 class="fw-bold text-center mb-5 fs-2">Verify OTP</h3>
-            <p>Enter otp send to your email</p>
-            <div class="otp-form">
-                <form action="/verify-otp" method="post">
-                <div class="mb-3">
-                    <input type="text" class="form-control" id="otp" placeholder="Enter otp" name="otp">
-                </div>
-                <% if (message) { %>
-                 <div class="text-black change"><%= message.message %></div>
-                <% } %>
-                <div id="timer" class="mt-3"></div>
-                    <button type="submit" class="btn btn-dark" id="verify">Verify</button>
-                    <p class="mt-3">Didn't receive otp ? <a class="fw-bold text-dark text-decoration-none disable"   href="/resend-otp" id="resend">Resend OTP</a></p>
-                </form>
+        <div class="container">
+            <div class="text-center">
+                <h3 class="fw-bold text-center mb-5 fs-2">Verify OTP</h3>
+                <p>Enter otp send to your email</p>
+                <div class="otp-form">
+                    <form action="/verify-otp" method="post">
+                        <div class="mb-3">
+                            <input type="text" class="form-control" id="otp" placeholder="Enter otp" name="otp">
+                        </div>
+                        <% if (message) { %>
+                            <div class="text-black change">
+                                <%= message.message %>
+                            </div>
+                            <% } %>
+                                <div id="timer" class="mt-3"></div>
+                                <button type="submit" class="btn btn-dark" id="verify">Verify</button>
+                                <p class="mt-3">Didn't receive otp ? <a
+                                        class="fw-bold text-dark text-decoration-none disable" href="/resend-otp"
+                                        id="resend">Resend OTP</a></p>
+                    </form>
 
+                </div>
             </div>
         </div>
-    </div>
-    <script>
-let defaultduration=120
-let verifybutton=document.getElementById('verify')
-startcountdown(duration())
- function startcountdown(duration){
-    let now=Date.now()
-    let endtime=now+duration*1000
-    localStorage.setItem('countdown',endtime)
-    updatetime()
-    let countdown=setInterval(updatetime,1000)
+        <script>
+            let defaultduration = 120
+            let verifybutton = document.getElementById('verify')
+            startcountdown(duration())
+            function startcountdown(duration) {
+                let now = Date.now()
+                let endtime = now + duration * 1000
+                localStorage.setItem('countdown', endtime)
+                updatetime()
+                let countdown = setInterval(updatetime, 1000)
 
-    function updatetime(){
-        let now=Date.now()
-        let timeleft=Math.round((endtime-now)/1000)
-        if(timeleft<=0){
-            clearInterval(countdown);
-                    localStorage.removeItem('countdown');
-                    document.getElementById('timer').innerText = "Time up!"
-                    document.getElementById('resend').classList.remove('disable')
-        }else{
-            const minutes = Math.floor(timeleft / 60);
-            const seconds = timeleft % 60;
-            document.getElementById('timer').innerText = `Time left: ${minutes}m ${seconds}s`;
-        }
-    }
- }
+                function updatetime() {
+                    let now = Date.now()
+                    let timeleft = Math.round((endtime - now) / 1000)
+                    if (timeleft <= 0) {
+                        clearInterval(countdown);
+                        localStorage.removeItem('countdown');
+                        document.getElementById('timer').innerText = "Time up!"
+                        document.getElementById('resend').classList.remove('disable')
+                    } else {
+                        const minutes = Math.floor(timeleft / 60);
+                        const seconds = timeleft % 60;
+                        document.getElementById('timer').innerText = `Time left: ${minutes}m ${seconds}s`;
+                    }
+                }
+            }
 
- function duration(){
-    let endtime=localStorage.getItem('countdown')
-    if(!endtime) return defaultduration
-    const now = Date.now();
-    const timeleft = Math.round((endtime - now) / 1000)
-    return timeleft >=0 ? timeleft:defaultduration
- }
-
+            function duration() {
+                let endtime = localStorage.getItem('countdown')
+                if (!endtime) return defaultduration
+                const now = Date.now();
+                const timeleft = Math.round((endtime - now) / 1000)
+                return timeleft >= 0 ? timeleft : defaultduration
+            }
 
 
- let resendotp=document.getElementById('resend')
- resendotp.addEventListener('click',()=>{
-    startcountdown(defaultduration)
-    resendotp.classList.add('disable')
- })
 
- let usernameInput = document.querySelector('#otp');
-      let changeElement = document.querySelector('.change');
-      
-      
-      usernameInput.addEventListener('focus', () => {
-        changeElement.innerText = '';
-      });
-    </script>
-    <%- include('../partials/userfooter') %>
+            let resendotp = document.getElementById('resend')
+            resendotp.addEventListener('click', () => {
+                startcountdown(defaultduration)
+                resendotp.classList.add('disable')
+            })
+
+            let usernameInput = document.querySelector('#otp');
+            let changeElement = document.querySelector('.change');
+
+
+            usernameInput.addEventListener('focus', () => {
+                changeElement.innerText = '';
+            });
+        </script>
+        <%- include('../partials/userfooter') %>
 </body>
+
 </html>

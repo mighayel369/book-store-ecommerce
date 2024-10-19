@@ -1,264 +1,305 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cart</title>
+  <title>Shoe Rack</title>
   <style>
-    .container{
+    .container {
       min-height: 100vh;
     }
-.img{
-  width: 150px;
-  height: 200px;
-  display:flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 10%;
-  background-color:white;
-}
-.cart{
-  background-color:rgb(229, 237, 247);
-  border: 1px solid rgb(69, 232, 238);
-  border-radius: 10px;
-  padding: 20px;
-  margin-top: 100px;
-}
-.cartHeading{
-  display:block;
-  border-bottom: 1px solid grey;
-  font-size: 30px;
-  padding-bottom: 15px;
-  margin-left: 10px;
-}
-.productlist{
-  border-bottom: 1px solid grey;
-  margin-left: 10px;
-  padding: 20px 0px 20px 0px;
-  display: flex;
-}
-.quantitybox{
-  border:1px solid grey;
-  text-align: center;
-  display: flex;
-  justify-content: space-evenly;
-  align-items: center;
-  width:110px ;
-  border-radius:10px;
-  padding: 5px 0px 5px 0px;
-}
 
-.productdetails{
-  margin-left: 30px;
-  margin-top: 25px;
-}
-.actionButton{
-  margin-top: 80px;
-}
-.totalprice{
-  margin-left: 140px;;
-}
-.checkout{
-  height: 350px;
-  width: 300px;
-  border: 1px solid black;
-  border-radius: 10px;
-  margin-top: 100px;
-  margin-left: 50px;
-  padding: 25px;
+    .img {
+      width: 150px;
+      height: 200px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 10%;
+      background-color: white;
+    }
 
-}
-.checkout p {
-  display: flex;
-  justify-content: space-between;
-  margin: 0;
-  padding: 0;
-  font-size: 19px;
-}
+    .cart {
+      background-color: rgb(229, 237, 247);
+      border: 1px solid rgb(69, 232, 238);
+      border-radius: 10px;
+      padding: 20px;
+      margin-top: 100px;
+    }
 
-.checkoutAmount {
-  margin-left: auto;
-}
-.checkout a {
-  margin: 0 auto;
-}
-</style>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    </head>
-    <body>
-<%- include('../partials/userHeader') %>
-<p class="fw-bold text-dark fs-5 mt-4 ms-3">Home > <span class="text-warning"> Cart</span></p>
-<div class="container">
-  <% let totalPrice=0 %>
-  <% if (cartData.length>0) { %>
-  <div class="row">
-    <div class="col-md-9">
-      <div class="cart">
-        <span class="cartHeading fw-medium">Shopping Cart</span>
-        <% cartData.forEach(product => { %>
-          <div class="productlist">
-            <div class="img">
-              <img src="product_images/<%= product.image[0] %>" alt="<%= product.productname %>" width="60%" height="60%">
-            </div>
-            <div class="productdetails">
-              <p class="mb-2 fw-medium fs-4"><%= product.productname %></p>
-              <p class="mb-2">
-                <% let discountSource = product.discountSource; %> 
-                
-                <% if (discountSource === 'category' && product.categoryOffer && product.categoryOffer.isOfferActive) { %>
-                  <span class="me-2 text-muted">
-                    ₹ <%= product.discountPrice %>
-                    <span class="fw-light" style="font-size: .9rem; color: orange;">
-                      <span class="text-dark mx-1" style="text-decoration: line-through;">
-                        ₹ <%= product.productprice %>
-                      </span>
-                      <% if (product.categoryOffer.discountType === 'percentage') { %>
-                        (<%= product.categoryOffer.discountValue %>% OFF)
-                      <% } else if (product.categoryOffer.discountType === 'fixed') { %>
-                        (₹ <%= product.categoryOffer.discountValue %> OFF)
-                      <% } %>
-                    </span>
-                  </span>
-                <% } else if (discountSource === 'product' && product.offer && product.offer.isOfferActive) { %>
-                  <span class="me-2 text-muted">
-                    ₹ <%= product.discountPrice %>
-                    <span class="fw-light" style="font-size: .9rem; color: orange;">
-                      <span class="text-dark mx-1" style="text-decoration: line-through;">
-                        ₹ <%= product.productprice %>
-                      </span>
-                      <% if (product.offer.discountType === 'percentage') { %>
-                        (<%= product.offer.discountValue %>% OFF)
-                      <% } else if (product.offer.discountType === 'fixed') { %>
-                        (₹ <%= product.offer.discountValue %> OFF)
-                      <% } %>
-                    </span>
-                  </span>
-                <% } else { %>
-                  ₹<%= product.productprice %>
-                <% } %>
-        
-                |<span class="mx-2 text-danger stock"><%= product.stock %> left</span>
-              </p>
-              <p class="mb-2"><span class="fw-medium text-muted">Category :</span> <%= product.categoryname %></p>
-              
+    .cartHeading {
+      display: block;
+      border-bottom: 1px solid grey;
+      font-size: 30px;
+      padding-bottom: 15px;
+      margin-left: 10px;
+    }
 
-              <div class="quantitybox mt-3">
-                <span onclick="changeQuantity('<%= product.productId %>',-1,this)"><i class="fa-solid fa-minus"></i></span>
-                <span class="quantity"><%= product.quantity %></span>
-                <span onclick="changeQuantity('<%= product.productId %>',1,this)"><i class="fa-solid fa-plus"></i></span>
+    .productlist {
+      border-bottom: 1px solid grey;
+      margin-left: 10px;
+      padding: 20px 0px 20px 0px;
+      display: flex;
+    }
+
+    .quantitybox {
+      border: 1px solid grey;
+      text-align: center;
+      display: flex;
+      justify-content: space-evenly;
+      align-items: center;
+      width: 110px;
+      border-radius: 10px;
+      padding: 5px 0px 5px 0px;
+    }
+
+    .productdetails {
+      margin-left: 30px;
+      margin-top: 25px;
+    }
+
+    .actionButton {
+      margin-top: 80px;
+    }
+
+    .totalprice {
+      margin-left: 140px;
+      ;
+    }
+
+    .checkout {
+      height: 350px;
+      width: 300px;
+      border: 1px solid black;
+      border-radius: 10px;
+      margin-top: 100px;
+      margin-left: 50px;
+      padding: 25px;
+
+    }
+
+    .checkout p {
+      display: flex;
+      justify-content: space-between;
+      margin: 0;
+      padding: 0;
+      font-size: 19px;
+    }
+
+    .checkoutAmount {
+      margin-left: auto;
+    }
+
+    .checkout a {
+      margin: 0 auto;
+    }
+
+    .product-name {
+      font-size: 1.25rem;
+      font-weight: 500;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 250px;
+      color: #343a40;
+      display: inline-block;
+    }
+  </style>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+
+<body>
+  <%- include('../partials/userHeader') %>
+    <p class="fw-bold text-dark fs-5 mt-4 ms-3">Home > <span class="text-warning"> Cart</span></p>
+    <div class="container">
+      <% let totalPrice=0 %>
+        <% if (cartData.length>0) { %>
+          <div class="row">
+            <div class="col-md-9">
+              <div class="cart">
+                <span class="cartHeading fw-medium">Shopping Cart</span>
+                <% cartData.forEach(product=> { %>
+                  <div class="productlist">
+                    <div class="img">
+                      <img src="product_images/<%= product.image[0] %>" alt="<%= product.productname %>" width="60%"
+                        height="60%">
+                    </div>
+                    <div class="productdetails">
+                      <p class="product-name mb-2 fw-medium fs-4">
+                        <%= product.productname %>
+                      </p>
+                      <p class="mb-2">
+                        <% let discountSource=product.discountSource; %>
+
+                          <% if (discountSource==='category' && product.categoryOffer &&
+                            product.categoryOffer.isOfferActive) { %>
+                            <span class="me-2 text-muted">
+                              ₹ <%= product.discountPrice %>
+                                <span class="fw-light" style="font-size: .9rem; color: orange;">
+                                  <span class="text-dark mx-1" style="text-decoration: line-through;">
+                                    ₹ <%= product.productprice %>
+                                  </span>
+                                  <% if (product.categoryOffer.discountType==='percentage' ) { %>
+                                    (<%= product.categoryOffer.discountValue %>% OFF)
+                                      <% } else if (product.categoryOffer.discountType==='fixed' ) { %>
+                                        (₹ <%= product.categoryOffer.discountValue %> OFF)
+                                          <% } %>
+                                </span>
+                            </span>
+                            <% } else if (discountSource==='product' && product.offer && product.offer.isOfferActive) {
+                              %>
+                              <span class="me-2 text-muted">
+                                ₹ <%= product.discountPrice %>
+                                  <span class="fw-light" style="font-size: .9rem; color: orange;">
+                                    <span class="text-dark mx-1" style="text-decoration: line-through;">
+                                      ₹ <%= product.productprice %>
+                                    </span>
+                                    <% if (product.offer.discountType==='percentage' ) { %>
+                                      (<%= product.offer.discountValue %>% OFF)
+                                        <% } else if (product.offer.discountType==='fixed' ) { %>
+                                          (₹ <%= product.offer.discountValue %> OFF)
+                                            <% } %>
+                                  </span>
+                              </span>
+                              <% } else { %>
+                                ₹<%= product.productprice %>
+                                  <% } %>
+
+                                    |<span class="mx-2 text-danger stock">
+                                      <%= product.stock %> left
+                                    </span>
+                      </p>
+                      <p class="mb-2"><span class="fw-medium text-muted">Brand :</span>
+                        <%= product.categoryname %>
+                      </p>
+
+
+                      <div class="quantitybox mt-3">
+                        <span onclick="changeQuantity('<%= product.productId %>',-1,this)"><i
+                            class="fa-solid fa-minus"></i></span>
+                        <span class="quantity">
+                          <%= product.quantity %>
+                        </span>
+                        <span onclick="changeQuantity('<%= product.productId %>',1,this)"><i
+                            class="fa-solid fa-plus"></i></span>
+                      </div>
+                    </div>
+
+                    <div class="ms-auto priceDiv" style="margin-top: 37px;">
+                      <p class="totalprice fw-medium">
+                        <i class="fa-solid fa-indian-rupee-sign"></i>
+                        <span class="subtotal">
+                          <% if ((product.categoryOffer && product.categoryOffer.isOfferActive) || (product.offer &&
+                            product.offer.isOfferActive)) { %>
+                            <%= (product.discountPrice * product.quantity) %>
+                              <% } else { %>
+                                <%= (product.productprice * product.quantity) %>
+                                  <% } %>
+                        </span>
+                      </p>
+                      <div class="actionButton">
+                        <span class="mx-3 fw-bold text-muted"><i class="fa-solid fa-heart"></i> Wishlist</span>
+                        <span class="fw-bold text-muted" onclick="deleteFromCart('<%= product.productId %>')"><i
+                            class="fa-solid fa-trash"></i> Delete</span>
+                      </div>
+                    </div>
+                    <% totalPrice +=((product.categoryOffer && product.categoryOffer.isOfferActive) || (product.offer &&
+                      product.offer.isOfferActive)) ? (product.discountPrice * product.quantity) : (product.productprice
+                      * product.quantity); %>
+                  </div>
+                  <% }) %>
               </div>
             </div>
-
-            <div class="ms-auto priceDiv" style="margin-top: 37px;">
-              <p class="totalprice fw-medium">
-                <i class="fa-solid fa-indian-rupee-sign"></i>
-                <span class="subtotal">
-                  <% if ((product.categoryOffer && product.categoryOffer.isOfferActive) || (product.offer && product.offer.isOfferActive)) { %>
-                    <%= (product.discountPrice * product.quantity) %>
-                  <% } else { %>
-                    <%= (product.productprice * product.quantity)  %>
-                  <% } %>
-                </span>
-              </p>
-              <div class="actionButton">
-                <span class="mx-3 fw-bold text-muted"><i class="fa-solid fa-heart"></i> Wishlist</span>
-                <span class="fw-bold text-muted" onclick="deleteFromCart('<%= product.productId %>')"><i class="fa-solid fa-trash"></i> Delete</span>
+            <div class="col-md-3">
+              <div class="checkout">
+                <h4 class="fw-semibold mt-2 fs-3">Cart Total</h4>
+                <p class="mt-4 fw-normal">Cart Subtotal : <span class="checkoutAmount" id="cartTotal">
+                    <%= totalPrice %>
+                  </span></p>
+                <p class="mt-2 fw-normal ">Shipping Charge : <span class="checkoutAmount">Free</span></p>
+                <p class="mt-2 fw-normal ">Discount : <span class="checkoutAmount">0</span></p>
+                <p class="mt-2 fw-semibold ">Cart Total : <span class="checkoutAmount" id="finalTotal">
+                    <%= totalPrice %>
+                  </span></p>
+                <div class="d-flex justify-content-center">
+                  <a type="button" href="/checkout" class="btn btn-dark mt-4">Proceed Checkout</a>
+                </div>
               </div>
             </div>
-            <% 
-              totalPrice += ((product.categoryOffer && product.categoryOffer.isOfferActive) || (product.offer && product.offer.isOfferActive)) ? 
-                            (product.discountPrice * product.quantity) : 
-                            (product.productprice * product.quantity); 
-            %>
           </div>
-        <% }) %>
-      </div>
-      </div>
-    <div class="col-md-3">
-      <div class="checkout">
-        <h4 class="fw-semibold mt-2 fs-3">Cart Total</h4>
-        <p class="mt-4 fw-normal">Cart Subtotal : <span class="checkoutAmount" id="cartTotal"><%= totalPrice %></span></p>
-        <p class="mt-2 fw-normal ">Shipping Charge : <span class="checkoutAmount">Free</span></p>
-        <p class="mt-2 fw-normal ">Discount : <span class="checkoutAmount">0</span></p>
-        <p class="mt-2 fw-semibold ">Cart Total : <span class="checkoutAmount" id="finalTotal"><%= totalPrice %></span></p>
-        <div class="d-flex justify-content-center">
-          <a type="button" href="/checkout" class="btn btn-dark mt-4">Proceed Checkout</a>
-        </div>
-      </div>
+          <% } else { %>
+            <p class="fs-4 text-muted fw-bold text-center py-5" style="background-color: #f8f9fa; border-radius: 8px;">
+              No Products Found!
+            </p>
+
+            <% } %>
+
     </div>
-  </div>
-  <% } else { %>
-    <p class="fs-4 text-muted fw-bold text-center py-5" style="background-color: #f8f9fa; border-radius: 8px;">
-      No Products Found!
-    </p>
-    
-    <% } %>
-   
-</div>
-<script>
-function changeQuantity(productId, count, button){
-  var quantityElement = $(button).siblings('.quantity');
- let subTotalElement= $(button).closest('.productdetails').siblings('.priceDiv').find('.subtotal');
-  var currentQuantity = parseInt(quantityElement.text());
-   var newQuantity = currentQuantity + count;
-   if (newQuantity <= 0) {
-        Swal.fire({
+    <script>
+      function changeQuantity(productId, count, button) {
+        var quantityElement = $(button).siblings('.quantity');
+        let subTotalElement = $(button).closest('.productdetails').siblings('.priceDiv').find('.subtotal');
+        var currentQuantity = parseInt(quantityElement.text());
+        var newQuantity = currentQuantity + count;
+        if (newQuantity <= 0) {
+          Swal.fire({
             title: 'Warning!',
             text: 'Minimum 1 Qty Needed',
             icon: 'warning',
-        });
-        return;
-    }
+          });
+          return;
+        }
 
-    $.ajax({
-                url: '/update-quantity',
-                method: 'POST',
-                data: {
-                    productId: productId,
-                    newQuantity: newQuantity
-                },
-                success: function (data) {
-                    quantityElement.text(newQuantity);
-                    subTotalElement.text(data.subtotal)
+        $.ajax({
+          url: '/update-quantity',
+          method: 'POST',
+          data: {
+            productId: productId,
+            newQuantity: newQuantity
+          },
+          success: function (data) {
+            quantityElement.text(newQuantity);
+            subTotalElement.text(data.subtotal)
 
-                    $.ajax({
-                      url:'/updated-total-price',
-                      method:'GET',
-                      success:function (response){
-                        $('#cartTotal').text(response.totalprice)
-                        $('#finalTotal').text(response.totalprice)
-                      },error:function(error){
-                        console.log(error)
-                      }
-                    })
-                },
-                error: function (error) {
-                  if(error.status===409){
-                    const errMsg = error.responseJSON.errorMessage;
-                    console.log(errMsg)
+            $.ajax({
+              url: '/updated-total-price',
+              method: 'GET',
+              success: function (response) {
+                $('#cartTotal').text(response.totalprice)
+                $('#finalTotal').text(response.totalprice)
+              }, error: function (error) {
+                console.log(error)
+              }
+            })
+          },
+          error: function (error) {
+            if (error.status === 409) {
+              const errMsg = error.responseJSON.errorMessage;
+              console.log(errMsg)
 
-                  if (errMsg === "Out Of Stock") {
-                   Swal.fire({
-                   title: 'Warning!',
-                  text: 'Out Of Stock',
-                   icon: 'warning',
-                  });
-                   } else {
-                  Swal.fire({
+              if (errMsg === "Out Of Stock") {
+                Swal.fire({
                   title: 'Warning!',
-                 text: 'You have reached the maximum limit for this product.',
-                   icon: 'warning',
+                  text: 'Out Of Stock',
+                  icon: 'warning',
+                });
+              } else {
+                Swal.fire({
+                  title: 'Warning!',
+                  text: 'You have reached the maximum limit for this product.',
+                  icon: 'warning',
                 });
               }
             }
           }
-           })
-}
-function deleteFromCart(productId){
-  let url=`/cart/delete-product/${productId}`
-  Swal.fire({
+        })
+      }
+      function deleteFromCart(productId) {
+        let url = `/cart/delete-product/${productId}`
+        Swal.fire({
           title: `Are you sure`,
           icon: 'warning',
           text: 'You want to remove the item from cart!',
@@ -271,8 +312,9 @@ function deleteFromCart(productId){
             window.location.href = url;
           }
         });
-}
-</script>
+      }
+    </script>
 </body>
 <%- include('../partials/userfooter') %>
+
 </html>

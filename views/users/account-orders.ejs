@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Orders</title>
+    <title>Shoe Rack</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -23,10 +24,12 @@
             background-color: #fff;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
-        .arrow{
+
+        .arrow {
             position: absolute;
-            left:255px;
+            left: 255px;
         }
+
         .account-navitem {
             border-bottom: 1px solid #ccc;
             padding: 10px;
@@ -78,25 +81,15 @@
             border-top-right-radius: 10px;
         }
 
-        .table {
-            width: 100%;
-            margin-bottom: 20px;
-            border-collapse: collapse;
-        }
-
-        .table th, .table td {
+        .table th,
+        .table td {
             padding: 10px;
-            border: 1px solid #ccc;
+            border: none;
             text-align: center;
         }
 
-        .table th {
-            background-color: #e9ecef;
-            font-weight: bold;
-        }
-
         .table td {
-            background-color: #f9f9f9;
+            padding: 20px 0px !important;
         }
 
         .btn-danger {
@@ -112,222 +105,269 @@
         .btn-danger:hover {
             background-color: #c82333;
         }
-        .orders{
+
+        .orders {
             margin-top: 130px;
         }
-        .order-list{
+
+        .order-list {
             margin-top: 20px;
         }
-        .order-details{
+
+        .order-details {
             padding: 20px;
+        }
+
+        .order-product-name {
+            font-size: 1rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 200px;
+            display: block;
         }
     </style>
 </head>
+
 <body>
     <%- include('../partials/userHeader') %>
-    <p class="fw-bold text-dark fs-5 mt-4 ms-3">Home > <span>Account ></span><span class="text-warning fs-5"> My Order</span></p>
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-3">
-                <%- include('../partials/account-nav') %>
-            </div>
-            <div class="col-md-9">
-               <div class="orders">
-                <div class="header-section"><h5 class="fw-bold">Your Orders</h5></div>
-                <div class="order-details">
-                <form class="d-flex" id="searchForm">
-                    <input class="form-control ms-auto mt-3" type="search" name="search" placeholder="Search" aria-label="Search" value="<%= search %>" style="width: 200px;">
-                  </form>
-                <div class="order-list">
-                    <table class="table">
-                        <thead>
-                          <tr>
-                            <th>OrderId</th>
-                            <th>Date</th>
-                            <th>Products</th>
-                            <th>Amount</th>
-                            <th>Status</th>
-                            <th>Payment Status</th>
-                            <th>Action</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                             
-                            <% orders.forEach(element => { %>
-                                <tr>
-                                    <td><%= element.orderId %></td>
-                                    <td><%= element.createdAt.toISOString().split('T')[0] %></td>
-                                     <td class="text-start">
-                                        <% element.products.forEach(product => { %>
-                                            <div><%= product.productName %></div>
-                                        <% }) %>
-                                    </td>
-                                    <td>₹ <%= element. finalPrice?element.finalPrice:element.totalAmount %></td>
-                                    <td><%= element.status %></td>
-                                    <td><% if (element.paymentStatus==="Pending") { %>
-                                     <button type="button"  class="btn btn-primary btn-sm paybutton" data-orderid="<%= element._id %>">pay now</button>
-                                    <% } else{%>
-                                        <p style="font-weight: bold;color: #28a745;"><%= element.paymentStatus %></p>
-                                        <% } %>
-                                    </td>
-                                    <td><a href="/account/<%=element._id  %>" class="btn btn-danger">view order</a></td>
-                                </tr>
-                                <% }) %>
-                        </tbody>
-                      </table>
+        <p class="fw-bold text-dark fs-5 mt-4 ms-3">Home > <span>Account ></span><span class="text-warning fs-5"> My
+                Order</span></p>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-3">
+                    <%- include('../partials/account-nav') %>
                 </div>
-                <nav aria-label="Page navigation example">
-                    <% if (totalPages >= 1) { %>  
-                        <ul class="pagination d-flex justify-content-end"> 
-                                <li class="page-item">
-                                    <a class="page-link" href="?page=<%= currentPage - 1 %>&limit=<%= limit %>&search=<%= search %>" aria-label="Previous">
-                                      <span aria-hidden="true">&laquo;</span>
-                                    </a>
-                                </li>
-                                <% for( let i = 1; i <= totalPages; i++) { %>
-                                    <li class="page-item <%= i === currentPage ? 'active' : '' %>">
-                                        <a class="page-link" href="?page=<%= i %>&limit=<%= limit %>&search=<%= search %>"><%= i %></a>
-                                    </li>
-                                <% } %>
-                                <li class="page-item">
-                                    <a class="page-link" href="?page=<%= currentPage + 1 %>&limit=<%= limit %>&search=<%= search %>" aria-label="Next">
-                                      <span aria-hidden="true">&raquo;</span>
-                                    </a>
-                                </li>
-                        </ul>
-                    <% } %>
-                </nav>
-                
+                <div class="col-md-9">
+                    <div class="orders">
+                        <div class="header-section">
+                            <h5 class="fw-bold">Your Orders</h5>
+                        </div>
+                        <div class="order-details">
+                            <form class="d-flex" id="searchForm">
+                                <input class="form-control ms-auto mt-3" type="search" name="search"
+                                    placeholder="Search" aria-label="Search" value="<%= search %>"
+                                    style="width: 200px;">
+                            </form>
+                            <div class="order-list">
+                                <table class="table table-striped">
+                                    <thead class="table-dark">
+                                        <tr>
+                                            <th>OrderId</th>
+                                            <th>Date</th>
+                                            <th>Products</th>
+                                            <th>Amount</th>
+                                            <th>Status</th>
+                                            <th>Payment Status</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+
+                                        <% if (orders.length>0) { %>
+                                            <% orders.forEach(element=> { %>
+                                                <tr>
+                                                    <td>
+                                                        <%= element.orderId %>
+                                                    </td>
+                                                    <td>
+                                                        <%= element.createdAt.toISOString().split('T')[0] %>
+                                                    </td>
+                                                    <td class="text-start">
+                                                        <% element.products.forEach(product=> { %>
+                                                            <p class="order-product-name">
+                                                                <%= product.productName %>
+                                                            </p>
+                                                            <% }) %>
+                                                    </td>
+                                                    <td>₹ <%= element. finalPrice?element.finalPrice:element.totalAmount
+                                                            %>
+                                                    </td>
+                                                    <td>
+                                                        <%= element.status %>
+                                                    </td>
+                                                    <td>
+                                                        <% if (element.paymentStatus==="Pending" ) { %>
+                                                            <button type="button"
+                                                                class="btn btn-primary btn-sm paybutton"
+                                                                data-orderid="<%= element._id %>">pay now</button>
+                                                            <% } else{%>
+                                                                <p style="font-weight: bold;color: #28a745;">
+                                                                    <%= element.paymentStatus %>
+                                                                </p>
+                                                                <% } %>
+                                                    </td>
+                                                    <td><a href="/account/<%=element._id  %>"
+                                                            class="btn btn-danger">view order</a></td>
+                                                </tr>
+                                                <% }) %>
+                                                    <% }else{ %>
+                                                        <td colspan="7" class="text-center mt-5 fw-bold text-danger">
+                                                            <i class="fa-solid fa-exclamation-circle me-2"></i> No
+                                                            Orders Found!
+                                                        </td>
+                                                        <% } %>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <nav aria-label="Page navigation example">
+                                <% if (totalPages>= 1) { %>
+                                    <ul class="pagination d-flex justify-content-end">
+                                        <li class="page-item">
+                                            <a class="page-link"
+                                                href="?page=<%= currentPage - 1 %>&limit=<%= limit %>&search=<%= search %>"
+                                                aria-label="Previous">
+                                                <span aria-hidden="true">&laquo;</span>
+                                            </a>
+                                        </li>
+                                        <% for( let i=1; i <=totalPages; i++) { %>
+                                            <li class="page-item <%= i === currentPage ? 'active' : '' %>">
+                                                <a class="page-link"
+                                                    href="?page=<%= i %>&limit=<%= limit %>&search=<%= search %>">
+                                                    <%= i %>
+                                                </a>
+                                            </li>
+                                            <% } %>
+                                                <li class="page-item">
+                                                    <a class="page-link"
+                                                        href="?page=<%= currentPage + 1 %>&limit=<%= limit %>&search=<%= search %>"
+                                                        aria-label="Next">
+                                                        <span aria-hidden="true">&raquo;</span>
+                                                    </a>
+                                                </li>
+                                    </ul>
+                                    <% } %>
+                            </nav>
+
+                        </div>
+                    </div>
                 </div>
-               </div> 
             </div>
         </div>
-    </div>
-    <%- include('../partials/userfooter') %>
-    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-    <script>
-    $(document).ready(function(){
+        <%- include('../partials/userfooter') %>
+            <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+            <script>
+                $(document).ready(function () {
 
-        const navItems = $('.account-navitem a');
-        navItems.each(function() {
-            if (window.location.pathname === $(this).attr('href')) {
-                $(this).parent().addClass('active');
-            }
-        });
+                    const navItems = $('.account-navitem a');
+                    navItems.each(function () {
+                        if (window.location.pathname === $(this).attr('href')) {
+                            $(this).parent().addClass('active');
+                        }
+                    });
 
-        navItems.on('click', function() {
-            navItems.parent().removeClass('active'); 
-            $(this).parent().addClass('active');
-        });
+                    navItems.on('click', function () {
+                        navItems.parent().removeClass('active');
+                        $(this).parent().addClass('active');
+                    });
 
-    $('#searchForm input[name="search"]').on('input', function() {
-        const query = $(this).val();
+                    $('#searchForm input[name="search"]').on('input', function () {
+                        const query = $(this).val();
 
-        $.ajax({
-            url: '/account',
-            type: 'GET',
-            data: { search: query },
-            success: function(response) {
-                const tableBody = $('table tbody');
-                tableBody.empty();
+                        $.ajax({
+                            url: '/account',
+                            type: 'GET',
+                            data: { search: query },
+                            success: function (response) {
+                                const tableBody = $('table tbody');
+                                tableBody.empty();
 
-                response.orders.forEach(order => {
-                    const products = order.products.map(product => `<div>${product.productName}</div>`).join('');
-                    const row = `
+                                response.orders.forEach(order => {
+                                    const products = order.products.map(product => `<div>${product.productName}</div>`).join('');
+                                    const row = `
                         <tr>
                             <td>${order.orderId}</td>
                             <td>${new Date(order.createdAt).toISOString().split('T')[0]}</td>
                             <td class="text-start">${products}</td>
                             <td>${order.totalAmount}</td>
                             <td>${order.status}</td>
-                            <td>${order.paymentStatus==="Completed"?`<p style="font-weight: bold;color: #28a745;">Completed</p>` :
-            `<button type="button" class="btn btn-primary btn-sm paybutton" data-orderid="${order._id}">pay now</button>`}</td>
+                            <td>${order.paymentStatus === "Completed" ? `<p style="font-weight: bold;color: #28a745;">Completed</p>` :
+                                            `<button type="button" class="btn btn-primary btn-sm paybutton" data-orderid="${order._id}">pay now</button>`}</td>
                             <td><a href='/account/${order._id}' class="btn btn-danger">View Order</a></td>
                         </tr>
                     `;
-                    tableBody.append(row);
+                                    tableBody.append(row);
+                                });
+                            },
+                            error: function (err) {
+                                console.error('An error occurred:', err);
+                            }
+                        });
+                    });
+
+                    $('.paybutton').on('click', function () {
+                        var orderId = $(this).data('orderid')
+                        $.ajax({
+                            type: "POST",
+                            url: '/paynow',
+                            data: { orderId: orderId },
+                            success: function (response) {
+                                if (response.message === 'Razorpay order created') {
+                                    let options = {
+                                        "key": "rzp_test_x7mcrmmJeFQpUZ",
+                                        "amount": response.amount * 100,
+                                        "currency": "INR",
+                                        "name": "Book Club",
+                                        "description": "Purchase Description",
+                                        "order_id": response.razorpayOrderId,
+                                        "handler": function (razorpayResponse) {
+                                            $.ajax({
+                                                type: "POST",
+                                                url: "/verifypay",
+                                                data: {
+                                                    razorpay_payment_id: razorpayResponse.razorpay_payment_id,
+                                                    razorpay_order_id: razorpayResponse.razorpay_order_id,
+                                                    razorpay_signature: razorpayResponse.razorpay_signature,
+                                                    orderId: response.orderId
+                                                },
+                                                success: function (verifyResponse) {
+                                                    Swal.fire({
+                                                        icon: 'success',
+                                                        title: 'Payment Successful!',
+                                                        text: 'Your payment has been verified.',
+                                                        confirmButtonText: 'OK'
+                                                    })
+
+                                                    $('.paybutton[data-orderid="' + response.orderId + '"]')
+                                                        .closest('td')
+                                                        .html('<p style="font-weight: bold; color: #28a745;">Completed</p>');
+
+                                                },
+                                                error: function () {
+                                                    Swal.fire({
+                                                        icon: 'error',
+                                                        title: 'Payment Verification Failed',
+                                                        text: 'Please contact support.',
+                                                        confirmButtonText: 'OK'
+                                                    });
+                                                }
+                                            })
+                                        },
+                                        "prefill": {
+                                            "name": "Customer Name",
+                                            "email": "customer@example.com",
+                                            "contact": "9999999999"
+                                        },
+                                        "theme": {
+                                            "color": "#3399cc"
+                                        }
+                                    }
+                                    let rzp1 = new Razorpay(options);
+                                    rzp1.open()
+                                }
+                            },
+                            error: function () {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Payment Verification Failed',
+                                    text: 'Order Canceled',
+                                    confirmButtonText: 'OK'
+                                });
+                            }
+                        })
+                    })
                 });
-            },
-            error: function(err) {
-                console.error('An error occurred:', err);
-            }
-        });
-    });
-
- $('.paybutton').on('click',function(){
-    var orderId=$(this).data('orderid')
-    $.ajax({
-        type:"POST",
-        url:'/paynow',
-        data:{orderId:orderId},
-        success:function(response){
-            if(response.message=== 'Razorpay order created'){
-                let options={
-            "key": "rzp_test_x7mcrmmJeFQpUZ",
-            "amount": response.amount * 100,
-            "currency": "INR",
-             "name": "Book Club",
-            "description": "Purchase Description",
-            "order_id": response.razorpayOrderId,
-            "handler": function (razorpayResponse) {
-                $.ajax({
-                    type:"POST",
-                    url:"/verifypay",
-                    data:{
-                     razorpay_payment_id: razorpayResponse.razorpay_payment_id,
-                     razorpay_order_id: razorpayResponse.razorpay_order_id,
-                     razorpay_signature: razorpayResponse.razorpay_signature,
-                     orderId:response.orderId
-                    },
-                    success:function(verifyResponse){
-                        Swal.fire({
-                          icon: 'success',
-                          title: 'Payment Successful!',
-                          text: 'Your payment has been verified.',
-                          confirmButtonText: 'OK'
-                          })
-
-                          $('.paybutton[data-orderid="' + response.orderId + '"]')
-                          .closest('td')
-                         .html('<p style="font-weight: bold; color: #28a745;">Completed</p>');
-
-                    },
-                    error: function () {
-                     Swal.fire({
-                     icon: 'error',
-                     title: 'Payment Verification Failed',
-                     text: 'Please contact support.',
-                     confirmButtonText: 'OK'
-                      });
-                      }
-                })
-            },
-            "prefill": {
-            "name": "Customer Name",
-            "email": "customer@example.com",
-             "contact": "9999999999"
-             },
-            "theme": {
-            "color": "#3399cc"
-             }
-            }
-            let rzp1=new Razorpay(options);
-            rzp1.open()
-        }
-        },
-        error:function(){
-            Swal.fire({
-                     icon: 'error',
-                     title: 'Payment Verification Failed',
-                     text: 'Order Canceled',
-                     confirmButtonText: 'OK'
-                      });
-        }
-    })
- })
-});
-</script>
-<%- include('../partials/userfooter') %>
+            </script>
 </body>
+
 </html>
-  

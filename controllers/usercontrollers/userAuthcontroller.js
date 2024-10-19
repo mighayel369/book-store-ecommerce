@@ -26,13 +26,14 @@ let product=require('../../models/productdetails')
           return res.redirect('/login')
         }else if (isMatch) {
           req.session.userId = user._id;
+          req.session.message={message:"User Logged Successfully"}
           return res.redirect('/');
         } else {
-          req.session.message = { message: 'Password is incorrect' };
+          req.session.message = { message: 'Password Is Incorrect' };
           return res.redirect('/login');
         }
       } else {
-        req.session.message = { message: 'User not found' };
+        req.session.message = { message: 'User Not Found' };
         return res.redirect('/login');
       }
     } catch (error) {
