@@ -1,375 +1,876 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Shoe Rack</title>
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<%- include('../partials/adminHeader') %>
 
   <style>
-    .topDiv {
+    main,
+    .admin-main {
+      margin-left: var(--sidebar-width);
+      margin-top: var(--navbar-height);
+      padding: 28px;
+      min-height: calc(100vh - var(--navbar-height));
+      min-width: 0;
+      box-sizing: border-box;
+    }
+
+
+    .dashboard-page {
+      max-width: 1500px;
+      margin: 0 auto;
+    }
+
+    .dashboard-title {
+      font-size: 27px;
+      font-weight: 750;
+      color: #212529;
+      margin-bottom: 7px;
+    }
+
+    .dashboard-subtitle {
+      color: #7a838d;
+      font-size: 14px;
+      margin: 0;
+    }
+
+    .dashboard-label {
+      color: #198754;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 9px;
+    }
+
+    .dashboard-heading {
+      margin-bottom: 30px;
+    }
+
+    .stat-card {
+      height: 100%;
+      min-height: 155px;
+      padding: 23px;
+      border: 1px solid #e9ecef;
+      background: #ffffff;
+      border-radius: 13px;
+      box-shadow: 0 3px 12px rgba(0, 0, 0, 0.025);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.06);
+    }
+
+    .stat-top {
       display: flex;
-      justify-content: space-evenly;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
     }
 
-    .card {
-      background-color: #f8f9fa;
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-      text-align: center;
-      width: 200px;
-      cursor: pointer;
-      transition: transform 0.2s ease;
+    .stat-title {
+      font-size: 13px;
+      color: #727b85;
+      font-weight: 600;
     }
 
-    .card:hover {
-      transform: scale(1.05);
-    }
-
-    .card i {
-      font-size: 30px;
-      margin-bottom: 15px;
-      color: #007bff;
-    }
-
-    .card p {
-      margin: 0;
-    }
-
-    .card .value {
-      font-size: 24px;
-      font-weight: bold;
-      color: #333;
-    }
-
-    .container {
-      max-width: 1200px;
-      margin: auto;
-    }
-
-    .chart-container {
-      margin-top: 50px;
-    }
-
-    #chart-filter {
-      width: 200px;
-    }
-
-    .offcanvas-center {
-      width: 500px;
-      height: 90vh;
-      margin: auto;
-      top: 0;
-      bottom: 0;
-      left: 20%;
-      right: 0;
-      transform: none;
-      border-radius: 10px;
-      overflow-y: auto;
-      backdrop-filter: blur(5px);
-    }
-
-    .offcanvas-header,
-    .offcanvas-body {
-      padding: 20px;
-    }
-
-    .offcanvas-center::-webkit-scrollbar {
-      width: 10px;
-    }
-
-    .offcanvas-center::-webkit-scrollbar-thumb {
-      background-color: rgba(0, 0, 0, 0.3);
-      border-radius: 10px;
-    }
-
-    .user-list {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
-
-    .user-list li {
+    .stat-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 11px;
       display: flex;
       align-items: center;
-      padding: 10px;
-      border-bottom: 1px solid #eee;
-      transition: background-color 0.2s;
-    }
-
-    .user-list li:hover {
-      background-color: #f8f9fa;
-      cursor: pointer;
-    }
-
-    .user-icon {
-      background-color: #007bff;
-      color: white;
-      border-radius: 50%;
-      display: inline-flex;
       justify-content: center;
-      align-items: center;
-      width: 40px;
-      height: 40px;
       font-size: 18px;
-      margin-right: 15px;
+      flex-shrink: 0;
     }
 
-    .user-name {
-      font-size: 18px;
-      font-weight: 500;
-      color: #333;
+    .icon-green {
+      background: #e5f5eb;
+      color: #198754;
     }
 
-    .no-users {
-      text-align: center;
-      font-size: 16px;
-      color: #666;
+    .icon-blue {
+      background: #e8f0ff;
+      color: #3975db;
     }
 
-    .product-list {
-      padding-left: 0;
+    .icon-orange {
+      background: #fff1df;
+      color: #dc8a19;
+    }
+
+    .icon-purple {
+      background: #f0eaff;
+      color: #7654c9;
+    }
+
+    .stat-value {
+      color: #212529;
+      font-size: 27px;
+      font-weight: 750;
+      line-height: 1.2;
       margin: 0;
-      list-style-type: none;
+      overflow-wrap: anywhere;
     }
 
-    .product-item {
+    .stat-description {
+      color: #8a929b;
+      font-size: 12px;
+      margin-top: 8px;
+      margin-bottom: 0;
+    }
+
+    .clickable-stat {
+      cursor: pointer;
+    }
+
+
+    .dashboard-panel {
+      background: #ffffff;
+      border: 1px solid #e9ecef;
+      border-radius: 13px;
+      padding: 25px;
+      box-shadow: 0 3px 12px rgba(0, 0, 0, 0.025);
+    }
+
+    .panel-title {
+      font-size: 17px;
+      font-weight: 750;
+      margin: 0;
+      color: #212529;
+    }
+
+    .panel-description {
+      color: #89919b;
+      font-size: 12px;
+      margin-top: 6px;
+      margin-bottom: 0;
+    }
+
+    .chart-filter {
+      width: 145px;
+      border-color: #e0e5e9;
+      border-radius: 8px;
+      font-size: 13px;
+      box-shadow: none !important;
+    }
+
+    .chart-filter:focus {
+      border-color: #198754;
+    }
+
+    .chart-area {
+      position: relative;
+      height: 330px;
+      margin-top: 28px;
+    }
+
+    .chart-status {
+      display: none;
+      text-align: center;
+      color: #7a838d;
+      font-size: 13px;
+      padding: 15px;
+    }
+
+
+    .detail-modal .modal-content {
+      border: none;
+      border-radius: 15px;
+      overflow: hidden;
+    }
+
+    .detail-modal .modal-header {
+      padding: 22px 25px;
+      border-bottom: 1px solid #edf0f2;
+    }
+
+    .detail-modal .modal-body {
+      padding: 15px 25px 25px;
+      max-height: 65vh;
+      overflow-y: auto;
+    }
+
+    .detail-modal .modal-title {
+      font-size: 18px;
+      font-weight: 750;
+    }
+
+    .detail-item {
       display: flex;
       align-items: center;
-      padding: 10px 0;
-      border-bottom: 1px solid #e0e0e0;
+      gap: 14px;
+      padding: 15px 0;
+      border-bottom: 1px solid #edf0f2;
     }
 
-    .product-icon {
-      font-size: 1.8rem;
-      color: #007bff;
-      margin-right: 15px;
+    .detail-item:last-child {
+      border-bottom: none;
     }
 
-    .product-details {
-      flex-grow: 1;
+    .detail-icon {
+      width: 43px;
+      height: 43px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      border-radius: 10px;
+      background: #e8f5ec;
+      color: #198754;
+      font-size: 16px;
     }
 
-    .product-name {
-      font-size: 1.1rem;
-      font-weight: bold;
-      color: #333;
+    .detail-info {
+      flex: 1;
+      min-width: 0;
     }
 
-    .product-info {
-      font-size: 0.9rem;
-      color: #777;
+    .detail-name {
+      color: #343a40;
+      font-size: 14px;
+      font-weight: 650;
+      overflow-wrap: anywhere;
+      margin-bottom: 5px;
     }
 
-    .no-products {
+    .detail-meta {
+      color: #89919b;
+      font-size: 12px;
+      margin: 0;
+      overflow-wrap: anywhere;
+    }
+
+    .detail-rank {
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #f2f4f6;
+      border-radius: 7px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #59616b;
+      flex-shrink: 0;
+    }
+
+    .empty-state {
       text-align: center;
-      color: #777;
-      margin-top: 20px;
-      font-size: 1rem;
+      padding: 45px 15px;
+      color: #89919b;
+    }
+
+    .empty-state i {
+      font-size: 32px;
+      margin-bottom: 15px;
+      color: #c5cbd1;
+    }
+
+    .empty-state p {
+      font-size: 13px;
+      margin: 0;
+    }
+
+    .dashboard-footer-note {
+      font-size: 12px;
+      color: #89919b;
+      text-align: center;
+      margin: 25px 0 5px;
+    }
+
+    @media (max-width: 575.98px) {
+      .dashboard-heading {
+        margin-bottom: 22px;
+      }
+
+      .dashboard-title {
+        font-size: 23px;
+      }
+
+      .stat-card {
+        padding: 17px;
+        min-height: 140px;
+      }
+
+      .stat-value {
+        font-size: 23px;
+      }
+
+      .stat-icon {
+        width: 38px;
+        height: 38px;
+        font-size: 16px;
+      }
+
+      .dashboard-panel {
+        padding: 18px;
+      }
+
+      .chart-area {
+        height: 270px;
+      }
+
+      .chart-filter {
+        width: 115px;
+      }
     }
   </style>
-</head>
 
-<body>
-  <%- include('../partials/adminHeader') %>
-    <main>
-      <div class="container">
-        <div class="d-flex justify-content-between align-items-center my-5">
-          <h3 class="me-auto">Dashboard</h3>
+  <main>
+    <div class="dashboard-page">
+
+      <div class="dashboard-heading d-flex justify-content-between
+                    align-items-center flex-wrap gap-3">
+
+        <div>
+          <div class="dashboard-label">Store overview</div>
+          <h1 class="dashboard-title">Dashboard</h1>
+          <p class="dashboard-subtitle">
+            Welcome back! Here's what's happening with your store.
+          </p>
         </div>
 
-        <div class="row">
-          <div class="topDiv">
-
-            <div class="card">
-              <i class="fas fa-dollar-sign"></i>
-              <p>Revenue</p>
-              <p class="value">₹<span id="totalRevenue"></span></p>
-            </div>
-
-            <div class="card" data-bs-toggle="offcanvas" data-bs-target="#offcanvasproducts"
-              aria-controls="offcanvasproductslabel">
-              <i class="fas fa-box-open"></i>
-              <p>Top 10 </p>
-              <p class="value">Products</p>
-            </div>
-
-            <div class="card" data-bs-toggle="offcanvas" data-bs-target="#offcanvascategory"
-              aria-controls="offcanvascategorylabel">
-              <i class="fas fa-tags"></i>
-              <p>Top 10 </p>
-              <p class="value">Category</p>
-            </div>
-
-            <div class="card" data-bs-toggle="offcanvas" data-bs-target="#offcanvasEditAddress"
-              aria-controls="offcanvasEditAddress">
-              <i class="fas fa-users"></i>
-              <p>Users</p>
-              <p class="value">
-                <%= users.length %>
-              </p>
-            </div>
-
-          </div>
-
-          <div class="chart-container mt-5">
-            <div class="d-flex justify-content-between align-items-center">
-              <h4>Sales Overview</h4>
-              <select id="chart-filter" class="form-select" onchange="updateChart()">
-                <option value="monthly">Monthly</option>
-                <option value="yearly">Yearly</option>
-              </select>
-            </div>
-            <canvas id="myChart"></canvas>
-          </div>
-        </div>
-
-
-        <div class="offcanvas offcanvas-center" data-bs-backdrop="static" tabindex="-1" id="offcanvasEditAddress"
-          aria-labelledby="offcanvasEditAddressLabel">
-          <div class="offcanvas-header">
-            <h5 class="offcanvas-title" id="offcanvasEditAddressLabel">Users</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-          </div>
-          <div class="offcanvas-body">
-            <% if (users.length> 0) { %>
-              <ul class="user-list">
-                <% users.forEach(user=> { %>
-                  <li>
-                    <div class="user-icon"><i class="fas fa-user"></i></div>
-                    <div class="user-name">
-                      <%= user.username %>
-                    </div>
-                  </li>
-                  <% }) %>
-              </ul>
-              <% } else { %>
-                <p class="no-users">No users found.</p>
-                <% } %>
-          </div>
-        </div>
-
-        <div class="offcanvas offcanvas-center" data-bs-backdrop="static" tabindex="-1" id="offcanvascategory"
-          aria-labelledby="offcanvascategorylabel">
-          <div class="offcanvas-header">
-            <h5 class="offcanvas-title" id="offcanvascategorylabel">Top 10 Category</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-          </div>
-          <div class="offcanvas-body">
-            <% if (categories.length> 0) { %>
-              <ol class="product-list">
-                <% categories.forEach(category=> { %>
-                  <li class="product-item">
-                    <div class="product-icon"><i class="fas fa-tags"></i></div>
-                    <div class="product-details">
-                      <div class="product-name">
-                        <%= category._id %>
-                      </div>
-                      <div class="product-info">
-                        Total Products Sold: <%= category.totalSold %>
-                      </div>
-                    </div>
-                  </li>
-                  <% }) %>
-              </ol>
-              <% } else { %>
-                <p class="no-products">No categories found.</p>
-                <% } %>
-          </div>
-        </div>
-
-
-        <div class="offcanvas offcanvas-center" data-bs-backdrop="static" tabindex="-1" id="offcanvasproducts"
-          aria-labelledby="offcanvasproductslabel">
-          <div class="offcanvas-header">
-            <h5 class="offcanvas-title" id="offcanvasproductslabel">Top 10 Products</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-          </div>
-          <div class="offcanvas-body">
-            <% if (products.length> 0) { %>
-              <ol class="product-list">
-                <% products.forEach(product=> { %>
-                  <li class="product-item">
-                    <div class="product-icon"><i class="fas fa-box"></i></div>
-                    <div class="product-details">
-                      <div class="product-name">
-                        <%= product.productname %>
-                      </div>
-                      <div class="product-info">
-                        Price: ₹<%= product.productprice %> | Popularity: <%= product.popularityScore %>
-                      </div>
-                    </div>
-                  </li>
-                  <% }) %>
-              </ol>
-              <% } else { %>
-                <p class="no-products">No products found.</p>
-                <% } %>
-          </div>
+        <div class="text-secondary small">
+          <i class="fa-regular fa-calendar me-2"></i>
+          <span id="dashboardDate"></span>
         </div>
       </div>
 
-    </main>
+      <div class="row g-3 mb-4">
 
-    <%- include('../partials/adminfooter') %>
+        <div class="col-12 col-sm-6 col-xl-3">
+          <div class="stat-card">
+            <div class="stat-top">
+              <span class="stat-title">Total Sales</span>
+              <div class="stat-icon icon-green">
+                <i class="fa-solid fa-indian-rupee-sign"></i>
+              </div>
+            </div>
 
-      <script>
-        let myChart;
-        async function fetchSalesData(filter) {
-          const response = await fetch(`/admin/sales-data?filter=${filter}`);
-          const data = await response.json();
-          return data;
+            <h2 class="stat-value" id="totalRevenue">₹0.00</h2>
+
+            <p class="stat-description" id="revenueDescription">
+              Sales for the selected period
+            </p>
+          </div>
+        </div>
+
+        <div class="col-12 col-sm-6 col-xl-3">
+          <div class="stat-card clickable-stat" role="button" tabindex="0" data-bs-toggle="modal"
+            data-bs-target="#productsModal">
+
+            <div class="stat-top">
+              <span class="stat-title">Top Products</span>
+              <div class="stat-icon icon-blue">
+                <i class="fa-solid fa-box-open"></i>
+              </div>
+            </div>
+
+            <h2 class="stat-value">
+              <%= products.length %>
+            </h2>
+
+            <p class="stat-description">
+              <i class="fa-solid fa-arrow-up-right-from-square me-1"></i>
+              View popular products
+            </p>
+          </div>
+        </div>
+
+        <div class="col-12 col-sm-6 col-xl-3">
+          <div class="stat-card clickable-stat" role="button" tabindex="0" data-bs-toggle="modal"
+            data-bs-target="#categoriesModal">
+
+            <div class="stat-top">
+              <span class="stat-title">Top Categories</span>
+              <div class="stat-icon icon-orange">
+                <i class="fa-solid fa-layer-group"></i>
+              </div>
+            </div>
+
+            <h2 class="stat-value">
+              <%= categories.length %>
+            </h2>
+
+            <p class="stat-description">
+              <i class="fa-solid fa-arrow-up-right-from-square me-1"></i>
+              View best-selling categories
+            </p>
+          </div>
+        </div>
+
+        <div class="col-12 col-sm-6 col-xl-3">
+          <div class="stat-card clickable-stat" role="button" tabindex="0" data-bs-toggle="modal"
+            data-bs-target="#usersModal">
+
+            <div class="stat-top">
+              <span class="stat-title">Registered Users</span>
+              <div class="stat-icon icon-purple">
+                <i class="fa-solid fa-users"></i>
+              </div>
+            </div>
+
+            <h2 class="stat-value">
+              <%= users.length %>
+            </h2>
+
+            <p class="stat-description">
+              <i class="fa-solid fa-arrow-up-right-from-square me-1"></i>
+              View registered customers
+            </p>
+          </div>
+        </div>
+
+      </div>
+
+      <section class="dashboard-panel">
+
+        <div class="d-flex justify-content-between align-items-center
+                        flex-wrap gap-3">
+
+          <div>
+            <h2 class="panel-title">Sales Overview</h2>
+            <p class="panel-description">
+              Review sales performance over time.
+            </p>
+          </div>
+
+          <select id="chart-filter" class="form-select chart-filter" aria-label="Sales period">
+            <option value="monthly">Monthly</option>
+            <option value="yearly">Yearly</option>
+          </select>
+        </div>
+
+        <div id="chartLoading" class="chart-status">
+          <i class="fa-solid fa-spinner fa-spin me-2"></i>
+          Loading sales data...
+        </div>
+
+        <div id="chartError" class="alert alert-danger mt-3 d-none" role="alert"></div>
+
+        <div class="chart-area" id="chartArea">
+          <canvas id="myChart" aria-label="Sales overview chart" role="img"></canvas>
+        </div>
+
+        <div id="chartEmpty" class="empty-state d-none">
+          <i class="fa-solid fa-chart-column d-block"></i>
+          <p>No sales data is available for this period.</p>
+        </div>
+
+      </section>
+
+      <p class="dashboard-footer-note">
+        Shoe Rack Admin Dashboard &mdash; Store performance at a glance.
+      </p>
+    </div>
+  </main>
+
+  <div class="modal fade detail-modal" id="productsModal" tabindex="-1" aria-labelledby="productsModalLabel"
+    aria-hidden="true">
+
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content">
+
+        <div class="modal-header">
+          <div>
+            <h2 class="modal-title" id="productsModalLabel">
+              <i class="fa-solid fa-box-open text-success me-2"></i>
+              Top Products
+            </h2>
+            <p class="panel-description">Your popular shoe products.</p>
+          </div>
+
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+        <div class="modal-body">
+
+          <% if (products.length> 0) { %>
+
+            <% products.forEach((product, index)=> { %>
+              <div class="detail-item">
+
+                <div class="detail-rank">
+                  <%= index + 1 %>
+                </div>
+
+                <div class="detail-icon">
+                  <i class="fa-solid fa-shoe-prints"></i>
+                </div>
+
+                <div class="detail-info">
+                  <div class="detail-name">
+                    <%= product.productname %>
+                  </div>
+
+                  <p class="detail-meta">
+                    Price: ₹<%= Number(product.productprice || 0).toFixed(2) %>
+                      &nbsp;|&nbsp;
+                      Popularity: <%= product.popularityScore || 0 %>
+                  </p>
+                </div>
+
+              </div>
+              <% }) %>
+
+                <% } else { %>
+
+                  <div class="empty-state">
+                    <i class="fa-solid fa-box-open d-block"></i>
+                    <p>No products found.</p>
+                  </div>
+
+                  <% } %>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade detail-modal" id="categoriesModal" tabindex="-1" aria-labelledby="categoriesModalLabel"
+    aria-hidden="true">
+
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content">
+
+        <div class="modal-header">
+          <div>
+            <h2 class="modal-title" id="categoriesModalLabel">
+              <i class="fa-solid fa-layer-group text-success me-2"></i>
+              Top Categories
+            </h2>
+            <p class="panel-description">Categories ranked by products sold.</p>
+          </div>
+
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+        <div class="modal-body">
+
+          <% if (categories.length> 0) { %>
+
+            <% categories.forEach((category, index)=> { %>
+              <div class="detail-item">
+
+                <div class="detail-rank">
+                  <%= index + 1 %>
+                </div>
+
+                <div class="detail-icon">
+                  <i class="fa-solid fa-tags"></i>
+                </div>
+
+                <div class="detail-info">
+                  <div class="detail-name">
+                    <%= category._id %>
+                  </div>
+
+                  <p class="detail-meta">
+                    Total products sold:
+                    <%= category.totalSold || 0 %>
+                  </p>
+                </div>
+
+              </div>
+              <% }) %>
+
+                <% } else { %>
+
+                  <div class="empty-state">
+                    <i class="fa-solid fa-layer-group d-block"></i>
+                    <p>No categories found.</p>
+                  </div>
+
+                  <% } %>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade detail-modal" id="usersModal" tabindex="-1" aria-labelledby="usersModalLabel"
+    aria-hidden="true">
+
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content">
+
+        <div class="modal-header">
+          <div>
+            <h2 class="modal-title" id="usersModalLabel">
+              <i class="fa-solid fa-users text-success me-2"></i>
+              Registered Users
+            </h2>
+            <p class="panel-description">
+              Customers registered with Shoe Rack.
+            </p>
+          </div>
+
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+        <div class="modal-body">
+
+          <% if (users.length> 0) { %>
+
+            <% users.forEach((user, index)=> { %>
+              <div class="detail-item">
+
+                <div class="detail-rank">
+                  <%= index + 1 %>
+                </div>
+
+                <div class="detail-icon">
+                  <i class="fa-solid fa-user"></i>
+                </div>
+
+                <div class="detail-info">
+                  <div class="detail-name">
+                    <%= user.username %>
+                  </div>
+
+                  <p class="detail-meta">Shoe Rack customer</p>
+                </div>
+
+              </div>
+              <% }) %>
+
+                <% } else { %>
+
+                  <div class="empty-state">
+                    <i class="fa-solid fa-users d-block"></i>
+                    <p>No registered users found.</p>
+                  </div>
+
+                  <% } %>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <script>
+    let myChart = null;
+
+    const chartFilter = document.getElementById('chart-filter');
+    const chartCanvas = document.getElementById('myChart');
+    const chartLoading = document.getElementById('chartLoading');
+    const chartError = document.getElementById('chartError');
+    const chartEmpty = document.getElementById('chartEmpty');
+    const chartArea = document.getElementById('chartArea');
+    const totalRevenue = document.getElementById('totalRevenue');
+    const revenueDescription = document.getElementById('revenueDescription');
+
+    document.getElementById('dashboardDate').textContent =
+      new Date().toLocaleDateString('en-IN', {
+        day: 'numeric',
+        month: 'short',
+        year: 'numeric'
+      });
+
+    function formatCurrency(amount) {
+      return Number(amount || 0).toLocaleString('en-IN', {
+        style: 'currency',
+        currency: 'INR',
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      });
+    }
+
+    async function fetchSalesData(filter) {
+      const response = await fetch(
+        `/admin/sales-data?filter=${encodeURIComponent(filter)}`,
+        {
+          headers: {
+            'Accept': 'application/json'
+          }
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error('Unable to retrieve sales data.');
+      }
+
+      const data = await response.json();
+
+      if (!Array.isArray(data)) {
+        throw new Error('The sales API returned an unexpected response.');
+      }
+
+      return data;
+    }
+
+    async function updateChart() {
+      const filter = chartFilter.value;
+
+      chartLoading.style.display = 'block';
+      chartError.classList.add('d-none');
+      chartEmpty.classList.add('d-none');
+      chartArea.classList.add('d-none');
+
+      try {
+        const salesData = await fetchSalesData(filter);
+
+
+        const labels = salesData.map(item => {
+          if (filter === 'monthly') {
+            const month = Number(item._id.month);
+            const year = item._id.year;
+
+            const date = new Date(year, month - 1, 1);
+
+            return date.toLocaleDateString('en-IN', {
+              month: 'short',
+              year: 'numeric'
+            });
+          }
+
+          return String(item._id.year);
+        });
+
+        const values = salesData.map(item =>
+          Number(item.totalSales) || 0
+        );
+
+        const totalAmount = values.reduce(
+          (sum, amount) => sum + amount,
+          0
+        );
+
+        totalRevenue.textContent = formatCurrency(totalAmount);
+
+        revenueDescription.textContent =
+          filter === 'monthly'
+            ? 'Sales across the returned months'
+            : 'Sales across the returned years';
+
+        if (myChart) {
+          myChart.destroy();
+          myChart = null;
         }
 
-        async function updateChart() {
-          const filter = document.getElementById('chart-filter').value;
-          const salesData = await fetchSalesData(filter);
+        chartLoading.style.display = 'none';
 
-          const labels = salesData.map(item => filter === 'monthly' ? `${item._id.month}/${item._id.year}` : `${item._id.year}`);
-          const values = salesData.map(item => item.totalSales);
-          let totalAmount = salesData.reduce((acc, curr) => {
-            acc += curr.totalSales;
-            return acc;
-          }, 0);
+        if (salesData.length === 0) {
+          chartEmpty.classList.remove('d-none');
+          return;
+        }
 
-          document.getElementById('totalRevenue').innerText = totalAmount;
+        chartArea.classList.remove('d-none');
 
-          const chartData = {
-            labels: labels,
+        myChart = new Chart(chartCanvas, {
+          type: 'bar',
+
+          data: {
+            labels,
+
             datasets: [{
-              label: `Sales (${filter})`,
+              label: 'Sales',
               data: values,
-              backgroundColor: 'rgba(75, 192, 192, 0.2)',
-              borderColor: 'rgba(75, 192, 192, 1)',
-              borderWidth: 2
+              backgroundColor: 'rgba(25, 135, 84, 0.75)',
+              hoverBackgroundColor: '#146c43',
+              borderRadius: 6,
+              borderSkipped: false,
+              maxBarThickness: 48
             }]
-          };
+          },
 
-          if (myChart) {
-            myChart.data = chartData;
-            myChart.update();
-          } else {
-            const ctx = document.getElementById('myChart').getContext('2d');
-            myChart = new Chart(ctx, {
-              type: 'bar',
-              data: chartData,
-              options: {
-                scales: {
-                  y: {
-                    beginAtZero: true
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+
+            interaction: {
+              intersect: false,
+              mode: 'index'
+            },
+
+            plugins: {
+              legend: {
+                display: false
+              },
+
+              tooltip: {
+                backgroundColor: '#202124',
+                padding: 12,
+                callbacks: {
+                  label: context =>
+                    'Sales: ' + formatCurrency(context.raw)
+                }
+              }
+            },
+
+            scales: {
+              x: {
+                grid: {
+                  display: false
+                },
+
+                border: {
+                  display: false
+                },
+
+                ticks: {
+                  color: '#89919b',
+                  maxRotation: 0
+                }
+              },
+
+              y: {
+                beginAtZero: true,
+
+                border: {
+                  display: false,
+                  dash: [4, 4]
+                },
+
+                grid: {
+                  color: '#edf0f2'
+                },
+
+                ticks: {
+                  color: '#89919b',
+
+                  callback: value => {
+                    const amount = Number(value);
+
+                    if (amount >= 100000) {
+                      return '₹' +
+                        (amount / 100000).toFixed(1) + 'L';
+                    }
+
+                    if (amount >= 1000) {
+                      return '₹' +
+                        (amount / 1000).toFixed(1) + 'K';
+                    }
+
+                    return '₹' + amount;
                   }
                 }
               }
-            });
+            }
           }
-        }
+        });
 
-        updateChart();
-      </script>
-</body>
+      } catch (error) {
+        
+        chartLoading.style.display = 'none';
+        chartArea.classList.add('d-none');
 
-</html>
+        totalRevenue.textContent = '—';
+        revenueDescription.textContent = 'Sales data unavailable';
+
+        chartError.textContent =
+          'Could not load sales data. Please try changing the period or refreshing the page.';
+
+        chartError.classList.remove('d-none');
+      }
+    }
+
+    chartFilter.addEventListener('change', updateChart);
+
+    updateChart();
+  </script>
+
+  <%- include('../partials/adminfooter') %>

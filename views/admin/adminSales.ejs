@@ -4,104 +4,592 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Shoe Rack</title>
+  <title>Shoe Rack | Completed Orders</title>
+
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-  <style>
 
+  <style>
+    :root {
+      --primary: #252b36;
+      --secondary: #64748b;
+      --border: #e5e7eb;
+      --background: #f5f7fb;
+      --success-bg: #dcfce7;
+      --success-text: #166534;
+      --warning-bg: #fef3c7;
+      --warning-text: #92400e;
+      --danger-bg: #fee2e2;
+      --danger-text: #991b1b;
+    }
+
+    body {
+      background: var(--background);
+      color: #1f2937;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    .completed-page {
+      max-width: 1500px;
+      margin-left: var(--sidebar-width) !important;
+      margin-top: var(--navbar-height);
+      padding: 32px 24px 50px;
+    }
+
+    .page-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 18px;
+      margin-bottom: 28px;
+    }
+
+    .page-title {
+      margin: 0;
+      font-size: 28px;
+      font-weight: 750;
+      color: #111827;
+    }
+
+    .page-subtitle {
+      margin: 8px 0 0;
+      color: var(--secondary);
+      font-size: 14px;
+    }
+
+    .download-btn {
+      background: var(--primary);
+      color: #fff;
+      border: 1px solid var(--primary);
+      border-radius: 9px;
+      padding: 11px 18px;
+      font-size: 14px;
+      font-weight: 600;
+      transition: 0.2s ease;
+    }
+
+    .download-btn:hover {
+      background: #3c4657;
+      color: #fff;
+      transform: translateY(-1px);
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+      margin-bottom: 26px;
+    }
+
+    .summary-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 21px;
+      box-shadow: 0 3px 12px rgba(15, 23, 42, 0.03);
+    }
+
+    .summary-label {
+      color: var(--secondary);
+      font-size: 13px;
+      margin-bottom: 10px;
+    }
+
+    .summary-value {
+      font-size: 27px;
+      font-weight: 750;
+      color: #111827;
+    }
+
+    .summary-note {
+      color: var(--secondary);
+      font-size: 12px;
+      margin-top: 6px;
+    }
+
+    .orders-panel {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 4px 18px rgba(15, 23, 42, 0.04);
+    }
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+      padding: 22px 24px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .panel-title {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .panel-subtitle {
+      margin: 6px 0 0;
+      color: var(--secondary);
+      font-size: 13px;
+    }
+
+    .order-count {
+      background: #eef2ff;
+      color: #3730a3;
+      border-radius: 20px;
+      padding: 7px 12px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .table-wrapper {
+      width: 100%;
+      overflow-x: auto;
+    }
+
+    .orders-table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 1000px;
+      margin: 0;
+    }
+
+    .orders-table thead th {
+      background: #f8fafc;
+      color: #64748b;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      font-weight: 700;
+      padding: 16px 18px;
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+
+    .orders-table tbody td {
+      padding: 18px;
+      border-bottom: 1px solid #edf0f4;
+      font-size: 13px;
+      vertical-align: middle;
+    }
+
+    .orders-table tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    .orders-table tbody tr:hover {
+      background: #fafbff;
+    }
+
+    .orders-table tbody tr.pending-return-row {
+      background: #fffbeb;
+    }
+
+    .orders-table tbody tr.pending-return-row:hover {
+      background: #fef3c7;
+    }
+
+    .order-id {
+      font-weight: 700;
+      color: #111827;
+      white-space: nowrap;
+    }
+
+    .customer-name {
+      font-weight: 600;
+      color: #1f2937;
+    }
+
+    .date-text {
+      color: #64748b;
+      white-space: nowrap;
+    }
+
+    .amount-text {
+      font-weight: 700;
+      color: #111827;
+      white-space: nowrap;
+    }
+
+    .payment-method {
+      display: inline-block;
+      background: #f1f5f9;
+      color: #334155;
+      padding: 6px 9px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .status-pending {
+      background: var(--warning-bg);
+      color: var(--warning-text);
+    }
+
+    .status-approved {
+      background: var(--success-bg);
+      color: var(--success-text);
+    }
+
+    .status-rejected {
+      background: var(--danger-bg);
+      color: var(--danger-text);
+    }
+
+    .status-none {
+      background: #f1f5f9;
+      color: #64748b;
+    }
+
+    .view-btn {
+      display: inline-block;
+      background: #252b36;
+      color: #fff;
+      border-radius: 7px;
+      padding: 9px 12px;
+      font-size: 12px;
+      font-weight: 600;
+      text-decoration: none;
+      white-space: nowrap;
+      transition: 0.2s ease;
+    }
+
+    .view-btn:hover {
+      background: #3c4657;
+      color: #fff;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 65px 20px;
+    }
+
+    .empty-icon {
+      font-size: 40px;
+      margin-bottom: 14px;
+    }
+
+    .empty-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #1f2937;
+      margin-bottom: 8px;
+    }
+
+    .empty-description {
+      font-size: 13px;
+      color: #64748b;
+      margin: 0;
+    }
+
+    .alert {
+      border-radius: 10px;
+    }
+
+    @media (max-width: 768px) {
+      .completed-page {
+        padding: 22px 12px 35px;
+      }
+
+      .page-title {
+        font-size: 23px;
+      }
+
+      .summary-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+
+      .summary-card {
+        padding: 17px;
+      }
+
+      .summary-value {
+        font-size: 23px;
+      }
+
+      .panel-header {
+        padding: 18px;
+      }
+    }
   </style>
 </head>
 
 <body>
+
   <%- include('../partials/adminHeader') %>
-    <main>
-      <div class="container">
-        <% if (adminmessage) { %>
-          <div class="alert m-4 alert-dismissible fade show alert-<%= adminmessage.type %>" role="alert">
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            <strong>
-              <%= adminmessage.message %>
-            </strong>
-          </div>
-          <% } %>
-            <div class="d-flex justify-content-end m-5">
-              <h3 class="me-auto">Completed Transactions</h3>
-              <button id="download" class="btn btn-primary ms-auto">Download Report</button>
-            </div>
-            <div class="row m-4">
-              <div class="col-lg-12">
-                <div class="table-responsive">
-                  <table class="table table-striped" id="table-data">
-                    <thead>
-                      <tr class="table-dark">
-                        <th>Order ID</th>
-                        <th>Customer Name</th>
-                        <th>Date</th>
-                        <th>Total</th>
-                        <th>Payment Method</th>
-                        <th>Return Status</th>
-                        <th>Action</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <% completedOrders.forEach(order=> { %>
-                        <tr>
-                          <td>
-                            <%= order.orderId %>
-                          </td>
-                          <td>
-                            <%= order.userId.username %>
-                          </td>
-                          <td>
-                            <%= order.createdAt.toISOString().split('T')[0] %>
-                          </td>
-                          <td>
-                            <%= order.finalPrice ? order.finalPrice : order.totalAmount %>
-                          </td>
-                          <td>
-                            <%= order.paymentMethod==='cod' ?"Cash On Delivery":order.paymentMethod%>
-                          </td>
-                          <td>
-                            <% let returnRequestStatus=null; %>
 
-                              <% order.products.forEach(product=> { %>
-                                <% if (product.returnRequest==="Pending" ) { %>
-                                  <% returnRequestStatus="Pending" ; %>
-                                    <% } else if (!returnRequestStatus && (product.returnRequest==="Approved" ||
-                                      product.returnRequest==="Rejected" )) { %>
-                                      <% returnRequestStatus=product.returnRequest; %>
-                                        <% } %>
-                                          <% }) %>
+    <main class="completed-page">
 
-                                            <% if (returnRequestStatus) { %>
-                                              <span
-                                                class="badge <%= returnRequestStatus === 'Pending' ? 'bg-warning' : returnRequestStatus === 'Approved' ? 'bg-success' : 'bg-danger' %>">
-                                                <%= returnRequestStatus %>
-                                              </span>
-                                              <% } else { %>
-                                                <span class="text-muted">No Return Request</span>
-                                                <% } %>
+      <% if (typeof adminmessage !=='undefined' && adminmessage) { %>
+        <div id="flash-message" hidden data-message="<%= adminmessage.message %>"
+          data-type="<%= adminmessage.type || 'success' %>">
+        </div>
+        <% } %>
 
-                          </td>
-                          <td><a href="/admin/orderdetails/<%= order._id %>" class="btn btn-danger btn-sm">View
-                              Details</a></td>
-                        </tr>
-                        <% }) %>
-                    </tbody>
-                  </table>
-                </div>
+          <% const ordersList=completedOrders || []; const pendingReturnOrders=ordersList.filter(order=>
+            (order.products || []).some(product =>
+            product.returnRequest === 'Pending'
+            )
+            ).length;
+
+            const totalRevenue = ordersList.reduce((sum, order) => {
+            const amount = order.finalPrice != null
+            ? order.finalPrice
+            : order.totalAmount;
+
+            return sum + (Number(amount) || 0);
+            }, 0);
+            %>
+
+            <section class="page-header">
+              <div>
+                <h1 class="page-title">Completed Orders</h1>
+                <p class="page-subtitle">
+                  Review completed transactions and manage customer return requests.
+                </p>
               </div>
-            </div>
-      </div>
+
+              <button id="download" class="btn download-btn" type="button">
+                Download Report
+              </button>
+            </section>
+
+            <section class="summary-grid">
+
+              <div class="summary-card">
+                <div class="summary-label">Completed Orders</div>
+                <div class="summary-value">
+                  <%= ordersList.length %>
+                </div>
+                <div class="summary-note">Total completed transactions</div>
+              </div>
+
+              <div class="summary-card">
+                <div class="summary-label">Pending Return Requests</div>
+                <div class="summary-value">
+                  <%= pendingReturnOrders %>
+                </div>
+                <div class="summary-note">Orders requiring return review</div>
+              </div>
+
+              <div class="summary-card">
+                <div class="summary-label">Total Order Value</div>
+                <div class="summary-value">
+                  ₹<%= totalRevenue.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) %>
+                </div>
+                <div class="summary-note">Based on the displayed completed orders</div>
+              </div>
+
+            </section>
+
+            <section class="orders-panel">
+
+              <div class="panel-header">
+                <div>
+                  <h2 class="panel-title">Transaction History</h2>
+                  <p class="panel-subtitle">
+                    View payment details and check return request status.
+                  </p>
+                </div>
+
+                <span class="order-count">
+                  <%= ordersList.length %> Orders
+                </span>
+              </div>
+
+              <div class="table-wrapper">
+
+                <table class="orders-table" id="table-data">
+
+                  <thead>
+                    <tr>
+                      <th>Order ID</th>
+                      <th>Customer</th>
+                      <th>Order Date</th>
+                      <th>Total Amount</th>
+                      <th>Payment</th>
+                      <th>Return Status</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+
+                  <tbody>
+
+                    <% if (ordersList.length> 0) { %>
+
+                      <% ordersList.forEach(order=> { %>
+
+                        <% const productList=order.products || []; let returnRequestStatus=null; if
+                          (productList.some(product=>
+                          product.returnRequest === 'Pending'
+                          )) {
+                          returnRequestStatus = 'Pending';
+                          } else if (productList.some(product =>
+                          product.returnRequest === 'Approved'
+                          )) {
+                          returnRequestStatus = 'Approved';
+                          } else if (productList.some(product =>
+                          product.returnRequest === 'Rejected'
+                          )) {
+                          returnRequestStatus = 'Rejected';
+                          }
+
+                          const statusClass =
+                          returnRequestStatus === 'Pending'
+                          ? 'status-pending'
+                          : returnRequestStatus === 'Approved'
+                          ? 'status-approved'
+                          : returnRequestStatus === 'Rejected'
+                          ? 'status-rejected'
+                          : 'status-none';
+
+                          const orderDate = order.createdAt
+                          ? new Date(order.createdAt)
+                          : null;
+                          %>
+
+                          <tr class="<%= returnRequestStatus === 'Pending' ? 'pending-return-row' : '' %>">
+
+                            <td>
+                              <span class="order-id">
+                                #<%= order.orderId %>
+                              </span>
+                            </td>
+
+                            <td>
+                              <span class="customer-name">
+                                <%= order.userId ? order.userId.username : 'Customer unavailable' %>
+                              </span>
+                            </td>
+
+                            <td>
+                              <span class="date-text">
+                                <%= orderDate && !isNaN(orderDate.getTime()) ? orderDate.toISOString().split('T')[0]
+                                  : 'N/A' %>
+                              </span>
+                            </td>
+
+                            <td>
+                              <span class="amount-text">
+                                ₹<%= Number( order.finalPrice !=null ? order.finalPrice : order.totalAmount
+                                  ).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) %>
+                              </span>
+                            </td>
+
+                            <td>
+                              <span class="payment-method">
+                                <%= order.paymentMethod==='cod' ? 'Cash on Delivery' : order.paymentMethod %>
+                              </span>
+                            </td>
+
+                            <td>
+                              <% if (returnRequestStatus) { %>
+                                <span class="status-badge <%= statusClass %>">
+                                  <% if (returnRequestStatus==='Pending' ) { %>
+                                    &#9679;
+                                    <% } else if (returnRequestStatus==='Approved' ) { %>
+                                      &#10003;
+                                      <% } else { %>
+                                        &#10005;
+                                        <% } %>
+
+                                          <%= returnRequestStatus %>
+                                </span>
+                                <% } else { %>
+                                  <span class="status-badge status-none">
+                                    No Return Request
+                                  </span>
+                                  <% } %>
+                            </td>
+
+                            <td>
+                              <a href="/admin/orderdetails/<%= order._id %>" class="view-btn">
+                                View Details
+                              </a>
+                            </td>
+
+                          </tr>
+
+                          <% }) %>
+
+                            <% } else { %>
+
+                              <tr>
+                                <td colspan="7">
+                                  <div class="empty-state">
+                                    <div class="empty-icon">&#128230;</div>
+                                    <div class="empty-title">
+                                      No completed orders yet
+                                    </div>
+                                    <p class="empty-description">
+                                      Completed transactions will appear here.
+                                    </p>
+                                  </div>
+                                </td>
+                              </tr>
+
+                              <% } %>
+
+                  </tbody>
+
+                </table>
+
+              </div>
+
+            </section>
+
     </main>
+
     <%- include('../partials/adminfooter') %>
+
       <script>
+        const flashMessage = document.getElementById('flash-message');
+
+        if (flashMessage && typeof Swal !== 'undefined') {
+          const message = flashMessage.dataset.message;
+          const type = flashMessage.dataset.type;
+
+          const icon = type === 'danger'
+            ? 'error'
+            : ['success', 'error', 'warning', 'info', 'question'].includes(type)
+              ? type
+              : 'info';
+
+          Swal.fire({
+            toast: true,
+            position: 'top-end',
+            icon: icon,
+            title: message,
+            showConfirmButton: false,
+            timer: 2500,
+            timerProgressBar: true
+          });
+        }
         $(document).ready(function () {
           $('#download').on('click', function () {
             window.location.href = '/admin/download-report';
           });
         });
       </script>
+
 </body>
 
 </html>

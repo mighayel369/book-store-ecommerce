@@ -1,90 +1,514 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login | Shoe Rack</title>
+
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
   <style>
-    .container {
-      height: 90vh
+    :root {
+      --shoe-accent: #f4512c;
+      --shoe-accent-dark: #d94120;
+      --shoe-dark: #202020;
+      --shoe-muted: #777;
+      --shoe-border: #e6e6e6;
+      --shoe-background: #f7f6f3;
     }
 
-    .facebook {
-      text-align: center;
-      background-color: #3b5998;
-      color: white;
-      width: 400px;
-      height: 45px;
-      padding: 7px;
-      border: 2px solid #3b5998;
-      border-radius: 10px;
+    body {
+      margin: 0;
+      background: var(--shoe-background);
+      color: var(--shoe-dark);
+      font-family: Arial, Helvetica, sans-serif;
     }
 
-    .google {
+
+    .login-page {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 75vh;
+      padding: 45px 18px;
+    }
+
+    .login-card {
+      display: grid;
+      grid-template-columns: 0.9fr 1.1fr;
+      width: 100%;
+      max-width: 1000px;
+      min-height: 570px;
+      overflow: hidden;
+      border: 1px solid #eee;
+      border-radius: 22px;
+      background: #fff;
+      box-shadow: 0 18px 55px rgba(0, 0, 0, 0.08);
+    }
+
+
+    .login-promo {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 42px 34px;
+      overflow: hidden;
+      background:
+
+        radial-gradient(circle at 90% 15%,
+          rgba(255, 255, 255, 0.14),
+          transparent 35%),
+        linear-gradient(145deg, #292929, #111);
+      color: #fff;
+    }
+
+    .promo-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 1.45rem;
+      font-weight: 800;
+      letter-spacing: 0.02rem;
+    }
+
+    .promo-brand i {
+      color: var(--shoe-accent);
+      font-size: 1.8rem;
+    }
+
+    .promo-content {
+      position: relative;
+      z-index: 1;
+      margin: 40px 0;
+    }
+
+    .promo-label {
+      display: inline-block;
+      margin-bottom: 20px;
+      padding: 7px 12px;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      border-radius: 20px;
+      color: #ffb4a3;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.1rem;
+      text-transform: uppercase;
+    }
+
+    .promo-content h1 {
+      margin-bottom: 18px;
+      font-size: clamp(2rem, 4vw, 2.8rem);
+      font-weight: 800;
+      line-height: 1.15;
+      letter-spacing: -0.07rem;
+    }
+
+    .promo-content h1 span {
+      color: var(--shoe-accent);
+    }
+
+    .promo-content p {
+      max-width: 300px;
+      color: #c7c7c7;
+      font-size: 0.95rem;
+      line-height: 1.8;
+    }
+
+    .promo-footer {
+      color: #b5b5b5;
+      font-size: 0.82rem;
+    }
+
+    .promo-footer i {
+      margin-right: 7px;
+      color: var(--shoe-accent);
+    }
+
+
+
+    .login-form-panel {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 48px 42px;
+    }
+
+    .login-form-content {
+      width: 100%;
+      max-width: 390px;
+    }
+
+    .login-heading {
+      margin-bottom: 8px;
+      font-size: 2rem;
+      font-weight: 800;
+      letter-spacing: -0.05rem;
+    }
+
+    .login-subtitle {
+      margin-bottom: 28px;
+      color: var(--shoe-muted);
+      font-size: 0.92rem;
+      line-height: 1.6;
+    }
+
+
+    .social-login {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 11px;
+      width: 100%;
+      min-height: 47px;
+      margin-bottom: 12px;
+      padding: 10px 14px;
+      border: 1px solid var(--shoe-border);
+      border-radius: 9px;
+      background: #fff;
+      color: #333;
+      font-size: 0.9rem;
+      font-weight: 650;
+      text-decoration: none;
+      transition: background 0.2s, border-color 0.2s;
+    }
+
+    .social-login:hover {
+      border-color: #c8c8c8;
+      background: #f8f8f8;
+      color: #111;
+    }
+
+    .social-login .fa-facebook-f {
+      color: #1877f2;
+      font-size: 1.1rem;
+    }
+
+    .social-login .fa-google {
+      color: #db4437;
+      font-size: 1.1rem;
+    }
+
+    .login-divider {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin: 23px 0;
+      color: #999;
+      font-size: 0.78rem;
+    }
+
+    .login-divider::before,
+    .login-divider::after {
+      flex: 1;
+      height: 1px;
+      background: var(--shoe-border);
+      content: "";
+    }
+
+
+    .form-label {
+      margin-bottom: 8px;
+      color: #333;
+      font-size: 0.87rem;
+      font-weight: 700;
+    }
+
+    .login-input {
+      min-height: 47px;
+      padding: 12px 14px;
+      border: 1px solid #dedede;
+      border-radius: 9px;
+      background: #fff;
+      font-size: 0.92rem;
+      box-shadow: none !important;
+    }
+
+    .login-input:focus {
+      border-color: var(--shoe-accent);
+      box-shadow: 0 0 0 3px rgba(244, 81, 44, 0.1) !important;
+    }
+
+    .password-wrapper {
+      position: relative;
+    }
+
+    .password-wrapper .login-input {
+      padding-right: 48px;
+    }
+
+    .toggle-password {
+      position: absolute;
+      top: 50%;
+      right: 15px;
+      padding: 5px;
+      transform: translateY(-50%);
+      border: none;
+      background: transparent;
+      color: #777;
+      cursor: pointer;
+    }
+
+    .toggle-password:hover {
+      color: var(--shoe-accent);
+    }
+
+    .forgot-password {
+      color: #444;
+      font-size: 0.84rem;
+      text-decoration: none;
+    }
+
+    .forgot-password:hover {
+      color: var(--shoe-accent);
+    }
+
+
+    .login-submit {
+      width: 100%;
+      min-height: 48px;
+      border: 1px solid var(--shoe-accent);
+      border-radius: 9px;
+      background: var(--shoe-accent);
+      color: #fff;
+      font-size: 0.95rem;
+      font-weight: 750;
+      transition: background 0.2s, transform 0.2s;
+    }
+
+    .login-submit:hover {
+      transform: translateY(-1px);
+      border-color: var(--shoe-accent-dark);
+      background: var(--shoe-accent-dark);
+      color: #fff;
+    }
+
+    .login-error {
+      padding: 10px 12px;
+      border: 1px solid #f3c5c5;
+      border-radius: 8px;
+      background: #fff2f2;
+      color: #c62828;
+      font-size: 0.85rem;
+    }
+
+    .signup-text {
+      margin: 22px 0 0;
+      color: var(--shoe-muted);
+      font-size: 0.88rem;
       text-align: center;
-      background-color: red;
-      color: white;
-      width: 400px;
-      height: 45px;
-      padding: 7px;
-      border: 2px solid red;
-      border-radius: 10px;
-      opacity: 80%;
+    }
+
+    .signup-text a {
+      color: var(--shoe-accent);
+      font-weight: 750;
+      text-decoration: none;
+    }
+
+    .signup-text a:hover {
+      text-decoration: underline;
+    }
+
+
+
+    @media (max-width: 767px) {
+      .login-page {
+        min-height: auto;
+        padding: 28px 14px 40px;
+      }
+
+      .login-card {
+        grid-template-columns: 1fr;
+        max-width: 470px;
+        min-height: auto;
+        border-radius: 17px;
+      }
+
+      .login-promo {
+        min-height: auto;
+        padding: 25px 25px 20px;
+      }
+
+      .promo-content {
+        margin: 28px 0 18px;
+      }
+
+      .promo-content h1 {
+        max-width: 350px;
+        font-size: 2rem;
+      }
+
+      .promo-content p {
+        margin-bottom: 0;
+      }
+
+      .promo-footer {
+        display: none;
+      }
+
+      .login-form-panel {
+        padding: 32px 25px 35px;
+      }
+
+      .login-heading {
+        font-size: 1.75rem;
+      }
+    }
+
+    @media (max-width: 380px) {
+      .login-promo {
+        padding: 22px 19px;
+      }
+
+      .login-form-panel {
+        padding: 28px 18px;
+      }
+
+      .promo-content h1 {
+        font-size: 1.8rem;
+      }
     }
   </style>
-  <!-- Bootstrap CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-
-  <title>Shoe Rack</title>
 </head>
 
 <body>
+
+
   <%- include('../partials/userHeader') %>
-    <div class="container  d-flex justify-content-center align-items-center">
-      <div class="login">
-        <h3 class="fw-bold text-center mb-5 fs-2">Login</h3>
-        <div class="facebook"><a href="/facebook" class="text-decoration-none text-white"><span><i
-                class="fa-brands fa-facebook-f mx-3 fs-4"></i></span>Sign in with Facebook</a></div>
-        <div class="google mt-3"><a href="/google" class="text-decoration-none text-white"><span><i
-                class="fa-brands fa-google mx-3 fs-4"></i></span>Sign in with Google</a></div>
-        <p class="text-center my-4">Please enter your email and password:</p>
-        <form action="/login" method="post">
-          <div class="mb-3 mt-3">
-            <input type="email" class="form-control" id="email" placeholder="Enter email" name="email">
+
+    <main class="login-page">
+
+      <div class="login-card">
+
+        <section class="login-promo">
+
+          <div class="promo-brand">
+            <i class="fa-solid fa-shoe-prints"></i>
+            <span>Shoe Rack</span>
           </div>
-          <div class=" position-relative">
-            <input type="password" class="form-control" id="password" placeholder="Enter password" name="password">
-            <span id="togglePassword" class="position-absolute top-50 end-0 translate-middle-y me-3 cursor-pointer">
-              <i class="fas fa-eye-slash"></i>
-            </span>
+
+          <div class="promo-content">
+            <span class="promo-label">Step into style</span>
+
+            <h1>
+              Every step<br>
+              starts with<br>
+              <span>the right pair.</span>
+            </h1>
+
+            <p>
+              Discover your next favourite pair.
+              Sign in to explore your collection,
+              manage your wishlist, and shop your style.
+            </p>
           </div>
-          <div class="d-flex justify-content-end mb-3">
-            <a href='/verify-email' class="text-decoration-none text-dark" style="font-size:.9rem;">Forgot Password</a>
+
+          <div class="promo-footer">
+            <i class="fa-solid fa-heart"></i>
+            Find your style. Own every step.
           </div>
-          <div class="d-flex justify-content-center">
-            <% if (message) { %>
-              <p class="text-danger fw-light">
-                <%= message.message %>
-              </p>
-              <% } %>
+
+        </section>
+
+
+        <section class="login-form-panel">
+
+          <div class="login-form-content">
+
+            <h2 class="login-heading">Welcome back!</h2>
+
+            <p class="login-subtitle">
+              Sign in to your account to continue shopping.
+            </p>
+
+            <a href="/facebook" class="social-login">
+              <i class="fa-brands fa-facebook-f"></i>
+              <span>Continue with Facebook</span>
+            </a>
+
+
+            <a href="/google" class="social-login">
+              <i class="fa-brands fa-google"></i>
+              <span>Continue with Google</span>
+            </a>
+
+            <div class="login-divider">
+              OR SIGN IN WITH EMAIL
+            </div>
+
+            <form action="/login" method="post">
+
+              <div class="mb-3">
+                <label for="email" class="form-label">
+                  Email address
+                </label>
+
+                <input type="email" class="form-control login-input" id="email" name="email"
+                  placeholder="you@example.com" autocomplete="email" required>
+              </div>
+
+              <div class="mb-3">
+                <label for="password" class="form-label">
+                  Password
+                </label>
+
+                <div class="password-wrapper">
+
+                  <input type="password" class="form-control login-input" id="password" name="password"
+                    placeholder="Enter your password" autocomplete="current-password" required>
+
+                  <button type="button" id="togglePassword" class="toggle-password" aria-label="Show password"
+                    aria-pressed="false">
+
+                    <i class="fa-solid fa-eye-slash" aria-hidden="true"></i>
+
+                  </button>
+
+                </div>
+              </div>
+
+              <div class="d-flex justify-content-end mb-4">
+                <a href="/verify-email" class="forgot-password">
+                  Forgot password?
+                </a>
+              </div>
+
+              <% if (typeof message !=='undefined' && message) { %>
+                <div class="login-error mb-3" role="alert">
+                  <i class="fa-solid fa-circle-exclamation me-2"></i>
+                  <%= message.message %>
+                </div>
+                <% } %>
+
+                  <button type="submit" class="login-submit">
+                    Sign In
+                    <i class="fa-solid fa-arrow-right ms-2"></i>
+                  </button>
+
+                  <p class="signup-text">
+                    Don't have an account?
+                    <a href="/signup">Create an account</a>
+                  </p>
+
+            </form>
+
           </div>
-          <div class="d-grid">
-            <button class="btn btn-dark" type="submit">Login</button>
-          </div>
-          <p class="text-center mt-2">Don't have an account?<a href='/signup'
-              class="link-primary  fw-bold text-decoration-none mx-2">Signup</a></p>
-        </form>
+        </section>
+
       </div>
-    </div>
+    </main>
+
+
     <%- include('../partials/userfooter') %>
 
-      <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
-        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
-        crossorigin="anonymous"></script>
-      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
-        integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
-        crossorigin="anonymous"></script>
+
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
 
       <script>
         document.addEventListener('DOMContentLoaded', function () {
@@ -92,18 +516,24 @@
           const password = document.getElementById('password');
 
           togglePassword.addEventListener('click', function () {
-            const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
-            password.setAttribute('type', type);
+            const isPassword = password.type === 'password';
 
-            this.querySelector('i').classList.toggle('fa-eye');
-            this.querySelector('i').classList.toggle('fa-eye-slash');
+            password.type = isPassword ? 'text' : 'password';
+
+            const icon = this.querySelector('i');
+
+            icon.classList.toggle('fa-eye', isPassword);
+            icon.classList.toggle('fa-eye-slash', !isPassword);
+
+            this.setAttribute('aria-pressed', String(isPassword));
+            this.setAttribute(
+              'aria-label',
+              isPassword ? 'Hide password' : 'Show password'
+            );
           });
         });
       </script>
 
-</body>
-
-</html>
 </body>
 
 </html>

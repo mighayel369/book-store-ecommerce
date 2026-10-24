@@ -4,34 +4,285 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Shoe Rack</title>
+  <title>Shoe Rack - Edit Product</title>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.css">
+
   <style>
-    .couponDiv {
-      background-color: #a2c7ec;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-      width: 450px;
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      background: #f5f6fa;
+    }
+
+    .edit-product-page {
+      width: 100%;
+      max-width: 1200px;
       margin: 0 auto;
+      padding: 32px 24px 48px;
+      margin-left: 260px;
     }
 
-    .coupon-header {
-      border-bottom: 1px solid #dee2e6;
-      padding-bottom: 8px;
-      margin-bottom: 15px;
+    .edit-product-heading {
+      margin-bottom: 24px;
     }
 
-    .form-label {
-      font-size: 0.9rem;
+    .edit-product-heading h2 {
+      font-size: 25px;
+      font-weight: 700;
+      color: #212529;
+      margin-bottom: 6px;
     }
 
-    .form-control,
-    .form-select {
-      font-size: 0.9rem;
+    .edit-product-heading p {
+      color: #6c757d;
+      font-size: 14px;
+      margin: 0;
     }
 
-    .btn {
-      font-size: 0.9rem;
+    .edit-product-card {
+      background: #fff;
+      width: 100%;
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 30px;
+      border: 1px solid #e9ecef;
+      border-radius: 14px;
+      box-shadow: 0 5px 22px rgba(0, 0, 0, 0.045);
+    }
+
+    .edit-product-card-header {
+      padding-bottom: 20px;
+      margin-bottom: 24px;
+      border-bottom: 1px solid #edf0f2;
+    }
+
+    .edit-product-card-header h4 {
+      font-size: 20px;
+      font-weight: 700;
+      margin: 0 0 6px;
+      color: #212529;
+    }
+
+    .edit-product-card-header p {
+      margin: 0;
+      color: #6c757d;
+      font-size: 13px;
+    }
+
+    .edit-product-page .form-label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: #343a40;
+      margin-bottom: 8px;
+    }
+
+    .edit-product-page .form-control,
+    .edit-product-page .form-select {
+      width: 100%;
+      min-height: 43px;
+      font-size: 14px;
+      border: 1px solid #dce1e7;
+      border-radius: 7px;
+      padding: 10px 12px;
+      box-shadow: none;
+    }
+
+    .edit-product-page textarea.form-control {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    .edit-product-page .form-control:focus,
+    .edit-product-page .form-select:focus {
+      border-color: #495057;
+      box-shadow: 0 0 0 3px rgba(33, 37, 41, 0.08);
+    }
+
+    .edit-product-page .form-text {
+      font-size: 12px;
+      color: #6c757d;
+      margin-top: 6px;
+    }
+
+    .product-image-field {
+      background: #fafbfc;
+      border: 1px solid #e9ecef;
+      border-radius: 10px;
+      padding: 16px;
+      margin-bottom: 18px;
+    }
+
+    .product-image-field .form-control {
+      background: #fff;
+    }
+
+    .product-preview {
+      display: block;
+      width: 115px;
+      height: 115px;
+      object-fit: cover;
+      background: #fff;
+      border: 1px solid #dee2e6;
+      border-radius: 8px;
+      margin-top: 14px;
+    }
+
+    .crop-status {
+      margin-top: 8px;
+      font-size: 12px;
+      color: #6c757d;
+      overflow-wrap: anywhere;
+    }
+
+    .crop-status.ready {
+      color: #198754;
+    }
+
+    .image-note {
+      font-size: 12px;
+      color: #6c757d;
+      margin-top: 5px;
+    }
+
+    .edit-product-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 28px;
+      padding-top: 22px;
+      border-top: 1px solid #edf0f2;
+    }
+
+    .edit-product-actions .btn {
+      min-height: 42px;
+      padding: 10px 22px;
+      border-radius: 7px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .edit-product-actions .btn-dark {
+      background: #212529;
+    }
+
+    .edit-product-actions .btn-dark:hover {
+      background: #343a40;
+    }
+
+    .crop-modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 99999;
+      background: rgba(15, 18, 22, 0.78);
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+
+    .crop-modal.show {
+      display: flex;
+    }
+
+    .crop-modal-content {
+      background: #fff;
+      width: 100%;
+      max-width: 680px;
+      max-height: 94vh;
+      overflow-y: auto;
+      padding: 24px;
+      border-radius: 12px;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+    }
+
+    .crop-modal-content h5 {
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .crop-container {
+      width: 100%;
+      height: 360px;
+      margin: 18px 0;
+      background: #f1f3f5;
+      overflow: hidden;
+    }
+
+    .crop-container img {
+      display: block;
+      max-width: 100%;
+    }
+
+    .crop-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .crop-actions .btn {
+      min-height: 38px;
+      padding: 8px 16px;
+      font-size: 13px;
+    }
+
+    @media (max-width: 768px) {
+      .edit-product-page {
+        padding: 24px 16px 32px;
+      }
+
+      .edit-product-card {
+        padding: 22px;
+      }
+
+      .edit-product-heading h2 {
+        font-size: 22px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .edit-product-page {
+        padding: 18px 10px 28px;
+      }
+
+      .edit-product-card {
+        padding: 16px;
+        border-radius: 10px;
+      }
+
+      .edit-product-card-header h4 {
+        font-size: 18px;
+      }
+
+      .product-image-field {
+        padding: 12px;
+      }
+
+      .product-preview {
+        width: 95px;
+        height: 95px;
+      }
+
+      .crop-modal-content {
+        padding: 16px;
+      }
+
+      .crop-container {
+        height: 270px;
+      }
+
+      .edit-product-actions {
+        flex-direction: column-reverse;
+      }
+
+      .edit-product-actions .btn {
+        width: 100%;
+      }
     }
   </style>
 </head>
@@ -40,78 +291,367 @@
 
   <%- include('../partials/adminHeader') %>
 
-    <main>
-      <div class="container mt-4">
-        <div class="row">
-          <div class="col-lg-6 mx-auto">
-            <div class="couponDiv">
-              <div class="coupon-header text-center">
-                <h5 class="fw-bold"><i class="fa-solid fa-book mx-1"></i> Edit Product</h5>
-              </div>
-              <form action="/admin/editproduct/<%= productdata._id %>" method="post" enctype="multipart/form-data">
-                <div class="mb-3">
-                  <label for="productname" class="form-label">Product Name</label>
-                  <input type="string" class="form-control" id="productname" name="productname"
-                    value="<%= productdata.productname %>">
-                </div>
-                <div class="mb-3">
-                  <label for="productdescription" class="form-label">Description</label>
-                  <input type="String" class="form-control" id="productdescription" name="productdescription"
-                    value="<%= productdata.productdescription %>">
-                </div>
-                <div class="mb-3">
-                  <label for="productcategory" class="form-label">Product Category</label>
-                  <select class="form-select" aria-label="Default select example" name="productcategory">
-                    <% availableCategory.forEach(element=> { %>
-                      <option value="<%= element.categoryname %>">
-                        <%= element.categoryname %>
-                      </option>
-                      <% }) %>
-                  </select>
-                </div>
-                <div class="mb-3">
-                  <label for="productprice" class="form-label">Price</label>
-                  <input type="number" class="form-control" id="productprice" name="productprice"
-                    value="<%= productdata.productprice %>">
-                </div>
-                <div class="mb-3">
-                  <label for="stockqty" class="form-label">Stock Qty</label>
-                  <input type="number" class="form-control" id="stockqty" name="stockqty"
-                    value="<%= productdata.stockqty %>">
-                </div>
-                <div class="mb-1">
-                  <label for="cover_image" class="form-label">Cover Image</label>
-                  <input type="file" class="form-control" id="cover_image" placeholder="file not chosen"
-                    name="cover_image">
-                  <img src="/product_images/<%= productdata.image[0] %>" width="50px" height="50px" class="mt-3">
-                  <input type="hidden" name="old_image" value="<%= productdata.image[0] %>" />
-                </div>
-                <div class="mb-1">
-                  <label for="image1" class="form-label">Image 1</label>
-                  <input type="file" class="form-control" id="image1" placeholder="file not chosen" name="image1"
-                    onchange="viewImage(event)">
-                  <img src="/product_images/<%= productdata.image[1] %>" width="50px" height="50px" class="mt-3"
-                    id="img-view">
-                  <input type="hidden" name="old_image" value="<%=productdata.image[1] %>" />
-                </div>
-                <div class="mb-1">
-                  <label for="image2" class="form-label">Image 2</label>
-                  <input type="file" class="form-control" id="image2" placeholder="file not chosen" name="image2">
-                  <img src="/product_images/<%= productdata.image[2] %>" width="50px" height="50px" class="mt-3">
-                  <input type="hidden" name="old_image" value="<%= productdata.image[2] %>" />
-                </div>
-                <div class="d-grid mt-3">
-                  <button type="submit" class="btn btn-dark btn-sm"> Save Changes</button>
-                </div>
-              </form>
-            </div>
-          </div>
-        </div>
+    <main class="edit-product-page">
+
+      <div class="edit-product-heading">
+        <h2>
+          <i class="fa-solid fa-shoe-prints me-2"></i>
+          Edit Product
+        </h2>
+        <p>Update product details, pricing, stock, and images.</p>
       </div>
+
+      <div class="edit-product-card">
+
+        <div class="edit-product-card-header">
+          <h4>Product Information</h4>
+          <p>Make your changes below and save when finished.</p>
+        </div>
+
+        <form id="editProductForm" action="/admin/editproduct/<%= productdata._id %>" method="post"
+          enctype="multipart/form-data">
+
+          <div class="mb-4">
+            <label for="productname" class="form-label">
+              Product Name
+            </label>
+
+            <input type="text" class="form-control" id="productname" name="productname"
+              value="<%= productdata.productname %>" maxlength="150" required>
+          </div>
+
+          <div class="mb-4">
+            <label for="productdescription" class="form-label">
+              Product Description
+            </label>
+
+            <textarea class="form-control" id="productdescription" name="productdescription" rows="4"
+              required><%= productdata.productdescription %></textarea>
+          </div>
+
+          <div class="mb-4">
+            <label for="productcategory" class="form-label">
+              Product Category
+            </label>
+
+            <select class="form-select" id="productcategory" name="productcategory" required>
+
+              <% availableCategory.forEach(element=> { %>
+                <option value="<%= element.categoryname %>" <%=String(productdata.productcategory)===String(element._id)
+                  || String(productdata.productcategory)===String(element.categoryname) ? 'selected' : '' %>>
+                  <%= element.categoryname %>
+                </option>
+                <% }) %>
+
+            </select>
+          </div>
+
+          <div class="row g-3 mb-4">
+
+            <div class="col-md-6">
+              <label for="productprice" class="form-label">
+                Price (₹)
+              </label>
+
+              <input type="number" class="form-control" id="productprice" name="productprice"
+                value="<%= productdata.productprice %>" min="0.01" step="0.01" required>
+            </div>
+
+            <div class="col-md-6">
+              <label for="stockqty" class="form-label">
+                Stock Quantity
+              </label>
+
+              <input type="number" class="form-control" id="stockqty" name="stockqty"
+                value="<%= productdata.stockqty %>" min="0" step="1" required>
+            </div>
+
+          </div>
+
+          <div class="mb-3">
+            <h5 class="fw-bold mb-1" style="font-size: 16px;">
+              Product Images
+            </h5>
+            <p class="text-muted small mb-3">
+              Select a new image only if you want to replace the current one.
+              Images are cropped to a consistent portrait ratio.
+            </p>
+          </div>
+
+          <div class="product-image-field">
+            <label for="cover_image" class="form-label">
+              Cover Image
+            </label>
+
+            <input type="file" class="form-control crop-input" id="cover_image" name="cover_image" accept="image/*"
+              data-preview="cover-preview" data-status="cover-status">
+
+            <img src="<%= productdata.image && productdata.image[0] ? productdata.image[0] : '' %>"
+              class="product-preview" id="cover-preview" alt="Current cover image">
+
+            <div class="crop-status" id="cover-status">
+              Current image will be kept unless you replace it.
+            </div>
+
+            <input type="hidden" name="old_image"
+              value="<%= productdata.image && productdata.image[0] ? productdata.image[0] : '' %>">
+          </div>
+
+          <div class="product-image-field">
+            <label for="image1" class="form-label">
+              Product Image 1
+            </label>
+
+            <input type="file" class="form-control crop-input" id="image1" name="image1" accept="image/*"
+              data-preview="image1-preview" data-status="image1-status">
+
+            <img src="<%= productdata.image && productdata.image[1] ? productdata.image[1] : '' %>"
+              class="product-preview" id="image1-preview" alt="Current product image 1">
+
+            <div class="crop-status" id="image1-status">
+              Current image will be kept unless you replace it.
+            </div>
+
+            <input type="hidden" name="old_image"
+              value="<%= productdata.image && productdata.image[1] ? productdata.image[1] : '' %>">
+          </div>
+
+          <div class="product-image-field">
+            <label for="image2" class="form-label">
+              Product Image 2
+            </label>
+
+            <input type="file" class="form-control crop-input" id="image2" name="image2" accept="image/*"
+              data-preview="image2-preview" data-status="image2-status">
+
+            <img src="<%= productdata.image && productdata.image[2] ? productdata.image[2] : '' %>"
+              class="product-preview" id="image2-preview" alt="Current product image 2">
+
+            <div class="crop-status" id="image2-status">
+              Current image will be kept unless you replace it.
+            </div>
+
+            <input type="hidden" name="old_image"
+              value="<%= productdata.image && productdata.image[2] ? productdata.image[2] : '' %>">
+          </div>
+
+          <div class="edit-product-actions">
+            <a href="/admin/products" class="btn btn-outline-secondary">
+              Cancel
+            </a>
+
+            <button type="submit" class="btn btn-dark" id="submitBtn">
+              <i class="fa-solid fa-check me-2"></i>
+              Save Changes
+            </button>
+          </div>
+
+        </form>
+      </div>
+
     </main>
+
+    <div class="crop-modal" id="cropModal" role="dialog" aria-modal="true" aria-labelledby="cropTitle">
+
+      <div class="crop-modal-content">
+
+        <h5 id="cropTitle">Crop Product Image</h5>
+
+        <p class="text-muted small">
+          Adjust the image, then select Crop Image to use it.
+        </p>
+
+        <div class="crop-container">
+          <img src="" id="cropImage" alt="Image to crop">
+        </div>
+
+        <div class="crop-actions">
+          <button type="button" class="btn btn-outline-secondary" id="cancelCrop">
+            Cancel
+          </button>
+
+          <button type="button" class="btn btn-dark" id="cropButton">
+            Crop Image
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.js"></script>
+
     <script>
-      function viewImage(event) {
-        document.getElementById('img-view').src = URL.createObjectURL(event.target.files[0])
+      const cropModal = document.getElementById('cropModal');
+      const cropImage = document.getElementById('cropImage');
+      const cropButton = document.getElementById('cropButton');
+      const cancelCrop = document.getElementById('cancelCrop');
+      const editProductForm = document.getElementById('editProductForm');
+
+      let cropper = null;
+      let activeInput = null;
+      let activePreview = null;
+      let activeStatus = null;
+      let originalPreview = '';
+      let originalStatus = '';
+      let pendingObjectUrl = null;
+
+      document.querySelectorAll('.crop-input').forEach(input => {
+        input.addEventListener('change', function () {
+          const file = this.files && this.files[0];
+
+          if (!file) return;
+
+          if (!file.type.startsWith('image/')) {
+            alert('Please select a valid image.');
+            this.value = '';
+            return;
+          }
+
+          activeInput = this;
+          activePreview = document.getElementById(this.dataset.preview);
+          activeStatus = document.getElementById(this.dataset.status);
+
+          originalPreview = activePreview.src;
+          originalStatus = activeStatus.textContent;
+
+          const reader = new FileReader();
+
+          reader.onload = function (event) {
+            cropImage.onload = function () {
+              if (cropper) {
+                cropper.destroy();
+                cropper = null;
+              }
+
+              cropper = new Cropper(cropImage, {
+                aspectRatio: 3.5 / 4,
+                viewMode: 1,
+                dragMode: 'move',
+                autoCropArea: 0.9,
+                responsive: true,
+                background: false,
+                movable: true,
+                zoomable: true,
+                rotatable: true,
+                scalable: false
+              });
+
+              cropModal.classList.add('show');
+              document.body.style.overflow = 'hidden';
+            };
+
+            cropImage.src = event.target.result;
+          };
+
+          reader.onerror = () => {
+            alert('Unable to read this image. Please try another image.');
+            this.value = '';
+          };
+
+          reader.readAsDataURL(file);
+        });
+      });
+
+      cropButton.addEventListener('click', function () {
+        if (!cropper || !activeInput) return;
+
+        const canvas = cropper.getCroppedCanvas({
+          width: 700,
+          height: 800,
+          imageSmoothingEnabled: true,
+          imageSmoothingQuality: 'high'
+        });
+
+        if (!canvas) {
+          alert('Could not crop this image. Please try another image.');
+          return;
+        }
+
+        cropButton.disabled = true;
+        cropButton.textContent = 'Cropping...';
+
+        canvas.toBlob(function (blob) {
+          cropButton.disabled = false;
+          cropButton.textContent = 'Crop Image';
+
+          if (!blob) {
+            alert('Could not crop this image. Please try another image.');
+            return;
+          }
+
+          const croppedFile = new File(
+            [blob],
+            activeInput.name + '_' + Date.now() + '.png',
+            { type: 'image/png' }
+          );
+
+          const dataTransfer = new DataTransfer();
+          dataTransfer.items.add(croppedFile);
+          activeInput.files = dataTransfer.files;
+
+          if (pendingObjectUrl) {
+            URL.revokeObjectURL(pendingObjectUrl);
+          }
+
+          pendingObjectUrl = URL.createObjectURL(blob);
+          activePreview.src = pendingObjectUrl;
+          activeStatus.textContent = 'Cropped image ready to upload.';
+          activeStatus.classList.add('ready');
+
+          closeCropper();
+        }, 'image/png');
+      });
+
+      cancelCrop.addEventListener('click', function () {
+        if (activeInput) {
+          activeInput.value = '';
+        }
+
+        if (activePreview) {
+          activePreview.src = originalPreview;
+        }
+
+        if (activeStatus) {
+          activeStatus.textContent = originalStatus;
+          activeStatus.classList.remove('ready');
+        }
+
+        closeCropper();
+      });
+
+      function closeCropper() {
+        cropModal.classList.remove('show');
+        document.body.style.overflow = '';
+
+        if (cropper) {
+          cropper.destroy();
+          cropper = null;
+        }
+
+        cropImage.onload = null;
+        cropImage.removeAttribute('src');
+
+        activeInput = null;
+        activePreview = null;
+        activeStatus = null;
       }
+
+      editProductForm.addEventListener('submit', function (event) {
+        if (cropModal.classList.contains('show')) {
+          event.preventDefault();
+          alert('Please crop or cancel the selected image first.');
+        }
+      });
+
+      document.addEventListener('keydown', function (event) {
+        if (event.key === 'Escape' && cropModal.classList.contains('show')) {
+          cancelCrop.click();
+        }
+      });
     </script>
+
     <%- include('../partials/adminfooter') %>
+
+</body>
+
+</html>

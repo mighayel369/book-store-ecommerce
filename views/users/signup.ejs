@@ -1,101 +1,604 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Account | Shoe Rack</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
   <style>
-    .container {
-      height: 110vh
+    :root {
+      --accent: #f4512c;
+      --dark: #202020;
+      --muted: #777;
+      --border: #e7e7e7;
+      --background: #faf9f7;
     }
 
-    .facebook {
-      text-align: center;
-      background-color: #3b5998;
-      color: white;
-      width: 400px;
-      height: 45px;
-      padding: 7px;
-      border: 2px solid #3b5998;
-      border-radius: 10px;
+    * {
+      box-sizing: border-box;
     }
 
-    .google {
-      text-align: center;
-      background-color: red;
+    body {
+      margin: 0;
+      background: var(--background);
+      color: var(--dark);
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    .signup-page {
+      min-height: 100vh;
+      padding: 40px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .signup-card {
+      width: 100%;
+      max-width: 1050px;
+      min-height: 650px;
+      display: grid;
+      grid-template-columns: 0.9fr 1.1fr;
+      background: #fff;
+      border-radius: 22px;
+      overflow: hidden;
+      box-shadow: 0 15px 50px rgba(0, 0, 0, 0.08);
+    }
+
+
+    .signup-promo {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 42px 34px;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 90% 15%,
+          rgba(244, 81, 44, 0.10),
+          transparent 35%),
+        linear-gradient(145deg, #ffffff, #fff5f1);
+      color: var(--dark);
+    }
+
+    .signup-promo-content,
+    .signup-promo-bottom {
+      position: relative;
+      z-index: 1;
+    }
+
+    .signup-brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--dark);
+      font-size: 23px;
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    .signup-brand-icon {
+      width: 42px;
+      height: 42px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--accent);
       color: white;
-      width: 400px;
-      height: 45px;
-      padding: 7px;
-      border: 2px solid red;
-      border-radius: 10px;
-      opacity: 80%;
+      border-radius: 12px;
+    }
+
+    .signup-promo h1 {
+      margin-top: 65px;
+      margin-bottom: 20px;
+      font-size: clamp(32px, 3.5vw, 43px);
+      line-height: 1.2;
+      font-weight: 800;
+      letter-spacing: -1.3px;
+    }
+
+    .signup-promo h1 span {
+      color: var(--accent);
+    }
+
+    .signup-promo-description {
+      max-width: 340px;
+      color: #666;
+      font-size: 15px;
+      line-height: 1.8;
+    }
+
+    .signup-benefits {
+      display: grid;
+      gap: 18px;
+      margin-top: 36px;
+    }
+
+    .signup-benefit {
+      display: flex;
+      align-items: center;
+      gap: 13px;
+      color: #444;
+      font-size: 14px;
+    }
+
+    .signup-benefit-icon {
+      width: 38px;
+      height: 38px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 11px;
+      background: #fff;
+      color: var(--accent);
+      box-shadow: 0 3px 12px rgba(0, 0, 0, 0.04);
+    }
+
+    .signup-promo-bottom {
+      margin-top: 45px;
+      color: #777;
+      font-size: 12px;
+    }
+
+
+    .signup-form-panel {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 45px 48px;
+    }
+
+    .signup-form-content {
+      width: 100%;
+      max-width: 400px;
+    }
+
+    .signup-heading {
+      margin-bottom: 8px;
+      font-size: 30px;
+      font-weight: 800;
+      letter-spacing: -0.7px;
+    }
+
+    .signup-subheading {
+      margin-bottom: 25px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .social-button {
+      width: 100%;
+      min-height: 45px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 12px;
+      padding: 10px 15px;
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      background: #fff;
+      color: #333;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 600;
+      transition: background 0.2s, border-color 0.2s;
+    }
+
+    .social-button:hover {
+      background: #fafafa;
+      border-color: #ccc;
+      color: #111;
+    }
+
+    .facebook-icon {
+      color: #1877f2;
+      font-size: 19px;
+    }
+
+    .google-icon {
+      color: #db4437;
+      font-size: 18px;
+    }
+
+    .signup-divider {
+      display: flex;
+      align-items: center;
+      gap: 13px;
+      margin: 22px 0;
+      color: #999;
+      font-size: 12px;
+    }
+
+    .signup-divider::before,
+    .signup-divider::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .signup-form .form-label {
+      margin-bottom: 7px;
+      color: #333;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .signup-form .form-control {
+      min-height: 46px;
+      border: 1px solid #e1e1e1;
+      border-radius: 9px;
+      padding: 11px 13px;
+      font-size: 14px;
+      box-shadow: none;
+    }
+
+    .signup-form .form-control:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(244, 81, 44, 0.10);
+    }
+
+    .signup-form .form-control::placeholder {
+      color: #aaa;
+    }
+
+    .password-wrapper {
+      position: relative;
+    }
+
+    .password-wrapper .form-control {
+      padding-right: 45px;
+    }
+
+    .password-toggle {
+      position: absolute;
+      top: 50%;
+      right: 13px;
+      transform: translateY(-50%);
+      padding: 4px;
+      border: 0;
+      background: transparent;
+      color: #888;
+      cursor: pointer;
+    }
+
+    .password-toggle:hover {
+      color: var(--accent);
+    }
+
+    .signup-submit {
+      width: 100%;
+      min-height: 47px;
+      margin-top: 8px;
+      border: 0;
+      border-radius: 9px;
+      background: var(--accent);
+      color: #fff;
+      font-size: 14px;
+      font-weight: 700;
+      transition: background 0.2s, transform 0.2s;
+    }
+
+    .signup-submit:hover {
+      background: #df3f1c;
+      transform: translateY(-1px);
+    }
+
+    .signup-error {
+      margin-bottom: 15px;
+      padding: 11px 13px;
+      border: 1px solid #f3caca;
+      border-radius: 8px;
+      background: #fff1f1;
+      color: #b42318;
+      font-size: 13px;
+    }
+
+    .signup-login-link {
+      margin-top: 21px;
+      margin-bottom: 0;
+      color: #777;
+      font-size: 13px;
+      text-align: center;
+    }
+
+    .signup-login-link a {
+      color: var(--accent);
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .signup-login-link a:hover {
+      text-decoration: underline;
+    }
+
+
+    @media (max-width: 850px) {
+      .signup-card {
+        max-width: 550px;
+        grid-template-columns: 1fr;
+      }
+
+      .signup-promo {
+        min-height: 280px;
+        padding: 30px;
+      }
+
+      .signup-promo h1 {
+        margin-top: 35px;
+        font-size: 32px;
+      }
+
+      .signup-promo-description {
+        max-width: 450px;
+      }
+
+      .signup-benefits {
+        display: none;
+      }
+
+      .signup-promo-bottom {
+        margin-top: 25px;
+      }
+
+      .signup-form-panel {
+        padding: 35px 30px 40px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .signup-page {
+        padding: 18px 12px;
+      }
+
+      .signup-card {
+        border-radius: 15px;
+      }
+
+      .signup-promo {
+        min-height: 235px;
+        padding: 24px;
+      }
+
+      .signup-promo h1 {
+        margin-top: 27px;
+        margin-bottom: 12px;
+        font-size: 29px;
+      }
+
+      .signup-promo-description {
+        font-size: 13px;
+      }
+
+      .signup-form-panel {
+        padding: 30px 22px;
+      }
+
+      .signup-heading {
+        font-size: 27px;
+      }
     }
   </style>
-  <!-- Bootstrap CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-  <title>Shoe Rack</title>
 </head>
 
 <body>
+
   <%- include('../partials/userHeader') %>
-    <div class="container  d-flex justify-content-center align-items-center">
-      <div class="signup">
-        <h3 class="fw-bold text-center mb-5 fs-2">Create An Account</h3>
-        <div class="facebook"><a href="/facebook" class="text-decoration-none text-white"><span><i
-                class="fa-brands fa-facebook-f mx-3 fs-4"></i></span>Sign in with Facebook</a></div>
-        <div class="google mt-3"><a href="/google" class="text-decoration-none text-white"><span><i
-                class="fa-brands fa-google mx-3 fs-4"></i></span>Sign in with Google</a></div>
-        <p class="text-center my-4">Please fill the fields:</p>
-        <form action="/signup" method="post">
-          <div class="mb-3 ">
-            <input type="username" class="form-control" id="username" placeholder="Name" name="username">
-          </div>
-          <div class="mb-3 ">
-            <input type="email" class="form-control" id="email" placeholder="Enter email" name="email">
-          </div>
-          <div class="mb-3">
-            <input type="number" class="form-control" id="phoneno" placeholder="Phone Number" name="phoneno">
-          </div>
-          <div class="mb-3">
-            <input type="password" class="form-control" id="password" placeholder="Enter password" name="password">
-          </div>
-          <div class="mb-3">
-            <input type="password" class="form-control" id="confirmpassword" placeholder="Confirm password"
-              name="confirmpassword">
-          </div>
-          <% if (message) {%>
-            <div id="change">
-              <p class="text-black fw-light">
-                <%= message.message %>
-              </p>
-            </div>
-            <% } %>
-              <div class="d-grid ">
-                <button class="btn btn-dark" type="submit">Signup</button>
+
+    <main class="signup-page">
+      <div class="signup-card">
+
+
+        <section class="signup-promo">
+          <div class="signup-promo-content">
+            <a href="/" class="signup-brand">
+              <span class="signup-brand-icon">
+                <i class="fa-solid fa-shoe-prints"></i>
+              </span>
+              Shoe Rack
+            </a>
+
+            <h1>
+              Find your next
+              <span>favorite pair.</span>
+            </h1>
+
+            <p class="signup-promo-description">
+              Create your account and discover footwear that
+              matches your style, comfort, and every step of your journey.
+            </p>
+
+            <div class="signup-benefits">
+              <div class="signup-benefit">
+                <span class="signup-benefit-icon">
+                  <i class="fa-solid fa-shoe-prints"></i>
+                </span>
+                <span>Discover styles for every occasion</span>
               </div>
-              <p class="text-center mt-2">Already have an account?<a href='/login'
-                  class="link-primary  fw-bold text-decoration-none mx-2">Login</a></p>
-        </form>
+
+              <div class="signup-benefit">
+                <span class="signup-benefit-icon">
+                  <i class="fa-solid fa-heart"></i>
+                </span>
+                <span>Save your favorite shoes</span>
+              </div>
+
+              <div class="signup-benefit">
+                <span class="signup-benefit-icon">
+                  <i class="fa-solid fa-bag-shopping"></i>
+                </span>
+                <span>Enjoy a convenient shopping experience</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="signup-promo-bottom">
+            Step into your style. Every single day.
+          </div>
+        </section>
+
+
+        <section class="signup-form-panel">
+          <div class="signup-form-content">
+
+            <h2 class="signup-heading">Create an account</h2>
+
+            <p class="signup-subheading">
+              Join Shoe Rack and find the right shoes for you.
+            </p>
+
+            <a href="/facebook" class="social-button">
+              <i class="fa-brands fa-facebook-f facebook-icon"></i>
+              Continue with Facebook
+            </a>
+
+            <a href="/google" class="social-button">
+              <i class="fa-brands fa-google google-icon"></i>
+              Continue with Google
+            </a>
+
+            <div class="signup-divider">OR SIGN UP WITH EMAIL</div>
+
+            <form action="/signup" method="post" class="signup-form">
+
+              <div class="mb-3">
+                <label for="username" class="form-label">Full name</label>
+                <input type="text" class="form-control" id="username" name="username" placeholder="Enter your full name"
+                  autocomplete="name" required>
+              </div>
+
+              <div class="mb-3">
+                <label for="email" class="form-label">Email address</label>
+                <input type="email" class="form-control" id="email" name="email" placeholder="you@example.com"
+                  autocomplete="email" required>
+              </div>
+
+              <div class="mb-3">
+                <label for="phoneno" class="form-label">Phone number</label>
+                <input type="tel" class="form-control" id="phoneno" name="phoneno" placeholder="Enter your phone number"
+                  autocomplete="tel" inputmode="tel" required>
+              </div>
+
+              <div class="mb-3">
+                <label for="password" class="form-label">Password</label>
+                <div class="password-wrapper">
+                  <input type="password" class="form-control" id="password" name="password"
+                    placeholder="Create a password" autocomplete="new-password" required>
+
+                  <button type="button" class="password-toggle" id="togglePassword" aria-label="Show password"
+                    aria-pressed="false">
+                    <i class="fa-solid fa-eye-slash"></i>
+                  </button>
+                </div>
+              </div>
+
+              <div class="mb-3">
+                <label for="confirmpassword" class="form-label">
+                  Confirm password
+                </label>
+
+                <div class="password-wrapper">
+                  <input type="password" class="form-control" id="confirmpassword" name="confirmpassword"
+                    placeholder="Re-enter your password" autocomplete="new-password" required>
+
+                  <button type="button" class="password-toggle" id="toggleConfirmPassword"
+                    aria-label="Show confirm password" aria-pressed="false">
+                    <i class="fa-solid fa-eye-slash"></i>
+                  </button>
+                </div>
+              </div>
+
+              <% if (typeof message !=='undefined' && message) { %>
+                <div class="signup-error" id="change" role="alert">
+                  <%= message.message %>
+                </div>
+                <% } %>
+
+                  <button type="submit" class="signup-submit">
+                    Create Account
+                    <i class="fa-solid fa-arrow-right ms-2"></i>
+                  </button>
+
+                  <p class="signup-login-link">
+                    Already have an account?
+                    <a href="/login">Sign in</a>
+                  </p>
+
+            </form>
+          </div>
+        </section>
+
       </div>
-    </div>
+    </main>
+
     <%- include('../partials/userfooter') %>
+
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
       <script>
-        let usernameInput = document.querySelector('#username');
-        let changeElement = document.querySelector('#change');
+        document.addEventListener('DOMContentLoaded', function () {
+          const passwordFields = [
+            {
+              input: document.getElementById('password'),
+              toggle: document.getElementById('togglePassword')
+            },
+            {
+              input: document.getElementById('confirmpassword'),
+              toggle: document.getElementById('toggleConfirmPassword')
+            }
+          ];
 
+          passwordFields.forEach(function ({ input, toggle }) {
+            if (!input || !toggle) return;
 
-        usernameInput.addEventListener('focus', () => {
-          changeElement.innerText = '';
+            toggle.addEventListener('click', function () {
+              const shouldShow = input.type === 'password';
+
+              input.type = shouldShow ? 'text' : 'password';
+
+              const icon = toggle.querySelector('i');
+
+              icon.classList.toggle('fa-eye', shouldShow);
+              icon.classList.toggle('fa-eye-slash', !shouldShow);
+
+              toggle.setAttribute(
+                'aria-label',
+                shouldShow ? 'Hide password' : 'Show password'
+              );
+
+              toggle.setAttribute('aria-pressed', String(shouldShow));
+            });
+          });
+
+          const form = document.querySelector('.signup-form');
+          const password = document.getElementById('password');
+          const confirmPassword = document.getElementById('confirmpassword');
+
+          form.addEventListener('submit', function (event) {
+            if (password.value !== confirmPassword.value) {
+              event.preventDefault();
+
+              confirmPassword.setCustomValidity('Passwords do not match.');
+              confirmPassword.reportValidity();
+            } else {
+              confirmPassword.setCustomValidity('');
+            }
+          });
+
+          confirmPassword.addEventListener('input', function () {
+            confirmPassword.setCustomValidity('');
+          });
         });
       </script>
-      <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
-        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
-        crossorigin="anonymous"></script>
-      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
-        integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
-        crossorigin="anonymous"></script>
+
 </body>
 
 </html>

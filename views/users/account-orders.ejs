@@ -4,370 +4,1085 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shoe Rack</title>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+    <title>My Orders | Shoe Rack</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f8f9fa;
-            color: #333;
+        :root {
+            --orders-primary: #f4512c;
+            --orders-primary-dark: #dc3f1d;
+            --orders-text: #242424;
+            --orders-muted: #777;
+            --orders-border: #ededed;
+            --orders-bg: #f7f8fa;
+            --orders-white: #fff;
+            --orders-radius: 16px;
+            --orders-shadow: 0 5px 24px rgba(0, 0, 0, 0.045);
         }
 
-        .account-nav {
-            border: 1px solid #ccc;
-            border-radius: 10px;
-            padding: 20px;
-            width: 100%;
-            font-weight: bold;
-            background-color: #fff;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        .orders-page {
+            min-height: 70vh;
+            padding: 22px 0 65px;
+            background: var(--orders-bg);
+            color: var(--orders-text);
         }
 
-        .arrow {
-            position: absolute;
-            left: 255px;
+        .orders-page * {
+            box-sizing: border-box;
         }
 
-        .account-navitem {
-            border-bottom: 1px solid #ccc;
-            padding: 10px;
-            cursor: pointer;
+        .orders-page .orders-breadcrumb {
+            margin: 0 0 24px;
+            color: var(--orders-muted);
+            font-size: 14px;
         }
 
-        .account-navitem:last-child {
-            border-bottom: none;
+        .orders-page .orders-breadcrumb a {
+            color: var(--orders-muted);
+            text-decoration: none;
+            transition: color 0.2s ease;
         }
 
-        .nav-link {
+        .orders-page .orders-breadcrumb a:hover {
+            color: var(--orders-primary);
+        }
+
+        .orders-page .breadcrumb-current {
+            color: var(--orders-primary);
+            font-weight: 600;
+        }
+
+        .orders-page .orders-card {
+            min-width: 0;
+            overflow: hidden;
+            background: var(--orders-white);
+            border: 1px solid var(--orders-border);
+            border-radius: var(--orders-radius);
+            box-shadow: var(--orders-shadow);
+        }
+
+        .orders-page .orders-card-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            color: #555;
-            text-decoration: none;
+            flex-wrap: wrap;
+            gap: 16px;
+            padding: 24px;
+            border-bottom: 1px solid var(--orders-border);
         }
 
-        .nav-link i {
-            margin-right: 10px;
+        .orders-page .orders-title {
+            margin: 0;
+            color: var(--orders-text);
+            font-size: 23px;
+            font-weight: 750;
+            letter-spacing: -0.5px;
         }
 
-        .account {
-            margin-left: 30px;
-            margin-top: 70px;
+        .orders-page .orders-subtitle {
+            margin: 7px 0 0;
+            color: var(--orders-muted);
+            font-size: 13px;
         }
 
-        .active {
-            background-color: #df9f9f;
-            border-radius: 5px;
+        .orders-page .orders-count {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 8px 12px;
+            color: var(--orders-primary);
+            background: #fff0eb;
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: 700;
         }
 
-        .orders {
-            margin-top: 20px;
-            background-color: #fff;
-            border: 1px solid #ccc;
+        .orders-page .orders-toolbar {
+            display: flex;
+            justify-content: flex-end;
+            padding: 20px 24px 12px;
+        }
+
+        .orders-page .orders-search {
+            position: relative;
+            width: 100%;
+            max-width: 310px;
+        }
+
+        .orders-page .orders-search i {
+            position: absolute;
+            top: 50%;
+            left: 14px;
+            color: #999;
+            transform: translateY(-50%);
+            pointer-events: none;
+        }
+
+        .orders-page .orders-search input {
+            width: 100%;
+            height: 44px;
+            padding: 10px 14px 10px 40px;
+            color: var(--orders-text);
+            background: #fff;
+            border: 1px solid #e7e7e7;
             border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            outline: none;
+            font-size: 13px;
+            transition: border-color 0.2s, box-shadow 0.2s;
         }
 
-        .header-section {
-            background-color: #b46363;
-            color: white;
-            text-align: center;
-            padding-top: 10px;
-            height: 50px;
-            border-bottom: 1px solid #ccc;
-            border-top-left-radius: 10px;
-            border-top-right-radius: 10px;
+        .orders-page .orders-search input:focus {
+            border-color: var(--orders-primary);
+            box-shadow: 0 0 0 3px rgba(244, 81, 44, 0.1);
         }
 
-        .table th,
-        .table td {
-            padding: 10px;
-            border: none;
-            text-align: center;
+        .orders-page .orders-table-wrap {
+            width: 100%;
+            overflow-x: auto;
+            padding: 0 24px;
         }
 
-        .table td {
-            padding: 20px 0px !important;
+        .orders-page .orders-table {
+            width: 100%;
+            min-width: 850px;
+            margin-bottom: 0;
+            border-collapse: separate;
+            border-spacing: 0;
+            vertical-align: middle;
         }
 
-        .btn-danger {
-            background-color: #dc3545;
-            color: #fff;
-            border: none;
-            padding: 5px 10px;
-            border-radius: 5px;
-            cursor: pointer;
-            text-align: center;
-        }
-
-        .btn-danger:hover {
-            background-color: #c82333;
-        }
-
-        .orders {
-            margin-top: 130px;
-        }
-
-        .order-list {
-            margin-top: 20px;
-        }
-
-        .order-details {
-            padding: 20px;
-        }
-
-        .order-product-name {
-            font-size: 1rem;
+        .orders-page .orders-table thead th {
+            padding: 15px 14px;
+            color: #777;
+            background: #f8f9fb;
+            border-top: 1px solid var(--orders-border);
+            border-bottom: 1px solid var(--orders-border);
+            font-size: 11px;
+            font-weight: 750;
+            letter-spacing: 0.6px;
+            text-align: left;
+            text-transform: uppercase;
             white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            max-width: 200px;
+        }
+
+        .orders-page .orders-table thead th:first-child {
+            border-top-left-radius: 9px;
+        }
+
+        .orders-page .orders-table thead th:last-child {
+            border-top-right-radius: 9px;
+        }
+
+        .orders-page .orders-table tbody td {
+            padding: 19px 14px;
+            color: #444;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 13px;
+            text-align: left;
+            vertical-align: middle;
+        }
+
+        .orders-page .orders-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .orders-page .orders-table tbody tr {
+            transition: background 0.2s ease;
+        }
+
+        .orders-page .orders-table tbody tr:hover {
+            background: #fffaf8;
+        }
+
+        .orders-page .order-id {
+            display: inline-block;
+            color: #292929;
+            font-weight: 750;
+            white-space: nowrap;
+        }
+
+        .orders-page .order-date {
+            color: #777;
+            white-space: nowrap;
+        }
+
+        .orders-page .order-products {
+            min-width: 150px;
+            max-width: 220px;
+        }
+
+        .orders-page .order-product-name {
             display: block;
+            max-width: 210px;
+            margin: 0 0 5px;
+            overflow: hidden;
+            color: #424242;
+            font-size: 12px;
+            font-weight: 500;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .orders-page .order-product-name:last-child {
+            margin-bottom: 0;
+        }
+
+        .orders-page .order-amount {
+            color: #222;
+            font-size: 14px;
+            font-weight: 750;
+            white-space: nowrap;
+        }
+
+        .orders-page .order-status,
+        .orders-page .payment-status {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 7px 10px;
+            border-radius: 30px;
+            font-size: 11px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .orders-page .order-status {
+            color: #555;
+            background: #f1f2f4;
+        }
+
+        .orders-page .status-delivered,
+        .orders-page .status-completed {
+            color: #178448;
+            background: #e9f8ef;
+        }
+
+        .orders-page .status-cancelled,
+        .orders-page .status-failed,
+        .orders-page .status-rejected {
+            color: #c53b3b;
+            background: #fff0f0;
+        }
+
+        .orders-page .status-pending,
+        .orders-page .status-processing,
+        .orders-page .status-shipped,
+        .orders-page .status-confirmed {
+            color: #9a6800;
+            background: #fff5d9;
+        }
+
+        .orders-page .payment-paid,
+        .orders-page .payment-completed,
+        .orders-page .payment-success {
+            color: #178448;
+            background: #e9f8ef;
+        }
+
+        .orders-page .payment-pending {
+            color: #9a6800;
+            background: #fff5d9;
+        }
+
+        .orders-page .payment-failed {
+            color: #c53b3b;
+            background: #fff0f0;
+        }
+
+        .orders-page .btn-pay,
+        .orders-page .btn-view-order {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+            min-height: 35px;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 700;
+            text-decoration: none;
+            white-space: nowrap;
+            transition: background 0.2s, transform 0.2s;
+            cursor: pointer;
+        }
+
+        .orders-page .btn-pay {
+            color: #fff;
+            background: var(--orders-primary);
+        }
+
+        .orders-page .btn-pay:hover {
+            color: #fff;
+            background: var(--orders-primary-dark);
+            transform: translateY(-1px);
+        }
+
+        .orders-page .btn-pay:disabled {
+            opacity: 0.65;
+            cursor: wait;
+            transform: none;
+        }
+
+        .orders-page .btn-view-order {
+            color: var(--orders-primary);
+            background: #fff0eb;
+        }
+
+        .orders-page .btn-view-order:hover {
+            color: #fff;
+            background: var(--orders-primary);
+            transform: translateY(-1px);
+        }
+
+        .orders-page .orders-empty {
+            padding: 65px 20px !important;
+            text-align: center !important;
+        }
+
+        .orders-page .orders-empty-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 66px;
+            height: 66px;
+            margin: 0 auto 17px;
+            color: var(--orders-primary);
+            background: #fff0eb;
+            border-radius: 50%;
+            font-size: 25px;
+        }
+
+        .orders-page .orders-empty h4 {
+            margin: 0 0 8px;
+            color: #282828;
+            font-size: 17px;
+            font-weight: 750;
+        }
+
+        .orders-page .orders-empty p {
+            margin: 0;
+            color: #888;
+            font-size: 13px;
+        }
+
+        .orders-page .orders-pagination {
+            display: flex;
+            justify-content: flex-end;
+            flex-wrap: wrap;
+            gap: 5px;
+            padding: 20px 24px 24px;
+            margin: 0;
+            list-style: none;
+        }
+
+        .orders-page .orders-pagination .page-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 36px;
+            height: 36px;
+            padding: 0 10px;
+            color: #555;
+            background: #fff;
+            border: 1px solid #e9e9e9;
+            border-radius: 8px;
+            font-size: 12px;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .orders-page .orders-pagination .page-link:hover {
+            color: var(--orders-primary);
+            border-color: var(--orders-primary);
+        }
+
+        .orders-page .orders-pagination .page-item.active .page-link {
+            color: #fff;
+            background: var(--orders-primary);
+            border-color: var(--orders-primary);
+        }
+
+        .orders-page .orders-pagination .page-item.disabled .page-link {
+            color: #bbb;
+            background: #f8f8f8;
+            pointer-events: none;
+        }
+
+        .orders-page .orders-loading {
+            padding: 35px 15px;
+            color: #777;
+            text-align: center;
+            font-size: 13px;
+        }
+
+        @media (max-width: 991px) {
+            .orders-page {
+                padding-top: 16px;
+            }
+
+            .orders-page .orders-card-header {
+                padding: 20px;
+            }
+
+            .orders-page .orders-toolbar {
+                padding: 16px 20px 12px;
+            }
+
+            .orders-page .orders-table-wrap {
+                padding: 0 20px;
+            }
+
+            .orders-page .orders-pagination {
+                padding: 18px 20px 20px;
+            }
+        }
+
+        @media (max-width: 575px) {
+            .orders-page .orders-breadcrumb {
+                margin-bottom: 17px;
+                font-size: 12px;
+            }
+
+            .orders-page .orders-card-header {
+                align-items: flex-start;
+                padding: 18px 16px;
+            }
+
+            .orders-page .orders-title {
+                font-size: 20px;
+            }
+
+            .orders-page .orders-subtitle {
+                line-height: 1.5;
+            }
+
+            .orders-page .orders-count {
+                padding: 7px 10px;
+            }
+
+            .orders-page .orders-toolbar {
+                padding: 15px 16px;
+            }
+
+            .orders-page .orders-search {
+                max-width: none;
+            }
+
+            .orders-page .orders-table-wrap {
+                padding: 0 12px;
+            }
+
+            .orders-page .orders-pagination {
+                justify-content: center;
+                padding: 18px 12px 20px;
+            }
         }
     </style>
 </head>
 
 <body>
+
     <%- include('../partials/userHeader') %>
-        <p class="fw-bold text-dark fs-5 mt-4 ms-3">Home > <span>Account ></span><span class="text-warning fs-5"> My
-                Order</span></p>
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-md-3">
-                    <%- include('../partials/account-nav') %>
-                </div>
-                <div class="col-md-9">
-                    <div class="orders">
-                        <div class="header-section">
-                            <h5 class="fw-bold">Your Orders</h5>
-                        </div>
-                        <div class="order-details">
-                            <form class="d-flex" id="searchForm">
-                                <input class="form-control ms-auto mt-3" type="search" name="search"
-                                    placeholder="Search" aria-label="Search" value="<%= search %>"
-                                    style="width: 200px;">
-                            </form>
-                            <div class="order-list">
-                                <table class="table table-striped">
-                                    <thead class="table-dark">
+
+        <main class="orders-page">
+            <div class="container">
+
+                <nav class="orders-breadcrumb" aria-label="Breadcrumb">
+                    <a href="/">Home</a>
+                    <span class="mx-2">/</span>
+                    <a href="/profile">Account</a>
+                    <span class="mx-2">/</span>
+                    <span class="breadcrumb-current">My Orders</span>
+                </nav>
+
+                <div class="row g-4">
+
+                    <aside class="col-lg-3 col-md-4">
+                        <%- include('../partials/account-nav') %>
+                    </aside>
+
+                    <section class="col-lg-9 col-md-8">
+
+                        <div class="orders-card">
+
+                            <div class="orders-card-header">
+                                <div>
+                                    <h1 class="orders-title">My Orders</h1>
+                                    <p class="orders-subtitle">
+                                        Track your purchases and manage your payments.
+                                    </p>
+                                </div>
+
+                                <div class="orders-count">
+                                    <i class="fa-solid fa-box"></i>
+                                    <span id="ordersCount">
+                                        <%= orders ? orders.length : 0 %>
+                                            <%= orders && orders.length===1 ? 'Order' : 'Orders' %>
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="orders-toolbar">
+                                <form class="orders-search" id="searchForm" role="search">
+                                    <i class="fa-solid fa-magnifying-glass"></i>
+                                    <input type="search" name="search" placeholder="Search orders or products..."
+                                        aria-label="Search orders" value="<%= search || '' %>" autocomplete="off">
+                                </form>
+                            </div>
+
+                            <div class="orders-table-wrap">
+                                <table class="table orders-table">
+                                    <thead>
                                         <tr>
-                                            <th>OrderId</th>
+                                            <th>Order ID</th>
                                             <th>Date</th>
                                             <th>Products</th>
                                             <th>Amount</th>
                                             <th>Status</th>
-                                            <th>Payment Status</th>
+                                            <th>Payment</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
 
-                                        <% if (orders.length>0) { %>
+                                    <tbody id="ordersTableBody">
+
+                                        <% if (orders && orders.length> 0) { %>
+
                                             <% orders.forEach(element=> { %>
-                                                <tr>
-                                                    <td>
-                                                        <%= element.orderId %>
-                                                    </td>
-                                                    <td>
-                                                        <%= element.createdAt.toISOString().split('T')[0] %>
-                                                    </td>
-                                                    <td class="text-start">
-                                                        <% element.products.forEach(product=> { %>
-                                                            <p class="order-product-name">
-                                                                <%= product.productName %>
-                                                            </p>
-                                                            <% }) %>
-                                                    </td>
-                                                    <td>₹ <%= element. finalPrice?element.finalPrice:element.totalAmount
-                                                            %>
-                                                    </td>
-                                                    <td>
-                                                        <%= element.status %>
-                                                    </td>
-                                                    <td>
-                                                        <% if (element.paymentStatus==="Pending" ) { %>
-                                                            <button type="button"
-                                                                class="btn btn-primary btn-sm paybutton"
-                                                                data-orderid="<%= element._id %>">pay now</button>
-                                                            <% } else{%>
-                                                                <p style="font-weight: bold;color: #28a745;">
-                                                                    <%= element.paymentStatus %>
-                                                                </p>
-                                                                <% } %>
-                                                    </td>
-                                                    <td><a href="/account/<%=element._id  %>"
-                                                            class="btn btn-danger">view order</a></td>
-                                                </tr>
-                                                <% }) %>
-                                                    <% }else{ %>
-                                                        <td colspan="7" class="text-center mt-5 fw-bold text-danger">
-                                                            <i class="fa-solid fa-exclamation-circle me-2"></i> No
-                                                            Orders Found!
+
+                                                <% const orderStatus=String(element.status || 'Pending' ); const
+                                                    paymentStatus=String(element.paymentStatus || 'Pending' ); const
+                                                    orderStatusClass=orderStatus.toLowerCase().replace(/[^a-z0-9]+/g, '-'
+                                                    ); const
+                                                    paymentStatusClass=paymentStatus.toLowerCase().replace(/[^a-z0-9]+/g, '-'
+                                                    ); const orderAmount=element.finalPrice !=null ? element.finalPrice
+                                                    : (element.totalAmount !=null ? element.totalAmount : 0); const
+                                                    orderDate=element.createdAt ? new Date(element.createdAt) : null; %>
+
+                                                    <tr>
+                                                        <td>
+                                                            <span class="order-id">
+                                                                #<%= element.orderId %>
+                                                            </span>
                                                         </td>
-                                                        <% } %>
+
+                                                        <td>
+                                                            <span class="order-date">
+                                                                <%= orderDate && !isNaN(orderDate.getTime()) ?
+                                                                    orderDate.toLocaleDateString('en-IN', {
+                                                                    day: '2-digit' , month: 'short' , year: 'numeric' })
+                                                                    : '—' %>
+                                                            </span>
+                                                        </td>
+
+                                                        <td>
+                                                            <div class="order-products">
+                                                                <% if (element.products && element.products.length> 0) {
+                                                                    %>
+                                                                    <% element.products.forEach(product=> { %>
+                                                                        <span class="order-product-name"
+                                                                            title="<%= product.productName || 'Product' %>">
+                                                                            <%= product.productName || 'Product' %>
+                                                                        </span>
+                                                                        <% }) %>
+                                                                            <% } else { %>
+                                                                                <span class="text-muted">No product
+                                                                                    details</span>
+                                                                                <% } %>
+                                                            </div>
+                                                        </td>
+
+                                                        <td>
+                                                            <span class="order-amount">
+                                                                ₹<%= Number(orderAmount).toLocaleString('en-IN', {
+                                                                    minimumFractionDigits: 2, maximumFractionDigits: 2
+                                                                    }) %>
+                                                            </span>
+                                                        </td>
+
+                                                        <td>
+                                                            <span class="order-status status-<%= orderStatusClass %>">
+                                                                <%= orderStatus %>
+                                                            </span>
+                                                        </td>
+
+                                                        <td>
+                                                            <% if (paymentStatus.toLowerCase()==='pending' ) { %>
+                                                                <button type="button" class="btn-pay paybutton"
+                                                                    data-orderid="<%= element._id %>">
+                                                                    <i class="fa-solid fa-credit-card"></i>
+                                                                    Pay Now
+                                                                </button>
+                                                                <% } else { %>
+                                                                    <span
+                                                                        class="payment-status payment-<%= paymentStatusClass %>">
+                                                                        <%= paymentStatus %>
+                                                                    </span>
+                                                                    <% } %>
+                                                        </td>
+
+                                                        <td>
+                                                            <a href="/account/<%= element._id %>"
+                                                                class="btn-view-order">
+                                                                View
+                                                                <i class="fa-solid fa-arrow-right"></i>
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+
+                                                    <% }) %>
+
+                                                        <% } else { %>
+
+                                                            <tr>
+                                                                <td colspan="7" class="orders-empty">
+                                                                    <div class="orders-empty-icon">
+                                                                        <i class="fa-solid fa-box-open"></i>
+                                                                    </div>
+
+                                                                    <h4>No orders found</h4>
+
+                                                                    <p>
+                                                                        Your orders will appear here when you make a
+                                                                        purchase.
+                                                                    </p>
+                                                                </td>
+                                                            </tr>
+
+                                                            <% } %>
+
                                     </tbody>
                                 </table>
                             </div>
-                            <nav aria-label="Page navigation example">
-                                <% if (totalPages>= 1) { %>
-                                    <ul class="pagination d-flex justify-content-end">
-                                        <li class="page-item">
-                                            <a class="page-link"
-                                                href="?page=<%= currentPage - 1 %>&limit=<%= limit %>&search=<%= search %>"
-                                                aria-label="Previous">
-                                                <span aria-hidden="true">&laquo;</span>
-                                            </a>
-                                        </li>
-                                        <% for( let i=1; i <=totalPages; i++) { %>
-                                            <li class="page-item <%= i === currentPage ? 'active' : '' %>">
+
+                            <nav aria-label="Order pagination">
+                                <ul class="orders-pagination" id="ordersPagination">
+
+                                    <% const pageNumber=Math.max(1, Number(currentPage) || 1); const
+                                        pageLimit=Number(limit) || 10; const pageCount=Number(totalPages) || 0; const
+                                        searchTerm=search || '' ; %>
+
+                                        <% if (pageCount> 1) { %>
+
+                                            <li class="page-item <%= pageNumber <= 1 ? 'disabled' : '' %>">
                                                 <a class="page-link"
-                                                    href="?page=<%= i %>&limit=<%= limit %>&search=<%= search %>">
-                                                    <%= i %>
+                                                    href="?page=<%= pageNumber - 1 %>&limit=<%= pageLimit %>&search=<%= encodeURIComponent(searchTerm) %>"
+                                                    aria-label="Previous page">
+                                                    <i class="fa-solid fa-chevron-left"></i>
                                                 </a>
                                             </li>
-                                            <% } %>
-                                                <li class="page-item">
+
+                                            <% for (let i=1; i <=pageCount; i++) { %>
+
+                                                <li class="page-item <%= i === pageNumber ? 'active' : '' %>">
                                                     <a class="page-link"
-                                                        href="?page=<%= currentPage + 1 %>&limit=<%= limit %>&search=<%= search %>"
-                                                        aria-label="Next">
-                                                        <span aria-hidden="true">&raquo;</span>
+                                                        href="?page=<%= i %>&limit=<%= pageLimit %>&search=<%= encodeURIComponent(searchTerm) %>">
+                                                        <%= i %>
                                                     </a>
                                                 </li>
-                                    </ul>
-                                    <% } %>
+
+                                                <% } %>
+
+                                                    <li
+                                                        class="page-item <%= pageNumber >= pageCount ? 'disabled' : '' %>">
+                                                        <a class="page-link"
+                                                            href="?page=<%= pageNumber + 1 %>&limit=<%= pageLimit %>&search=<%= encodeURIComponent(searchTerm) %>"
+                                                            aria-label="Next page">
+                                                            <i class="fa-solid fa-chevron-right"></i>
+                                                        </a>
+                                                    </li>
+
+                                                    <% } %>
+
+                                </ul>
                             </nav>
 
                         </div>
-                    </div>
+                    </section>
+
                 </div>
             </div>
-        </div>
+        </main>
+
         <%- include('../partials/userfooter') %>
+
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
             <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
             <script>
-                $(document).ready(function () {
+                $(function () {
 
-                    const navItems = $('.account-navitem a');
-                    navItems.each(function () {
-                        if (window.location.pathname === $(this).attr('href')) {
-                            $(this).parent().addClass('active');
-                        }
-                    });
+                    const $searchInput = $('#searchForm input[name="search"]');
+                    const $tableBody = $('#ordersTableBody');
+                    const $ordersCount = $('#ordersCount');
 
-                    navItems.on('click', function () {
-                        navItems.parent().removeClass('active');
-                        $(this).parent().addClass('active');
-                    });
+                    let searchRequest = null;
+                    let searchTimer = null;
 
-                    $('#searchForm input[name="search"]').on('input', function () {
-                        const query = $(this).val();
+                    function escapeHtml(value) {
+                        return String(value == null ? '' : value).replace(/[&<>"']/g, function (char) {
+                            const entities = {
+                                '&': '&amp;',
+                                '<': '&lt;',
+                                '>': '&gt;',
+                                '"': '&quot;',
+                                "'": '&#39;'
+                            };
 
-                        $.ajax({
-                            url: '/account',
-                            type: 'GET',
-                            data: { search: query },
-                            success: function (response) {
-                                const tableBody = $('table tbody');
-                                tableBody.empty();
+                            return entities[char];
+                        });
+                    }
 
-                                response.orders.forEach(order => {
-                                    const products = order.products.map(product => `<div>${product.productName}</div>`).join('');
-                                    const row = `
+                    function formatCurrency(value) {
+                        const amount = Number(value);
+
+                        return '₹' + (Number.isFinite(amount) ? amount : 0).toLocaleString('en-IN', {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2
+                        });
+                    }
+
+                    function formatDate(value) {
+                        if (!value) return '—';
+
+                        const date = new Date(value);
+
+                        if (isNaN(date.getTime())) return '—';
+
+                        return date.toLocaleDateString('en-IN', {
+                            day: '2-digit',
+                            month: 'short',
+                            year: 'numeric'
+                        });
+                    }
+
+                    function getStatusClass(value) {
+                        return String(value || 'Pending')
+                            .toLowerCase()
+                            .replace(/[^a-z0-9]+/g, '-');
+                    }
+
+                    function renderOrders(orders) {
+                        if (!Array.isArray(orders) || orders.length === 0) {
+                            $tableBody.html(`
                         <tr>
-                            <td>${order.orderId}</td>
-                            <td>${new Date(order.createdAt).toISOString().split('T')[0]}</td>
-                            <td class="text-start">${products}</td>
-                            <td>${order.totalAmount}</td>
-                            <td>${order.status}</td>
-                            <td>${order.paymentStatus === "Completed" ? `<p style="font-weight: bold;color: #28a745;">Completed</p>` :
-                                            `<button type="button" class="btn btn-primary btn-sm paybutton" data-orderid="${order._id}">pay now</button>`}</td>
-                            <td><a href='/account/${order._id}' class="btn btn-danger">View Order</a></td>
+                            <td colspan="7" class="orders-empty">
+                                <div class="orders-empty-icon">
+                                    <i class="fa-solid fa-box-open"></i>
+                                </div>
+                                <h4>No orders found</h4>
+                                <p>Try another search term or check back after making a purchase.</p>
+                            </td>
+                        </tr>
+                    `);
+
+                            $ordersCount.text('0 Orders');
+                            $('#ordersPagination').empty();
+
+                            return;
+                        }
+
+                        const rows = orders.map(function (order) {
+                            const orderStatus = order.status || 'Pending';
+                            const paymentStatus = order.paymentStatus || 'Pending';
+
+                            const orderAmount = order.finalPrice != null
+                                ? order.finalPrice
+                                : (order.totalAmount != null ? order.totalAmount : 0);
+
+                            const products = Array.isArray(order.products) && order.products.length
+                                ? order.products.map(function (product) {
+                                    const name = product.productName || 'Product';
+
+                                    return `
+                                <span class="order-product-name" title="${escapeHtml(name)}">
+                                    ${escapeHtml(name)}
+                                </span>
+                            `;
+                                }).join('')
+                                : '<span class="text-muted">No product details</span>';
+
+                            const paymentCell = String(paymentStatus).toLowerCase() === 'pending'
+                                ? `
+                            <button
+                                type="button"
+                                class="btn-pay paybutton"
+                                data-orderid="${escapeHtml(order._id)}">
+                                <i class="fa-solid fa-credit-card"></i>
+                                Pay Now
+                            </button>
+                        `
+                                : `
+                            <span class="payment-status payment-${getStatusClass(paymentStatus)}">
+                                ${escapeHtml(paymentStatus)}
+                            </span>
+                        `;
+
+                            return `
+                        <tr>
+                            <td>
+                                <span class="order-id">#${escapeHtml(order.orderId || '')}</span>
+                            </td>
+                            <td>
+                                <span class="order-date">${escapeHtml(formatDate(order.createdAt))}</span>
+                            </td>
+                            <td>
+                                <div class="order-products">${products}</div>
+                            </td>
+                            <td>
+                                <span class="order-amount">${formatCurrency(orderAmount)}</span>
+                            </td>
+                            <td>
+                                <span class="order-status status-${getStatusClass(orderStatus)}">
+                                    ${escapeHtml(orderStatus)}
+                                </span>
+                            </td>
+                            <td>${paymentCell}</td>
+                            <td>
+                                <a href="/account/${encodeURIComponent(order._id)}" class="btn-view-order">
+                                    View <i class="fa-solid fa-arrow-right"></i>
+                                </a>
+                            </td>
                         </tr>
                     `;
-                                    tableBody.append(row);
-                                });
+                        }).join('');
+
+                        $tableBody.html(rows);
+
+                        $ordersCount.text(
+                            orders.length + (orders.length === 1 ? ' Order' : ' Orders')
+                        );
+                    }
+
+
+                    $searchInput.on('input', function () {
+                        const query = $(this).val().trim();
+
+                        clearTimeout(searchTimer);
+
+                        searchTimer = setTimeout(function () {
+                            if (searchRequest && searchRequest.readyState !== 4) {
+                                searchRequest.abort();
+                            }
+
+                            $tableBody.html(`
+                        <tr>
+                            <td colspan="7" class="orders-loading">
+                                <i class="fa-solid fa-spinner fa-spin me-2"></i>
+                                Searching orders...
+                            </td>
+                        </tr>
+                    `);
+
+                            searchRequest = $.ajax({
+                                url: '/account',
+                                type: 'GET',
+                                data: {
+                                    search: query
+                                },
+                                dataType: 'json',
+
+                                success: function (response) {
+                                    if (response && Array.isArray(response.orders)) {
+                                        renderOrders(response.orders);
+                                    } else {
+                                        $tableBody.html(`
+                                    <tr>
+                                        <td colspan="7" class="orders-empty">
+                                            <h4>Unable to load orders</h4>
+                                            <p>The server returned an unexpected response.</p>
+                                        </td>
+                                    </tr>
+                                `);
+                                    }
+                                },
+
+                                error: function (xhr, status) {
+                                    if (status === 'abort') return;
+
+
+                                    $tableBody.html(`
+                                <tr>
+                                    <td colspan="7" class="orders-empty">
+                                        <h4>Search unavailable</h4>
+                                        <p>Please try again in a moment.</p>
+                                    </td>
+                                </tr>
+                            `);
+                                }
+                            });
+                        }, 350);
+                    });
+
+                    $(document).on('click', '.paybutton', function () {
+                        const $button = $(this);
+                        const orderId = $button.data('orderid');
+
+                        if (!orderId || $button.prop('disabled')) return;
+
+                        if (typeof Razorpay === 'undefined') {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Payment unavailable',
+                                text: 'The payment service could not be loaded. Please refresh and try again.'
+                            });
+
+                            return;
+                        }
+
+                        $button.prop('disabled', true);
+                        $button.html('<i class="fa-solid fa-spinner fa-spin"></i> Processing...');
+
+                        $.ajax({
+                            type: 'POST',
+                            url: '/paynow',
+                            data: {
+                                orderId: orderId
                             },
-                            error: function (err) {
-                                console.error('An error occurred:', err);
+
+                            success: function (response) {
+                                if (!response || response.message !== 'Razorpay order created') {
+                                    $button.prop('disabled', false);
+                                    $button.html('<i class="fa-solid fa-credit-card"></i> Pay Now');
+
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Unable to start payment',
+                                        text: response && response.message
+                                            ? response.message
+                                            : 'Please try again.'
+                                    });
+
+                                    return;
+                                }
+
+                                const options = {
+                                    key: response.key || 'rzp_test_x7mcrmmJeFQpUZ',
+                                    amount: Number(response.amount) * 100,
+                                    currency: 'INR',
+                                    name: 'Shoe Rack',
+                                    description: 'Shoe Rack order payment',
+                                    order_id: response.razorpayOrderId,
+
+                                    handler: function (razorpayResponse) {
+                                        Swal.fire({
+                                            title: 'Verifying payment...',
+                                            text: 'Please wait while we verify your payment.',
+                                            allowOutsideClick: false,
+                                            allowEscapeKey: false,
+                                            didOpen: function () {
+                                                Swal.showLoading();
+                                            }
+                                        });
+
+                                        $.ajax({
+                                            type: 'POST',
+                                            url: '/verifypay',
+                                            data: {
+                                                razorpay_payment_id: razorpayResponse.razorpay_payment_id,
+                                                razorpay_order_id: razorpayResponse.razorpay_order_id,
+                                                razorpay_signature: razorpayResponse.razorpay_signature,
+                                                orderId: response.orderId || orderId
+                                            },
+
+                                            success: function () {
+                                                Swal.fire({
+                                                    icon: 'success',
+                                                    title: 'Payment successful!',
+                                                    text: 'Your payment has been verified.',
+                                                    confirmButtonColor: '#f4512c',
+                                                    confirmButtonText: 'OK'
+                                                }).then(function () {
+                                                    // Reload server-rendered order and payment statuses.
+                                                    window.location.reload();
+                                                });
+                                            },
+
+                                            error: function (xhr) {
+
+                                                Swal.fire({
+                                                    icon: 'error',
+                                                    title: 'Payment verification failed',
+                                                    text: 'Your payment could not be verified here. Please check your order status or contact support.',
+                                                    confirmButtonColor: '#f4512c'
+                                                }).then(function () {
+                                                    window.location.reload();
+                                                });
+                                            }
+                                        });
+                                    },
+
+                                    modal: {
+                                        ondismiss: function () {
+                                            $button.prop('disabled', false);
+                                            $button.html('<i class="fa-solid fa-credit-card"></i> Pay Now');
+                                        }
+                                    },
+
+                                    theme: {
+                                        color: '#f4512c'
+                                    }
+                                };
+
+                                try {
+                                    const razorpay = new Razorpay(options);
+
+                                    razorpay.on('payment.failed', function (failureResponse) {
+
+                                        $button.prop('disabled', false);
+                                        $button.html('<i class="fa-solid fa-credit-card"></i> Pay Now');
+
+                                        Swal.fire({
+                                            icon: 'error',
+                                            title: 'Payment unsuccessful',
+                                            text: failureResponse.error && failureResponse.error.description
+                                                ? failureResponse.error.description
+                                                : 'The payment did not complete. Please try again.',
+                                            confirmButtonColor: '#f4512c'
+                                        });
+                                    });
+
+                                    razorpay.open();
+                                } catch (error) {
+
+                                    $button.prop('disabled', false);
+                                    $button.html('<i class="fa-solid fa-credit-card"></i> Pay Now');
+
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Unable to open payment',
+                                        text: 'Please refresh the page and try again.',
+                                        confirmButtonColor: '#f4512c'
+                                    });
+                                }
+                            },
+
+                            error: function (xhr) {
+
+                                $button.prop('disabled', false);
+                                $button.html('<i class="fa-solid fa-credit-card"></i> Pay Now');
+
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Payment could not be started',
+                                    text: 'Please try again. If the problem continues, contact support.',
+                                    confirmButtonColor: '#f4512c'
+                                });
                             }
                         });
                     });
 
-                    $('.paybutton').on('click', function () {
-                        var orderId = $(this).data('orderid')
-                        $.ajax({
-                            type: "POST",
-                            url: '/paynow',
-                            data: { orderId: orderId },
-                            success: function (response) {
-                                if (response.message === 'Razorpay order created') {
-                                    let options = {
-                                        "key": "rzp_test_x7mcrmmJeFQpUZ",
-                                        "amount": response.amount * 100,
-                                        "currency": "INR",
-                                        "name": "Book Club",
-                                        "description": "Purchase Description",
-                                        "order_id": response.razorpayOrderId,
-                                        "handler": function (razorpayResponse) {
-                                            $.ajax({
-                                                type: "POST",
-                                                url: "/verifypay",
-                                                data: {
-                                                    razorpay_payment_id: razorpayResponse.razorpay_payment_id,
-                                                    razorpay_order_id: razorpayResponse.razorpay_order_id,
-                                                    razorpay_signature: razorpayResponse.razorpay_signature,
-                                                    orderId: response.orderId
-                                                },
-                                                success: function (verifyResponse) {
-                                                    Swal.fire({
-                                                        icon: 'success',
-                                                        title: 'Payment Successful!',
-                                                        text: 'Your payment has been verified.',
-                                                        confirmButtonText: 'OK'
-                                                    })
-
-                                                    $('.paybutton[data-orderid="' + response.orderId + '"]')
-                                                        .closest('td')
-                                                        .html('<p style="font-weight: bold; color: #28a745;">Completed</p>');
-
-                                                },
-                                                error: function () {
-                                                    Swal.fire({
-                                                        icon: 'error',
-                                                        title: 'Payment Verification Failed',
-                                                        text: 'Please contact support.',
-                                                        confirmButtonText: 'OK'
-                                                    });
-                                                }
-                                            })
-                                        },
-                                        "prefill": {
-                                            "name": "Customer Name",
-                                            "email": "customer@example.com",
-                                            "contact": "9999999999"
-                                        },
-                                        "theme": {
-                                            "color": "#3399cc"
-                                        }
-                                    }
-                                    let rzp1 = new Razorpay(options);
-                                    rzp1.open()
-                                }
-                            },
-                            error: function () {
-                                Swal.fire({
-                                    icon: 'error',
-                                    title: 'Payment Verification Failed',
-                                    text: 'Order Canceled',
-                                    confirmButtonText: 'OK'
-                                });
-                            }
-                        })
-                    })
                 });
             </script>
+
 </body>
 
 </html>

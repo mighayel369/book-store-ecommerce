@@ -4,106 +4,387 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Shoe Rack</title>
-  <link rel="stylesheet" href="path/to/your/css/styles.css">
+  <title>Coupon Management | Shoe Rack</title>
+
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+  <style>
+    .coupon-page {
+      width: 100%;
+      max-width: none;
+      min-width: 0;
+      padding: 24px;
+      box-sizing: border-box;
+    }
+
+    main,
+    .admin-main {
+      margin-left: var(--sidebar-width);
+      margin-top: var(--navbar-height);
+      padding: 28px;
+      min-height: calc(100vh - var(--navbar-height));
+      min-width: 0;
+      box-sizing: border-box;
+    }
+
+    .coupon-page *,
+    .coupon-page *::before,
+    .coupon-page *::after {
+      box-sizing: border-box;
+    }
+
+    .coupon-page .page-heading {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 15px;
+      margin-bottom: 24px;
+    }
+
+    .coupon-page .page-heading h2 {
+      margin: 0 0 5px;
+      font-size: 26px;
+      font-weight: 600;
+      color: #212529;
+    }
+
+    .coupon-page .page-heading p {
+      margin: 0;
+      color: #6c757d;
+      font-size: 14px;
+    }
+
+    .coupon-page .add-coupon-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 16px;
+      border-radius: 6px;
+      background: #212529;
+      color: #fff;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+
+    .coupon-page .add-coupon-btn:hover {
+      background: #343a40;
+      color: #fff;
+    }
+
+    .coupon-page .coupon-card {
+      width: 100%;
+      min-width: 0;
+      padding: 22px;
+      background: #fff;
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    }
+
+    .coupon-page .table-responsive {
+      width: 100%;
+      overflow-x: auto;
+    }
+
+    .coupon-page .coupon-table {
+      width: 100%;
+      margin-bottom: 0;
+      vertical-align: middle;
+    }
+
+    .coupon-page .coupon-table thead th {
+      padding: 14px 12px;
+      background: #212529;
+      color: #fff;
+      font-size: 13px;
+      font-weight: 600;
+      white-space: nowrap;
+      border-color: #343a40;
+    }
+
+    .coupon-page .coupon-table tbody td {
+      padding: 13px 12px;
+      font-size: 14px;
+      vertical-align: middle;
+    }
+
+    .coupon-page .coupon-code {
+      font-weight: 600;
+      color: #212529;
+      white-space: nowrap;
+    }
+
+    .coupon-page .coupon-description {
+      min-width: 160px;
+      max-width: 260px;
+      overflow-wrap: anywhere;
+    }
+
+    .coupon-page .coupon-status {
+      display: inline-block;
+      padding: 5px 10px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .coupon-page .status-active {
+      background: #d1e7dd;
+      color: #0f5132;
+    }
+
+    .coupon-page .status-expired {
+      background: #f8d7da;
+      color: #842029;
+    }
+
+    .coupon-page .action-links {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .coupon-page .action-links a {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 34px;
+      height: 34px;
+      border-radius: 6px;
+      text-decoration: none;
+      transition: background 0.2s ease;
+    }
+
+    .coupon-page .edit-coupon {
+      color: #0d6efd;
+      background: #e9f2ff;
+    }
+
+    .coupon-page .edit-coupon:hover {
+      background: #d0e2ff;
+    }
+
+    .coupon-page .delete-coupon {
+      color: #dc3545;
+      background: #f8d7da;
+    }
+
+    .coupon-page .delete-coupon:hover {
+      background: #f1bfc4;
+    }
+
+    .coupon-page .empty-coupons {
+      padding: 35px 15px;
+      text-align: center;
+      color: #6c757d;
+    }
+
+    @media (max-width: 767px) {
+      .coupon-page {
+        padding: 16px;
+      }
+
+      .coupon-page .page-heading h2 {
+        font-size: 22px;
+      }
+
+      .coupon-page .coupon-card {
+        padding: 12px;
+      }
+
+      .coupon-page .add-coupon-btn {
+        width: 100%;
+      }
+    }
+  </style>
 </head>
 
 <body>
 
   <%- include('../partials/adminHeader') %>
-    <main>
-      <div class="container">
-        <% if (adminmessage) { %>
-          <div class="alert m-4 alert-dismissible fade show alert-<%= adminmessage.type %>" role="alert">
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            <strong>
-              <%= adminmessage.message %>
-            </strong>
+
+    <main class="coupon-page">
+
+      <% if (typeof adminmessage !=='undefined' && adminmessage) { %>
+        <div id="flash-message" hidden data-message="<%= adminmessage.message %>"
+          data-type="<%= adminmessage.type || 'success' %>">
+        </div>
+        <% } %>
+
+          <div class="page-heading">
+            <div>
+              <h2>Coupon Management</h2>
+              <p>Manage discount coupons for your store.</p>
+            </div>
+
+            <a href="/admin/addcoupon" class="add-coupon-btn">
+              <i class="fa-solid fa-plus"></i>
+              Add Coupon
+            </a>
           </div>
-          <% } %>
-            <div class="d-flex justify-content-end m-5">
-              <h3 class="me-auto">Coupon Management</h3>
-              <a href="/admin/addcoupon" class="btn btn-dark">Add Coupon</a>
-            </div>
-            <div class="row m-4">
-              <div class="col-lg-12">
-                <div class="table-responsive">
-                  <table class="table table-striped text-center">
-                    <thead>
-                      <tr class="table-dark">
-                        <th>Code</th>
-                        <th>Type</th>
-                        <th>Value</th>
-                        <th>Min-Amount</th>
-                        <th>Description</th>
-                        <th>Usage/Limit</th>
-                        <th>End Date</th>
-                        <th>Status</th>
-                        <th>Action</th>
+
+
+          <div class="coupon-card">
+
+            <div class="table-responsive">
+              <table class="table table-striped table-hover text-center coupon-table">
+
+                <thead>
+                  <tr>
+                    <th>Code</th>
+                    <th>Type</th>
+                    <th>Value</th>
+                    <th>Min. Amount</th>
+                    <th>Description</th>
+                    <th>Usage / Limit</th>
+                    <th>End Date</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  <% if (Coupons && Coupons.length> 0) { %>
+
+                    <% Coupons.forEach(coupon=> { %>
+                      <tr>
+                        <td class="coupon-code">
+                          <%= coupon.code %>
+                        </td>
+
+                        <td>
+                          <%= coupon.discountType %>
+                        </td>
+
+                        <td>
+                          <% if (coupon.discountType==='percentage' ) { %>
+                            <%= coupon.discountValue %>%
+                              <% } else { %>
+                                ₹<%= coupon.discountValue %>
+                                  <% } %>
+                        </td>
+
+                        <td>
+                          ₹<%= coupon.minimumPurchaseAmount %>
+                        </td>
+
+                        <td class="coupon-description">
+                          <%= coupon.description || '-' %>
+                        </td>
+
+                        <td>
+                          <%= coupon.usageLimit ?? '-' %>
+                        </td>
+
+                        <td>
+                          <%= coupon.endDate ? new Date(coupon.endDate).toLocaleDateString('en-IN') : '-' %>
+                        </td>
+
+                        <td>
+                          <% if (coupon.isActive===true) { %>
+                            <span class="coupon-status status-active">
+                              Active
+                            </span>
+                            <% } else { %>
+                              <span class="coupon-status status-expired">
+                                Inactive
+                              </span>
+                              <% } %>
+                        </td>
+
+                        <td>
+                          <div class="action-links">
+
+                            <a href="/admin/editcoupon/<%= coupon._id %>" class="edit-coupon" title="Edit coupon"
+                              aria-label="Edit coupon">
+                              <i class="fa-solid fa-pen-to-square"></i>
+                            </a>
+
+                            <a href="/admin/deletecoupon/<%= coupon._id %>" class="delete-coupon" title="Delete coupon"
+                              aria-label="Delete coupon" onclick="return deleteCoupon(event, '<%= coupon._id %>')">
+                              <i class="fa-solid fa-trash"></i>
+                            </a>
+
+                          </div>
+                        </td>
                       </tr>
-                    </thead>
-                    <tbody>
-                      <% Coupons.forEach(coupon=> { %>
-                        <tr>
-                          <td>
-                            <%= coupon.code %>
-                          </td>
-                          <td>
-                            <%= coupon.discountType %>
-                          </td>
-                          <td>
-                            <%= coupon.discountValue %>
-                          </td>
-                          <td>
-                            <%= coupon.minimumPurchaseAmount %>
-                          </td>
-                          <td>
-                            <%= coupon.description %>
-                          </td>
-                          <td>
-                            <%= coupon.usageLimit %>
-                          </td>
-                          <td>
-                            <%= coupon.endDate.toISOString().split('T')[0] %>
-                          </td>
-                          <td class="text-warning">
-                            <%= coupon.isActive===true?'Active':'Expired' %>
-                          </td>
-                          <td><a href="/admin/editcoupon/<%= coupon._id %>" class="text-muted m-2"><i
-                                class="fa-solid fa-pen-to-square"></i></a>
-                            <a href='#' class="text-muted" onclick="deleteCoupon('<%= coupon._id %>')"><i
-                                class="fa-solid fa-trash"></i></a>
-                          </td>
-                        </tr>
-                        <% }) %>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
+                      <% }); %>
+
+                        <% } else { %>
+                          <tr>
+                            <td colspan="9" class="empty-coupons">
+                              <i class="fa-solid fa-ticket fa-2x mb-3"></i>
+                              <p class="mb-0">No coupons available.</p>
+                            </td>
+                          </tr>
+                          <% } %>
+                </tbody>
+
+              </table>
             </div>
-      </div>
+
+          </div>
+
     </main>
+
     <script>
-      function deleteCoupon(couponId) {
-        let url = `/admin/deletecoupon/${couponId}`
+      const flashMessage = document.getElementById('flash-message');
+
+      if (flashMessage && typeof Swal !== 'undefined') {
+        const message = flashMessage.dataset.message;
+        const type = flashMessage.dataset.type;
+
+        const icon = type === 'danger'
+          ? 'error'
+          : ['success', 'error', 'warning', 'info', 'question'].includes(type)
+            ? type
+            : 'info';
+
         Swal.fire({
-          title: `Are you sure you want to delete`,
+          toast: true,
+          position: 'top-end',
+          icon: icon,
+          title: message,
+          showConfirmButton: false,
+          timer: 2500,
+          timerProgressBar: true
+        });
+      }
+      function deleteCoupon(event, couponId) {
+        event.preventDefault();
+
+        const url = `/admin/deletecoupon/${couponId}`;
+
+        Swal.fire({
+          title: 'Delete this coupon?',
+          text: 'This action cannot be undone.',
           icon: 'warning',
           showCancelButton: true,
-          confirmButtonColor: '#3085d6',
-          cancelButtonColor: '#d33',
-          confirmButtonText: 'Yes'
+          confirmButtonColor: '#dc3545',
+          cancelButtonColor: '#6c757d',
+          confirmButtonText: 'Yes, delete it',
+          cancelButtonText: 'Cancel'
         }).then((result) => {
           if (result.isConfirmed) {
             window.location.href = url;
           }
         });
+
+        return false;
       }
     </script>
+
+    <%- include('../partials/adminfooter') %>
+
 </body>
-<%- include('../partials/adminfooter') %>
 
 </html>

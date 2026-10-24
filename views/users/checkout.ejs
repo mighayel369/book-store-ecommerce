@@ -4,818 +4,1770 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shoe Rack</title>
+    <title>Checkout | Shoe Rack</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <style>
-        .container {
-            min-height: 100vh;
-            padding-top: 30px;
+        :root {
+            --brand: #f4512c;
+            --brand-dark: #d83c1b;
+            --brand-light: #fff2ed;
+            --text: #252525;
+            --muted: #747474;
+            --border: #e9e9e9;
+            --surface: #ffffff;
+            --page-bg: #f7f7f8;
         }
 
-        .shipping-details,
-        .order-summary {
-            border: 1px solid #ccc;
-            padding: 20px;
-            border-radius: 15px;
-            background-color: #f9f9f9;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            margin-bottom: 30px;
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: var(--page-bg);
+            color: var(--text);
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .checkout-page {
+            min-height: 75vh;
+            padding: 28px 0 60px;
+        }
+
+        .checkout-container {
+            max-width: 1250px;
+            margin: auto;
+            padding: 0 20px;
+        }
+
+        .breadcrumb-line {
+            color: var(--muted);
+            font-size: 14px;
+            margin-bottom: 26px;
+        }
+
+        .breadcrumb-line a {
+            color: var(--muted);
+            text-decoration: none;
+        }
+
+        .breadcrumb-line a:hover {
+            color: var(--brand);
+        }
+
+        .breadcrumb-line .current {
+            color: var(--brand);
+            font-weight: 700;
+        }
+
+        .checkout-heading {
+            margin-bottom: 25px;
+        }
+
+        .checkout-heading h1 {
+            font-size: clamp(25px, 3vw, 34px);
+            font-weight: 800;
+            letter-spacing: -0.8px;
+            margin-bottom: 8px;
+        }
+
+        .checkout-heading p {
+            margin: 0;
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .checkout-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 25px;
+            margin-bottom: 22px;
+            box-shadow: 0 5px 24px rgba(0, 0, 0, 0.035);
+        }
+
+        .section-heading {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 22px;
+        }
+
+        .section-icon {
+            width: 43px;
+            height: 43px;
+            border-radius: 13px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--brand);
+            background: var(--brand-light);
+            font-size: 17px;
+            flex-shrink: 0;
+        }
+
+        .section-heading h2 {
+            font-size: 19px;
+            font-weight: 750;
+            margin: 0 0 4px;
+        }
+
+        .section-heading p {
+            margin: 0;
+            color: var(--muted);
+            font-size: 13px;
         }
 
         .address-list {
             display: flex;
-            align-items: start;
-            border: 1px solid #ddd;
-            border-radius: 10px;
-            padding: 15px;
-            background-color: #fff;
-            margin-top: 20px;
+            align-items: flex-start;
+            gap: 13px;
+            padding: 17px;
+            margin-bottom: 13px;
+            border: 1px solid var(--border);
+            border-radius: 13px;
+            background: #fff;
+            transition: border-color 0.2s, background 0.2s;
         }
 
-        .address-list input[type="radio"] {
-            margin-right: 10px;
-            margin-top: 5px;
+        .address-list:has(input[type="radio"]:checked) {
+            border-color: var(--brand);
+            background: #fffaf8;
         }
 
-        .address-list p {
-            margin-bottom: 0.5rem;
-            line-height: 1.4;
-            font-weight: 500;
-            color: #333;
-        }
-
-        .order-summary .order-details {
-            display: flex;
-            align-items: center;
-            margin-top: 20px;
-        }
-
-        .order-summary img {
-            border-radius: 10px;
-            margin-right: 15px;
-            height: 100px;
-            width: 70px;
-        }
-
-        .order-summary p,
-        .order-total p {
-            margin-bottom: 0.5rem;
-        }
-
-        .order-total {
-            margin-top: 30px;
-            padding-top: 20px;
-            border-top: 1px solid #ddd;
-        }
-
-        .order-total .subtotal {
-            margin-bottom: 20px;
-        }
-
-        .order-total p {
-            display: flex;
-            justify-content: space-between;
-            font-weight: 500;
-        }
-
-        .defaultButton {
-            position: absolute;
-            left: 47%;
-            margin-top: 10px;
-        }
-
-        .offcanvas-center {
-            width: 500px;
-            height: 90vh;
-            margin: auto;
-            top: 0;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            transform: none;
-            border-radius: 10px;
-            overflow-y: auto;
-        }
-
-        .offcanvas-header,
-        .offcanvas-body {
-            padding: 20px;
-        }
-
-        .offcanvas-center::-webkit-scrollbar {
-            width: 10px;
-        }
-
-        .offcanvas-center::-webkit-scrollbar-thumb {
-            background-color: rgba(0, 0, 0, 0.3);
-            border-radius: 10px;
-        }
-
-        #offcanvasapplycoupon {
-            margin-top: 70px;
-            height: 500px;
-            width: 450px;
-        }
-
-        .apply-coupon {
+        .address-radio {
+            width: 17px;
+            height: 17px;
+            margin-top: 4px;
+            flex-shrink: 0;
+            accent-color: var(--brand);
             cursor: pointer;
         }
 
-        .checkboxes {
-            background-color: rgb(205, 243, 238);
+        .address-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .address-name {
+            font-size: 15px;
+            font-weight: 750;
+            margin-bottom: 7px;
+        }
+
+        .address-content p {
+            font-size: 13px;
+            line-height: 1.65;
+            color: #5f5f5f;
+            margin: 0;
+            overflow-wrap: anywhere;
+        }
+
+        .default-label {
+            display: inline-block;
+            color: #237847;
+            background: #eaf8ef;
+            border-radius: 5px;
+            padding: 3px 7px;
+            margin-left: 6px;
+            font-size: 10px;
+            font-weight: 700;
+            vertical-align: middle;
+        }
+
+        .address-actions {
+            display: flex;
+            gap: 10px;
+            flex-shrink: 0;
+        }
+
+        .icon-button {
+            width: 34px;
+            height: 34px;
+            border: 1px solid var(--border);
+            background: white;
+            color: #555;
+            border-radius: 9px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .icon-button:hover {
+            color: var(--brand);
+            border-color: var(--brand);
+            background: var(--brand-light);
+        }
+
+        .icon-button.delete:hover {
+            color: #dc3545;
+            border-color: #dc3545;
+            background: #fff1f1;
+        }
+
+        .address-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 18px;
+        }
+
+        .btn-brand {
+            background: var(--brand);
+            border: 1px solid var(--brand);
+            color: white;
+            font-weight: 700;
             border-radius: 10px;
+            padding: 11px 17px;
+            transition: all 0.2s;
+        }
+
+        .btn-brand:hover,
+        .btn-brand:focus {
+            background: var(--brand-dark);
+            border-color: var(--brand-dark);
+            color: white;
+        }
+
+        .btn-outline-brand {
+            background: white;
+            color: var(--brand);
+            border: 1px solid var(--brand);
+            border-radius: 10px;
+            padding: 10px 15px;
+            font-weight: 700;
+        }
+
+        .btn-outline-brand:hover {
+            color: white;
+            background: var(--brand);
+        }
+
+        .btn-dark-custom {
+            color: white;
+            background: #222;
+            border: 1px solid #222;
+            border-radius: 10px;
+            padding: 11px 16px;
+            font-weight: 700;
+        }
+
+        .btn-dark-custom:hover {
+            color: white;
+            background: #444;
+        }
+
+        .payment-option {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .payment-option:has(input:checked) {
+            border-color: var(--brand);
+            background: #fffaf8;
+        }
+
+        .payment-option input {
+            accent-color: var(--brand);
+            width: 17px;
+            height: 17px;
+            flex-shrink: 0;
+        }
+
+        .payment-option .payment-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: #f4f4f4;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #383838;
+            flex-shrink: 0;
+        }
+
+        .payment-option strong {
+            display: block;
+            font-size: 14px;
+            margin-bottom: 3px;
+        }
+
+        .payment-option small {
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .payment-option .payment-check {
+            margin-left: auto;
+            color: var(--brand);
+        }
+
+        .order-summary {
+            position: sticky;
+            top: 20px;
+        }
+
+        .delivery-note {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 13px;
+            background: #f2fbf5;
+            color: #277448;
+            border-radius: 11px;
+            font-size: 12px;
+            margin-bottom: 22px;
+        }
+
+        .order-product {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 16px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .product-image-wrap {
+            width: 86px;
+            height: 100px;
+            border-radius: 12px;
+            background: #f7f7f7;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        .product-image-wrap img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            mix-blend-mode: multiply;
+        }
+
+        .product-info {
+            flex: 1;
+            min-width: 0;
         }
 
         .product-name {
-            font-size: 1rem;
-            font-weight: 700;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            max-width: 300px;
-            display: inline-block;
-            color: #212529;
+            font-size: 14px;
+            font-weight: 750;
+            line-height: 1.45;
+            margin-bottom: 6px;
+            overflow-wrap: anywhere;
+            color: #242424;
         }
-        .colored-toast {
-         background: rgba(207, 117, 43, 0.9) !important; 
-          color: white !important;
-         }
 
-          .toast-text {
-          color: #ffffff !important;
-          }
+        .product-price {
+            font-size: 14px;
+            font-weight: 750;
+            margin-bottom: 5px;
+        }
+
+        .old-price {
+            color: #888;
+            font-size: 12px;
+            text-decoration: line-through;
+            margin-left: 5px;
+            font-weight: 400;
+        }
+
+        .offer-label {
+            display: inline-block;
+            margin-top: 4px;
+            color: #198754;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .product-quantity {
+            color: var(--muted);
+            font-size: 12px;
+            margin: 0;
+        }
+
+        .product-line-total {
+            font-size: 14px;
+            font-weight: 750;
+            white-space: nowrap;
+        }
+
+        .summary-divider {
+            border: 0;
+            border-top: 1px solid var(--border);
+            margin: 20px 0;
+        }
+
+        .summary-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            font-size: 13px;
+            margin-bottom: 17px;
+        }
+
+        .summary-row .summary-label {
+            color: #666;
+        }
+
+        .summary-row .summary-value {
+            font-weight: 650;
+            text-align: right;
+        }
+
+        .coupon-trigger {
+            color: var(--brand);
+            background: transparent;
+            border: none;
+            padding: 0;
+            font-weight: 750;
+            cursor: pointer;
+            text-align: right;
+        }
+
+        .coupon-trigger:hover {
+            color: var(--brand-dark);
+            text-decoration: underline;
+        }
+
+        .coupon-applied {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            color: #198754;
+            font-size: 12px;
+        }
+
+        .grand-total {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            font-size: 17px;
+            font-weight: 800;
+            margin-top: 20px;
+        }
+
+        .grand-total .amount {
+            font-size: 23px;
+            color: var(--brand);
+            white-space: nowrap;
+        }
+
+        .place-order-btn {
+            width: 100%;
+            border: 0;
+            border-radius: 12px;
+            background: var(--brand);
+            color: #fff;
+            font-weight: 800;
+            padding: 15px;
+            margin-top: 23px;
+            transition: all 0.2s;
+        }
+
+        .place-order-btn:hover {
+            background: var(--brand-dark);
+            transform: translateY(-1px);
+        }
+
+        .place-order-btn:disabled {
+            opacity: 0.65;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .secure-note {
+            text-align: center;
+            color: var(--muted);
+            font-size: 11px;
+            margin-top: 13px;
+        }
+
+        .coupon-promo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 15px;
+            margin-top: 20px;
+            background: #fffaf8;
+            border: 1px dashed #f4b09f;
+            border-radius: 12px;
+        }
+
+        .coupon-promo-icon {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--brand-light);
+            color: var(--brand);
+            border-radius: 10px;
+            flex-shrink: 0;
+        }
+
+        .coupon-promo-text {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .coupon-promo-text strong {
+            display: block;
+            font-size: 13px;
+        }
+
+        .coupon-promo-text small {
+            display: block;
+            color: var(--muted);
+            font-size: 11px;
+            margin-top: 4px;
+        }
+
+        .offcanvas-center {
+            width: min(480px, 100%);
+            height: min(90vh, 780px);
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) !important;
+            border-radius: 18px;
+            overflow: hidden;
+            border: none;
+            box-shadow: 0 20px 70px rgba(0, 0, 0, 0.18);
+        }
+
+        .offcanvas-center .offcanvas-header {
+            padding: 22px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .offcanvas-center .offcanvas-body {
+            padding: 22px;
+            overflow-y: auto;
+        }
+
+        .offcanvas-title {
+            font-size: 18px;
+            font-weight: 800;
+        }
+
+        .form-control,
+        .form-select {
+            border-color: #dedede;
+            border-radius: 10px;
+        }
+
+        .form-control:focus,
+        .form-select:focus {
+            border-color: var(--brand);
+            box-shadow: 0 0 0 0.2rem rgba(244, 81, 44, 0.12);
+        }
+
+        .form-floating>label {
+            color: #777;
+        }
+
+        .form-check-input:checked {
+            background-color: var(--brand);
+            border-color: var(--brand);
+        }
+
+        .coupon-code-box {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .coupon-code-box .form-control {
+            min-width: 0;
+        }
+
+        .coupon-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 16px;
+            border: 1px solid var(--border);
+            border-radius: 13px;
+            margin-bottom: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .coupon-item:has(input:checked) {
+            border-color: var(--brand);
+            background: #fffaf8;
+        }
+
+        .coupon-item input {
+            margin-top: 4px;
+            flex-shrink: 0;
+        }
+
+        .coupon-item-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .coupon-code {
+            display: inline-block;
+            border: 1px dashed var(--brand);
+            color: var(--brand);
+            background: white;
+            border-radius: 6px;
+            padding: 5px 10px;
+            font-weight: 800;
+            font-size: 12px;
+            margin-bottom: 9px;
+        }
+
+        .coupon-saving {
+            font-size: 14px;
+            font-weight: 800;
+            color: #198754;
+            margin-bottom: 5px;
+        }
+
+        .coupon-description {
+            font-size: 12px;
+            color: #666;
+            line-height: 1.5;
+        }
+
+        .coupon-expiry {
+            font-size: 11px;
+            color: #888;
+            margin-top: 6px;
+        }
+
+        .coupon-bottom {
+            padding-top: 18px;
+            border-top: 1px solid var(--border);
+        }
+
+        .coupon-max-saving {
+            text-align: center;
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        .coupon-max-saving strong {
+            display: block;
+            font-size: 21px;
+            color: var(--brand);
+            margin-top: 5px;
+        }
+
+        .empty-address {
+            text-align: center;
+            padding: 28px 15px;
+            border: 1px dashed #ddd;
+            border-radius: 13px;
+            color: var(--muted);
+        }
+
+        .empty-address i {
+            font-size: 28px;
+            color: #aaa;
+            margin-bottom: 12px;
+        }
+
+        .colored-toast {
+            background: #262626 !important;
+            color: white !important;
+        }
+
+        @media (max-width: 991px) {
+            .order-summary {
+                position: static;
+            }
+
+            .checkout-page {
+                padding-top: 20px;
+            }
+        }
+
+        @media (max-width: 575px) {
+            .checkout-container {
+                padding: 0 12px;
+            }
+
+            .checkout-card {
+                padding: 17px;
+                border-radius: 14px;
+            }
+
+            .checkout-heading h1 {
+                font-size: 27px;
+            }
+
+            .address-list {
+                padding: 12px;
+                gap: 9px;
+            }
+
+            .address-actions {
+                gap: 5px;
+            }
+
+            .icon-button {
+                width: 30px;
+                height: 30px;
+            }
+
+            .address-footer {
+                align-items: stretch;
+                flex-direction: column;
+            }
+
+            .address-footer button {
+                width: 100%;
+            }
+
+            .product-image-wrap {
+                width: 68px;
+                height: 82px;
+            }
+
+            .order-product {
+                gap: 10px;
+            }
+
+            .product-name {
+                font-size: 12px;
+            }
+
+            .product-line-total {
+                font-size: 12px;
+            }
+
+            .grand-total .amount {
+                font-size: 21px;
+            }
+
+            .offcanvas-center {
+                width: calc(100% - 20px);
+                height: 92vh;
+                border-radius: 14px;
+            }
+
+            .offcanvas-center .offcanvas-header,
+            .offcanvas-center .offcanvas-body {
+                padding: 16px;
+            }
+        }
     </style>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body>
     <%- include('../partials/userHeader') %>
-        <p class="fw-bold text-dark fs-5 mt-4 ms-3">Home > Cart > <span class="text-warning">Checkout</span></p>
-        <div class="container">
-            <% if (message) { %>
-                <script>
-                  Swal.fire({
-                    toast: true,
-                    position: 'top-end',
-                    title: '<%= message.message %>',
-                    showConfirmButton: false,
-                    timer: 2000,
-                    timerProgressBar: false,
-                    background: '#28a745',
-                    customClass: {
-                      popup: 'colored-toast',
-                      text: 'toast-text'
-                    }
-                  });
-                </script>
-                <% } %>
 
+        <main class="checkout-page">
+            <div class="checkout-container">
 
-                    <div class="row">
-                        <div class="col-md-7">
-                            <div class="shipping-details">
-                                <p class="fw-bold fs-5">Shipping Info</p>
-                                <p class="fw-semibold text-muted">Select Shipping Address</p>
-                                <form action="/updateDefaultaddress" method="post">
-                                    <% users.address.forEach(element=> { %>
+                <nav class="breadcrumb-line" aria-label="Breadcrumb">
+                    <a href="/">Home</a>
+                    <span class="mx-2">/</span>
+                    <a href="/cart">Cart</a>
+                    <span class="mx-2">/</span>
+                    <span class="current">Checkout</span>
+                </nav>
 
-                                        <div class="address-list">
-                                            <input type="radio" name="selectedAddress" value="<%= element._id %>"
-                                                <%=element.default ? 'checked' : '' %> class="me-2">
-                                            <div>
-                                                <p class="mb-0 fw-bold">
-                                                    <%= element.fullname %>
-                                                </p>
-                                                <p class="mb-0">
-                                                    <%= element.houseno %>, <%= element.area %>, <%= element.landmark %>
-                                                </p>
-                                                <p class="mb-0">
-                                                    <%= element.town %>, <%= element.state %>
-                                                </p>
-                                                <p class="mb-0">
-                                                    <%= element.phoneno %>
-                                                </p>
-                                                <p class="mb-0">
-                                                    <%= element.pincode %>
-                                                </p>
-                                            </div>
-                                            <div class="ms-auto">
-                                                <a href="" type="button" class="mx-1 mt-1 text-muted"
-                                                    data-bs-toggle="offcanvas" data-bs-target="#offcanvasEditAddress"
-                                                    aria-controls="offcanvasEditAddress" data-id="<%= element._id %>"
-                                                    data-fullname="<%= element.fullname %>"
-                                                    data-houseno="<%= element.houseno %>"
-                                                    data-area="<%= element.area %>"
-                                                    data-landmark="<%= element.landmark %>"
-                                                    data-town="<%= element.town %>" data-state="<%= element.state %>"
-                                                    data-pincode="<%= element.pincode %>"
-                                                    data-phoneno="<%= element.phoneno %>"
-                                                    data-default=" <%= element.default %>"
-                                                    onclick="populateEditForm(this)"><i
-                                                        class="fa-solid fa-pen-to-square"></i></a>
-                                                <a onclick="deleteAddress('<%= element._id %>')"
-                                                    class="mx-1 mt-1 text-muted"><i class="fa-solid fa-trash"></i></a>
-                                            </div>
-                                        </div>
-                                        <% }) %>
-                                            <button type="submit" class="btn btn-primary btn-sm defaultButton">Save
-                                                Default</button>
-                                </form>
-                                <button class="btn btn-dark ms-auto mx-3 mt-2" type="button" data-bs-toggle="offcanvas"
-                                    data-bs-target="#offcanvasWithBothOptions"
-                                    aria-controls="offcanvasWithBothOptions">Add Address</button>
-                                <div class="offcanvas offcanvas-center" data-bs-scroll="true" tabindex="-1"
-                                    id="offcanvasWithBothOptions" aria-labelledby="offcanvasWithBothOptionsLabel">
-                                    <div class="offcanvas-header">
-                                        <h5 class="offcanvas-title" id="offcanvasWithBothOptionsLabel">Add New Address
-                                        </h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="offcanvas"
-                                            aria-label="Close"></button>
-                                    </div>
-                                    <div class="offcanvas-body">
-                                        <form action="/addaddress" method="post">
-                                            <div class="form-floating mb-3">
-                                                <input type="text" class="form-control" id="fullname" placeholder="name"
-                                                    name="fullname" required>
-                                                <label for="fullname">Name</label>
-                                            </div>
-                                            <div class="form-floating mb-3">
-                                                <input type="number" class="form-control" id="phoneno" name="phoneno"
-                                                    placeholder="Phone Number" required>
-                                                <label for="phoneno">Phone Number</label>
-                                            </div>
-                                            <div class="form-floating mb-3">
-                                                <input type="text" class="form-control" id="houseno" name="houseno"
-                                                    placeholder="Flat, House No, Company, Building, Apartment" required>
-                                                <label for="houseno">Flat, House No, Company, Building,
-                                                    Apartment</label>
-                                            </div>
-                                            <div class="form-floating mb-3">
-                                                <input type="text" class="form-control" id="area" name="area"
-                                                    placeholder="Area, Street, Sector, Village" required>
-                                                <label for="area">Area, Street, Sector, Village</label>
-                                            </div>
-                                            <div class="form-floating mb-3">
-                                                <input type="text" class="form-control" id="landmark" name="landmark"
-                                                    placeholder="Landmark" required>
-                                                <label for="landmark">Landmark</label>
-                                            </div>
-                                            <div class="form-floating mb-3">
-                                                <input type="text" class="form-control" id="town" name="town"
-                                                    placeholder="Town, City" required>
-                                                <label for="town">Town, City</label>
-                                            </div>
-                                            <div class="row">
-                                                <div class="form-floating mb-3 col-md-6">
-                                                    <select class="form-select" id="state" name="state">
-                                                        <option value="kerala">Kerala</option>
-                                                        <option value="Tamil Nadu">Tamil Nadu</option>
-                                                        <option value="kerala">Kerala</option>
-                                                        <option value="Tamil Nadu">Tamil Nadu</option>
-                                                        <option value="kerala">Kerala</option>
-                                                        <option value="Tamil Nadu">Tamil Nadu</option>
-                                                        <option value="kerala">Kerala</option>
-                                                        <option value="Tamil Nadu">Tamil Nadu</option>
-                                                        <option value="kerala">Kerala</option>
-                                                        <option value="Tamil Nadu">Tamil Nadu</option>
-                                                    </select>
-                                                    <label for="state" class="mx-2 mb-1">State</label>
-                                                </div>
-                                                <div class="form-floating mb-3 col-md-6">
-                                                    <input type="number" class="form-control" id="pincode"
-                                                        name="pincode" placeholder="Pincode" required>
-                                                    <label for="pincode" class="mx-2">Pincode</label>
-                                                </div>
-                                            </div>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" value="true"
-                                                    id="checkadd" name="default">
-                                                <label class="form-check-label" for="checkadd">
-                                                    set as default
-                                                </label>
-                                            </div>
-                                            <div class="d-flex justify-content-center w-100">
-                                                <button class="btn btn-dark" type="submit">Add Address</button>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
-                                <div class="offcanvas offcanvas-center" data-bs-scroll="true" tabindex="-1"
-                                    id="offcanvasEditAddress" aria-labelledby="offcanvasEditAddressLabel">
-                                    <div class="offcanvas-header">
-                                        <h5 class="offcanvas-title" id="offcanvasEditAddressLabel">Edit Address</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="offcanvas"
-                                            aria-label="Close"></button>
-                                    </div>
-                                    <div class="offcanvas-body">
-                                        <form method="post" action="#" id="edit-address-form">
-                                            <div class="form-floating mb-3">
-                                                <input type="text" class="form-control" id="edit-fullname"
-                                                    name="fullname" placeholder="Full Name">
-                                                <label for="edit-fullname">Name</label>
-                                            </div>
-                                            <div class="form-floating mb-3">
-                                                <input type="number" class="form-control" id="edit-phoneno"
-                                                    name="phoneno" placeholder="Phone Number">
-                                                <label for="edit-phoneno">Phone Number</label>
-                                            </div>
-                                            <div class="form-floating mb-3">
-                                                <input type="text" class="form-control" id="edit-houseno" name="houseno"
-                                                    placeholder="Flat, House No, Company, Building, Apartment">
-                                                <label for="edit-houseno">Flat, House No, Company, Building,
-                                                    Apartment</label>
-                                            </div>
-                                            <div class="form-floating mb-3">
-                                                <input type="text" class="form-control" id="edit-area" name="area"
-                                                    placeholder="Area, Street, Sector, Village">
-                                                <label for="edit-area">Area, Street, Sector, Village</label>
-                                            </div>
-                                            <div class="form-floating mb-3">
-                                                <input type="text" class="form-control" id="edit-landmark"
-                                                    name="landmark" placeholder="Landmark">
-                                                <label for="edit-landmark">Landmark</label>
-                                            </div>
-                                            <div class="form-floating mb-3">
-                                                <input type="text" class="form-control" id="edit-town" name="town"
-                                                    placeholder="Town, City">
-                                                <label for="edit-town">Town, City</label>
-                                            </div>
-                                            <div class="row">
-                                                <div class="form-floating mb-3 col-md-6">
-                                                    <select class="form-select" id="edit-state" name="state">
-                                                        <option value="kerala">Kerala</option>
-                                                        <option value="Tamil Nadu">Tamil Nadu</option>
-                                                    </select>
-                                                    <label for="edit-state" class="mx-2 mb-1">State</label>
-                                                </div>
-                                                <div class="form-floating mb-3 col-md-6">
-                                                    <input type="number" class="form-control" id="edit-pincode"
-                                                        name="pincode" placeholder="Pincode">
-                                                    <label for="edit-pincode" class="mx-2">Pincode</label>
-                                                </div>
-                                            </div>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" value="true"
-                                                    id="flexCheckDefault" name="default">
-                                                <label class="form-check-label" for="default">
-                                                    set as default
-                                                </label>
-                                            </div>
-                                            <div class="d-flex justify-content-center w-100">
-                                                <button class="btn btn-dark" type="submit">Update Address</button>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
+                <div class="checkout-heading">
+                    <h1>Checkout</h1>
+                    <p>Almost there! Confirm your delivery details and complete your order.</p>
+                </div>
 
-
-
-                                <div class="payment mt-5">
-                                    <form id="orderForm">
-                                        <p class="fw-bold fs-5">Payment</p>
-                                        <p class="fw-semibold text-muted">Select Payment Options</p>
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="paymentMethod" id="cod"
-                                                value="cod" checked>
-                                            <label for="cod" class="form-check-label text-dark fw-semibold">Cash On
-                                                Delivery</label>
-                                        </div>
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="paymentMethod"
-                                                id="wallet" value="wallet">
-                                            <label for="walet"
-                                                class="form-check-label text-dark fw-semibold">Wallet</label>
-                                        </div>
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="paymentMethod"
-                                                id="razorpay" value="razorpay">
-                                            <label for="razorpay"
-                                                class="form-check-label text-dark fw-semibold">Online</label>
-                                        </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-5">
-                            <div class="order-summary">
-                                <p class="fw-bold fs-5">Bag Summary</p>
-                                <p class="text-muted fw-semibold" style="font-size: 13px;">Arrives in 4-7 days</p>
-                                <% let subtotal=0 %>
-                                    <% cartData.forEach(element=> { %>
-                                        <div class="order-details">
-                                            <img src="/product_images/<%= element.image[0] %>" alt="Product Image"
-                                                width="100">
-                                            <div>
-                                                <p class="product-name fw-bold mb-0"><span class="text-muted">Product
-                                                        Name</span>: <%= element.productname %>
-                                                </p>
-                                                <% if (element.offer.isOfferActive &&
-                                                    element.discountSource==='category' ) { %>
-                                                    <span class="me-2 text-muted">
-                                                        ₹ <%= element.discountPrice %>
-                                                            <span class="fw-light"
-                                                                style="font-size: .9rem; color: orange;">
-                                                                <span class="text-dark mx-1"
-                                                                    style="text-decoration: line-through;">
-                                                                    ₹ <%= element.productprice %>
-                                                                </span>
-                                                                <% if (element.offer.discountType==='percentage' ) { %>
-                                                                    <%= element.offer.discountValue %>% OFF
-                                                                        <% } else if
-                                                                            (element.offer.discountType==='fixed' ) { %>
-                                                                            ₹ <%= element.offer.discountValue %> OFF
-                                                                                <% } %>
-                                                            </span>
-                                                    </span>
-                                                    <% } else if (element.productoffer.isOfferActive &&
-                                                        element.discountSource==='product' ) { %>
-                                                        <span class="me-2 text-muted">
-                                                            ₹ <%= element.discountPrice %>
-                                                                <span class="fw-light"
-                                                                    style="font-size: .9rem; color: orange;">
-                                                                    <span class="text-dark mx-1"
-                                                                        style="text-decoration: line-through;">
-                                                                        ₹ <%= element.productprice %>
-                                                                    </span>
-                                                                    <% if
-                                                                        (element.productoffer.discountType==='percentage'
-                                                                        ) { %>
-                                                                        <%= element.productoffer.discountValue %>% OFF
-                                                                            <% } else if
-                                                                                (element.productoffer.discountType==='fixed'
-                                                                                ) { %>
-                                                                                ₹ <%= element.productoffer.discountValue
-                                                                                    %> OFF
-                                                                                    <% } %>
-                                                                </span>
-                                                        </span>
-                                                        <% } else { %>
-                                                            <p class="text-muted mb-0">Price: ₹ <%= element.productprice
-                                                                    %>
-                                                            </p>
-                                                            <% } %>
-                                                                <p class="text-muted">Quantity: <%= element.quantity %>
-                                                                </p>
-                                            </div>
-                                        </div>
-                                        <% let itemPrice=(element.offer.isOfferActive &&
-                                            element.discountSource==='category' ) || (element.productoffer.isOfferActive
-                                            && element.discountSource==='product' ) ? element.discountPrice :
-                                            element.productprice; subtotal +=itemPrice * element.quantity; %>
-                                            <% }) %>
-                                                <div class="order-total">
-                                                    <p class="fw-bold fs-5">Order Summary</p>
-                                                    <div class="subtotal mt-5">
-                                                        <p>Subtotal <span style="font-size: 1rem;">
-                                                                <%= subtotal %>
-                                                            </span></p>
-                                                        <p>Coupon Discount <span style="font-size: 1rem;"
-                                                                class="text-warning apply-coupon"
-                                                                data-bs-toggle="offcanvas"
-                                                                data-bs-target="#offcanvasapplycoupon">
-                                                                <%=deductedValue?deductedValue:'Apply Coupon' %>
-                                                            </span></p>
-                                                        <p>Shipping Fee <span>Free</span></p>
-                                                    </div>
-                                                    <input type="hidden" name="totalPrice" value="<%= subtotal %>">
-                                                    <% if (finalTotal) { %>
-                                                        <input type="hidden" name="finalPrice"
-                                                            value="<%= finalTotal %>">
-                                                        <% } %>
-                                                            <p class="fw-bold">Total <span>
-                                                                    <%= finalTotal?finalTotal:subtotal %><span></p>
-                                                            <button type="submit"
-                                                                class="btn btn-dark mt-3 w-100 fw-bold">Place
-                                                                Order</button>
-                                                </div>
-                                                </form>
-                                                <div class="coupon mt-4 p-3 border-top">
-                                                    <div class="couponDiv">
-                                                        <p class="fw-bold fs-5 mb-3">Coupons</p>
-                                                        <div
-                                                            class="applyCoupon d-flex align-items-center justify-content-between">
-                                                            <div class="d-flex align-items-start flex-column">
-                                                                <div class="d-flex align-items-center">
-                                                                    <i class="fa-solid fa-ticket-simple fs-4"></i>
-                                                                    <% if (deductedValue) { %>
-                                                                        <span class="fw-bold mx-2 fs-6">1 Coupon
-                                                                            applied</span>
-                                                                        <% } else { %>
-                                                                            <span class="fw-bold mx-2 fs-6">Apply
-                                                                                Coupons</span>
-                                                                            <% } %>
-                                                                </div>
-                                                                <% if (deductedValue) { %>
-                                                                    <span class="text-muted ms-4"
-                                                                        style="font-size: .75rem;">You saved an
-                                                                        additional ₹ <%= deductedValue %></span>
-                                                                    <% } %>
-                                                            </div>
-                                                            <% if (!deductedValue) { %>
-                                                                <button type="button"
-                                                                    class="btn btn-outline-dark btn-sm"
-                                                                    data-bs-toggle="offcanvas"
-                                                                    data-bs-target="#offcanvasapplycoupon"
-                                                                    aria-controls="offcanvasapplycoupon">APPLY</button>
-                                                                <% } else { %>
-                                                                    <button type="button"
-                                                                        class="btn btn-outline-dark btn-sm"
-                                                                        data-bs-toggle="offcanvas"
-                                                                        data-bs-target="#offcanvasapplycoupon"
-                                                                        aria-controls="offcanvasapplycoupon">EDIT</button>
-                                                                    <% } %>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                            </div>
-                        </div>
-
-                        <div class="offcanvas offcanvas-center" data-bs-scroll="true" tabindex="-1"
-                            id="offcanvasapplycoupon" aria-labelledby="offcanvasapplycouponLabel">
-                            <div class="offcanvas-header border-bottom">
-                                <h5 class="offcanvas-title fw-bold" id="offcanvasapplycouponLabel"
-                                    style="font-size: .8rem;">APPLY COUPON</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="offcanvas"
-                                    aria-label="Close"></button>
-                            </div>
-                            <div class="offcanvas-body couponBody d-flex flex-column justify-content-between">
-
-                                <div class="input-group">
-                                    <input type="text" class="form-control p-2" placeholder="   Enter coupon code"
-                                        aria-label="Enter coupon code" aria-describedby="inputGroup-sizing-default"
-                                        style="border-right: none;">
-                                    <span class="input-group-text text-muted fw-bold" id="inputGroup-sizing-default"
-                                        style="background-color: transparent;border-left: none;cursor: pointer;font-size: .8rem;letter-spacing: 0.1rem;">CHECK</span>
-                                </div>
-                                <div class="coupondetails">
-                                    <% if (coupons.length>0) { %>
-                                        <% coupons.forEach(coupon=> { %>
-                                            <div class="form-check my-4 d-flex align-items-start checkboxes"
-                                                style="padding:15px;">
-                                                <input class="form-check-input me-3 mt-1" type="checkbox"
-                                                    value="<%= coupon._id %>" id="<%= coupon._id %>"
-                                                    <%=users.coupon?.couponId?.toString()===coupon._id.toString()
-                                                    ? 'checked' : '' %> data-couponvalue="<%=
-                                                    coupon.discountType==="percentage"
-                                                    ?Math.floor(subtotal*coupon.discountValue /100):coupon.discountValue
-                                                    %>">
-                                                    <label class="form-check-label" for="<%= coupon._id %>"
-                                                        style="display: block; font-size: 0.9rem; line-height: 1.4; color: #333;">
-                                                        <span
-                                                            style="border: 1px dashed #101611; padding:10px 15px; display: inline-block; font-size: .8rem; font-weight: bold; color: #a18766; margin-bottom: 5px; border-radius: .4rem;">
-                                                            <%= coupon.code %>
-                                                        </span>
-                                                        <div class="mt-2"
-                                                            style="font-weight: bold; color: #dc3545; margin-bottom: 3px;">
-                                                            Save ₹ <% if (coupon.discountType==='percentage' ) { %>
-                                                                <%= Math.floor(subtotal * coupon.discountValue / 100) %>
-                                                                    <% }else{ %>
-                                                                        <%= coupon.discountValue %>
-                                                                            <% } %>
-                                                        </div>
-                                                        <div style="font-size: 0.85rem; color: #555;">
-                                                            <%= coupon.description %> <br>
-                                                                Expires on: <%= new
-                                                                    Date(coupon.endDate).toLocaleDateString('en-IN', {
-                                                                    day: 'numeric' , month: 'long' , year: 'numeric' })
-                                                                    %> |
-                                                                    <%= new
-                                                                        Date(coupon.endDate).toLocaleTimeString('en-IN',
-                                                                        { hour: '2-digit' , minute: '2-digit' , hour12:
-                                                                        true }) %>
-                                                        </div>
-                                                    </label>
-                                            </div>
-                                            <% }) %>
-                                                <% } else{%>
-                                                    <div class="alert alert-info text-center my-4" role="alert"
-                                                        style="padding: 20px; border-radius: .5rem;">
-                                                        <i class="fas fa-info-circle"></i> No Coupons Available at the
-                                                        Moment
-                                                    </div>
-                                                    <% } %>
-                                </div>
-                                <div class="bottomButton mt-auto">
-                                    <div
-                                        class="max-savings d-flex flex-column justify-content-center align-items-center text-center">
-                                        Maximum Savings: <br>
-                                        <span class="fw-bold" id="savings">0</span>
-                                    </div>
-                                    <button class="btn btn-danger apply-btn w-100 mt-3" type="button"
-                                        onclick="applyCoupon()">APPLY</button>
-                                </div>
-
-                            </div>
-                        </div>
-
+                <% if (message && message.message) { %>
+                    <div id="flash-message" hidden>
+                        <%= message.message %>
                     </div>
-        </div>
-        <%- include('../partials/userfooter') %>
-            <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-            <script>
-                $(document).ready(function () {
-                    $('#orderForm').on('submit', function (e) {
-                        e.preventDefault();
-                        var formData = $(this).serialize();
-                        Swal.fire({
-                            title: `Order Confirmation`,
-                            icon: 'warning',
-                            text: 'Are you sure you want to order the products',
-                            showCancelButton: true,
-                            confirmButtonColor: '#3085d6',
-                            cancelButtonColor: '#d33',
-                            confirmButtonText: 'Yes'
-                        }).then((result) => {
-                            if (result.isConfirmed) {
-                                $.ajax({
-                                    type: 'POST',
-                                    url: '/place-order',
-                                    data: formData,
-                                    success: function (response) {
-                                        if (response.message === 'Razorpay order created') {
-                                            var options = {
-                                                "key": "rzp_test_x7mcrmmJeFQpUZ",
-                                                "amount": response.amount * 100,
-                                                "currency": "INR",
-                                                "name": "Shoe Rack",
-                                                "description": "Purchase Description",
-                                                "order_id": response.razorpayOrderId,
-                                                "handler": function (razorpayResponse) {
-                                                    $.ajax({
-                                                        type: 'POST',
-                                                        url: '/verify-payment',
-                                                        data: {
-                                                            orderId: response.orderId,
-                                                            razorpay_payment_id: razorpayResponse.razorpay_payment_id,
-                                                            razorpay_order_id: razorpayResponse.razorpay_order_id,
-                                                            razorpay_signature: razorpayResponse.razorpay_signature,
-                                                            totalPrice: response.totalPrice,
-                                                            finalPrice: response.finalPrice
-                                                        },
-                                                        success: function (verifyResponse) {
-                                                            Swal.fire({
-                                                                icon: 'success',
-                                                                title: 'Payment Successful!',
-                                                                text: 'Your payment has been verified.',
-                                                                confirmButtonText: 'OK'
-                                                            }).then(() => {
-                                                                window.location.href = `/ordersuccess`
-                                                            });
-                                                        },
-                                                        error: function (error) {
-                                                            Swal.fire({
-                                                                icon: 'error',
-                                                                title: 'Payment Verification Failed',
-                                                                text: 'Please contact support.',
-                                                                confirmButtonText: 'OK'
-                                                            });
-                                                        }
-                                                    });
-                                                },
-                                                "modal": {
-                                                    "ondismiss": function () {
-                                                        Swal.fire({
-                                                            icon: 'warning',
-                                                            title: 'Payment Cancelled',
-                                                            text: 'You cancelled the payment. Please try again.',
-                                                            confirmButtonText: 'OK'
-                                                        }).then(() => {
-                                                            window.location.href = `/account`
-                                                        })
-                                                    }
-                                                },
-                                                "prefill": {
-                                                    "name": "Customer Name",
-                                                    "email": "customer@example.com",
-                                                    "contact": "9999999999"
-                                                },
-                                                "theme": {
-                                                    "color": "#3399cc"
-                                                }
-                                            };
-                                            var rzp1 = new Razorpay(options);
-                                            rzp1.open();
-                                        } else {
-                                            Swal.fire({
-                                                icon: 'success',
-                                                title: 'Order Placed Successfully!',
-                                                text: 'Your order has been placed.',
-                                                confirmButtonText: 'OK'
-                                            }).then((result) => {
-                                                let orderId = response.orderId;
-                                                if (result.isConfirmed) {
-                                                    window.location.href = `/ordersuccess`
-                                                }
-                                            });
-                                        }
-                                    },
-                                    error: function (xhr) {
-                                        let errorMessage = xhr.responseJSON.message || 'Something went wrong. Please try again.';
-                                        Swal.fire({
-                                            icon: 'error',
-                                            title: 'Order Failed',
-                                            text: errorMessage,
-                                            confirmButtonText: 'OK'
-                                        });
+
+                    <script>
+                        document.addEventListener('DOMContentLoaded', function () {
+                            const messageElement = document.getElementById('flash-message');
+
+                            if (messageElement) {
+                                Swal.fire({
+                                    toast: true,
+                                    position: 'top-end',
+                                    title: messageElement.textContent.trim(),
+                                    showConfirmButton: false,
+                                    timer: 2500,
+                                    timerProgressBar: true,
+                                    background: '#218838',
+                                    color: '#fff',
+                                    customClass: {
+                                        popup: 'colored-toast'
                                     }
                                 });
                             }
                         });
-                    });
+                    </script>
+                    <% } %>
 
-                    $(window).on('beforeunload', function () {
-                        $.ajax({
-                            type: 'GET',
-                            url: '/checkout/removeCoupon',
-                            success: function (response) {
-                                console.log('Coupon removed successfully.');
-                            },
-                            error: function (xhr) {
-                                console.log('Failed to remove the coupon.');
-                            }
-                        });
-                    });
+                        <div class="row g-4">
 
-                    function initialSavings() {
-                        let checkboxes = $('.checkboxes input[type="checkbox"]:checked');
-                        if (checkboxes.length > 0) {
-                            let couponValue = checkboxes.data('couponvalue');
-                            $('#savings').text('₹' + couponValue);
+                            <div class="col-lg-7">
+
+                                <section class="checkout-card">
+                                    <div class="section-heading">
+                                        <div class="section-icon">
+                                            <i class="fa-solid fa-location-dot"></i>
+                                        </div>
+                                        <div>
+                                            <h2>Delivery Address</h2>
+                                            <p>Choose where you want your order delivered.</p>
+                                        </div>
+                                    </div>
+
+                                    <form action="/updateDefaultaddress" method="post" id="defaultAddressForm">
+                                        <% if (users.address && users.address.length> 0) { %>
+
+                                            <% users.address.forEach(element=> { %>
+                                                <div class="address-list">
+                                                    <input type="radio" name="selectedAddress"
+                                                        value="<%= element._id %>" <%=element.default ? 'checked' : ''
+                                                        %>
+                                                    class="address-radio"
+                                                    aria-label="Select address for <%= element.fullname %>"
+                                                        >
+
+                                                        <div class="address-content">
+                                                            <div class="address-name">
+                                                                <%= element.fullname %>
+                                                                    <% if (element.default) { %>
+                                                                        <span class="default-label">DEFAULT</span>
+                                                                        <% } %>
+                                                            </div>
+
+                                                            <p>
+                                                                <%= element.houseno %>, <%= element.area %>
+                                                            </p>
+                                                            <p>
+                                                                <%= element.landmark %>
+                                                            </p>
+                                                            <p>
+                                                                <%= element.town %>, <%= element.state %> - <%=
+                                                                            element.pincode %>
+                                                            </p>
+                                                            <p>
+                                                                <i class="fa-solid fa-phone me-1"></i>
+                                                                <%= element.phoneno %>
+                                                            </p>
+                                                        </div>
+
+                                                        <div class="address-actions">
+                                                            <button type="button" class="icon-button"
+                                                                title="Edit address" aria-label="Edit address"
+                                                                data-bs-toggle="offcanvas"
+                                                                data-bs-target="#offcanvasEditAddress"
+                                                                data-id="<%= element._id %>"
+                                                                data-fullname="<%= element.fullname %>"
+                                                                data-houseno="<%= element.houseno %>"
+                                                                data-area="<%= element.area %>"
+                                                                data-landmark="<%= element.landmark %>"
+                                                                data-town="<%= element.town %>"
+                                                                data-state="<%= element.state %>"
+                                                                data-pincode="<%= element.pincode %>"
+                                                                data-phoneno="<%= element.phoneno %>"
+                                                                data-default="<%= element.default %>"
+                                                                onclick="populateEditForm(this)">
+                                                                <i class="fa-solid fa-pen"></i>
+                                                            </button>
+
+                                                            <button type="button" class="icon-button delete"
+                                                                title="Delete address" aria-label="Delete address"
+                                                                onclick="deleteAddress('<%= element._id %>')">
+                                                                <i class="fa-solid fa-trash"></i>
+                                                            </button>
+                                                        </div>
+                                                </div>
+                                                <% }) %>
+
+                                                    <div class="address-footer">
+                                                        <button type="button" class="btn btn-outline-brand"
+                                                            data-bs-toggle="offcanvas"
+                                                            data-bs-target="#offcanvasWithBothOptions">
+                                                            <i class="fa-solid fa-plus me-2"></i>Add New Address
+                                                        </button>
+
+                                                        <button type="submit" class="btn btn-dark-custom">
+                                                            <i class="fa-solid fa-check me-2"></i>Save Default Address
+                                                        </button>
+                                                    </div>
+
+                                                    <% } else { %>
+
+                                                        <div class="empty-address">
+                                                            <i class="fa-solid fa-map-location-dot d-block"></i>
+                                                            <h6 class="fw-bold text-dark">No delivery address yet</h6>
+                                                            <p class="small mb-3">Add an address to continue with
+                                                                checkout.</p>
+                                                            <button type="button" class="btn btn-brand"
+                                                                data-bs-toggle="offcanvas"
+                                                                data-bs-target="#offcanvasWithBothOptions">
+                                                                <i class="fa-solid fa-plus me-2"></i>Add Address
+                                                            </button>
+                                                        </div>
+
+                                                        <% } %>
+                                    </form>
+                                </section>
+
+                                <section class="checkout-card">
+                                    <div class="section-heading">
+                                        <div class="section-icon">
+                                            <i class="fa-solid fa-wallet"></i>
+                                        </div>
+                                        <div>
+                                            <h2>Payment Method</h2>
+                                            <p>Choose your preferred payment option.</p>
+                                        </div>
+                                    </div>
+
+                                    <form id="orderForm">
+                                        <label class="payment-option" for="cod">
+                                            <input class="form-check-input" type="radio" name="paymentMethod" id="cod"
+                                                value="cod" checked>
+                                            <span class="payment-icon">
+                                                <i class="fa-solid fa-money-bill-wave"></i>
+                                            </span>
+                                            <span>
+                                                <strong>Cash on Delivery</strong>
+                                                <small>Pay when your order arrives.</small>
+                                            </span>
+                                            <i class="fa-solid fa-circle-check payment-check"></i>
+                                        </label>
+
+                                        <label class="payment-option" for="wallet">
+                                            <input class="form-check-input" type="radio" name="paymentMethod"
+                                                id="wallet" value="wallet">
+                                            <span class="payment-icon">
+                                                <i class="fa-solid fa-wallet"></i>
+                                            </span>
+                                            <span>
+                                                <strong>Wallet</strong>
+                                                <small>Pay using your available wallet balance.</small>
+                                            </span>
+                                            <i class="fa-solid fa-circle-check payment-check"></i>
+                                        </label>
+
+                                        <label class="payment-option mb-0" for="razorpay">
+                                            <input class="form-check-input" type="radio" name="paymentMethod"
+                                                id="razorpay" value="razorpay">
+                                            <span class="payment-icon">
+                                                <i class="fa-solid fa-credit-card"></i>
+                                            </span>
+                                            <span>
+                                                <strong>Online Payment</strong>
+                                                <small>Pay securely using Razorpay.</small>
+                                            </span>
+                                            <i class="fa-solid fa-circle-check payment-check"></i>
+                                        </label>
+
+                                        <% let subtotal=0; cartData.forEach(element=> {
+                                            const activeOffer = element.discountSource === 'category'
+                                            ? element.offer
+                                            : element.productoffer;
+
+                                            const hasActiveOffer = Boolean(
+                                            activeOffer &&
+                                            activeOffer.isOfferActive &&
+                                            element.discountPrice != null &&
+                                            Number.isFinite(Number(element.discountPrice))
+                                            );
+
+                                            const itemPrice = hasActiveOffer
+                                            ? Number(element.discountPrice)
+                                            : Number(element.productprice);
+
+                                            subtotal += itemPrice * Number(element.quantity);
+                                            });
+
+
+                                            const couponDiscount = Math.min(
+                                            Math.max(0, Number(deductedValue) || 0),
+                                            subtotal
+                                            );
+
+
+                                            const finalTotal = Math.max(0, subtotal - couponDiscount);
+                                            %>
+
+                                            <input type="hidden" name="totalPrice" value="<%= subtotal %>">
+                                            <input type="hidden" name="couponDiscount" value="<%= couponDiscount %>">
+                                            <input type="hidden" name="finalPrice" value="<%= finalTotal %>">
+                                    </form>
+                                </section>
+
+                            </div>
+
+
+                            <div class="col-lg-5">
+                                <section class="checkout-card order-summary">
+                                    <div class="section-heading">
+                                        <div class="section-icon">
+                                            <i class="fa-solid fa-bag-shopping"></i>
+                                        </div>
+                                        <div>
+                                            <h2>Order Summary</h2>
+                                            <p>Review your items before placing the order.</p>
+                                        </div>
+                                    </div>
+
+                                    <div class="delivery-note">
+                                        <i class="fa-solid fa-truck-fast fs-5"></i>
+                                        <div>
+                                            <strong>Free shipping</strong>
+                                            <div>Estimated delivery in 4–7 days.</div>
+                                        </div>
+                                    </div>
+
+                                    <% cartData.forEach(element=> {
+                                        const activeOffer = element.discountSource === 'category'
+                                        ? element.offer
+                                        : element.productoffer;
+                                        const hasActiveOffer = Boolean(
+                                        activeOffer &&
+                                        activeOffer.isOfferActive &&
+                                        element.discountPrice !== undefined &&
+                                        element.discountPrice !== null
+                                        );
+                                        const itemPrice = hasActiveOffer
+                                        ? Number(element.discountPrice)
+                                        : Number(element.productprice);
+                                        %>
+
+                                        <div class="order-product">
+                                            <div class="product-image-wrap">
+                                                <img src="<%= element.image && element.image.length ? element.image[0] : '' %>"
+                                                    alt="<%= element.productname %>" loading="lazy">
+                                            </div>
+
+                                            <div class="product-info">
+                                                <div class="product-name">
+                                                    <%= element.productname %>
+                                                </div>
+
+                                                <div class="product-price">
+                                                    ₹<%= itemPrice.toLocaleString('en-IN', { minimumFractionDigits: 2,
+                                                        maximumFractionDigits: 2 }) %>
+
+                                                        <% if (hasActiveOffer) { %>
+                                                            <span class="old-price">
+                                                                ₹<%= Number(element.productprice).toLocaleString('en-IN')
+                                                                    %>
+                                                            </span>
+
+                                                            <div class="offer-label">
+                                                                <% if (activeOffer.discountType==='percentage' ) { %>
+                                                                    <i class="fa-solid fa-tag me-1"></i>
+                                                                    <%= activeOffer.discountValue %>% OFF
+                                                                        <% } else if (activeOffer.discountType==='fixed'
+                                                                            ) { %>
+                                                                            <i class="fa-solid fa-tag me-1"></i>
+                                                                            ₹<%= activeOffer.discountValue %> OFF
+                                                                                <% } else { %>
+                                                                                    <i
+                                                                                        class="fa-solid fa-tag me-1"></i>Offer
+                                                                                    applied
+                                                                                    <% } %>
+                                                            </div>
+                                                            <% } %>
+                                                </div>
+
+                                                <p class="product-quantity">
+                                                    Quantity: <%= element.quantity %>
+                                                </p>
+                                            </div>
+
+                                            <div class="product-line-total">
+                                                ₹<%= (itemPrice * Number(element.quantity)).toLocaleString('en-IN', {
+                                                    minimumFractionDigits: 2, maximumFractionDigits: 2 }) %>
+                                            </div>
+                                        </div>
+
+                                        <% }) %>
+
+                                            <hr class="summary-divider">
+
+                                            <div class="summary-row">
+                                                <span class="summary-label">Subtotal</span>
+                                                <span class="summary-value">
+                                                    ₹<%= subtotal.toLocaleString('en-IN', { minimumFractionDigits: 2,
+                                                        maximumFractionDigits: 2 }) %>
+                                                </span>
+                                            </div>
+
+                                            <div class="summary-row">
+                                                <span class="summary-label">Coupon discount</span>
+
+                                                <button type="button" class="coupon-trigger" data-bs-toggle="offcanvas"
+                                                    data-bs-target="#offcanvasapplycoupon"
+                                                    aria-controls="offcanvasapplycoupon">
+                                                    <% if (deductedValue) { %>
+                                                        <span class="coupon-applied">
+                                                            <i class="fa-solid fa-circle-check"></i>
+                                                            −₹<%= Number(deductedValue).toLocaleString('en-IN') %>
+                                                                <span class="text-muted">Edit</span>
+                                                        </span>
+                                                        <% } else { %>
+                                                            <i class="fa-solid fa-ticket me-1"></i>Apply Coupon
+                                                            <% } %>
+                                                </button>
+                                            </div>
+
+                                            <div class="summary-row">
+                                                <span class="summary-label">Shipping fee</span>
+                                                <span class="summary-value text-success">FREE</span>
+                                            </div>
+
+                                            <hr class="summary-divider">
+
+                                            <div class="grand-total">
+                                                <span>Total Payable</span>
+                                                <span class="amount">
+                                                    ₹<%= Number(finalTotal || subtotal).toLocaleString('en-IN', {
+                                                        minimumFractionDigits: 2, maximumFractionDigits: 2 }) %>
+                                                </span>
+                                            </div>
+
+                                            <button type="submit" form="orderForm" id="placeOrderButton"
+                                                class="place-order-btn" <%=!users.address || users.address.length===0
+                                                ? 'disabled' : '' %>
+                                                >
+                                                Place Order <i class="fa-solid fa-arrow-right ms-2"></i>
+                                            </button>
+
+                                            <% if (!users.address || users.address.length===0) { %>
+                                                <p class="text-danger small text-center mt-2 mb-0">
+                                                    Add a delivery address before placing your order.
+                                                </p>
+                                                <% } %>
+
+                                                    <p class="secure-note">
+                                                        <i class="fa-solid fa-shield-halved me-1"></i>
+                                                        Your checkout is protected.
+                                                    </p>
+
+                                                    <div class="coupon-promo">
+                                                        <div class="coupon-promo-icon">
+                                                            <i class="fa-solid fa-ticket-simple"></i>
+                                                        </div>
+
+                                                        <div class="coupon-promo-text">
+                                                            <% if (deductedValue) { %>
+                                                                <strong>Coupon applied successfully</strong>
+                                                                <small>You saved ₹<%=
+                                                                        Number(deductedValue).toLocaleString('en-IN') %>
+                                                                        on this order.</small>
+                                                                <% } else { %>
+                                                                    <strong>Have a coupon code?</strong>
+                                                                    <small>Apply an eligible coupon to save on your
+                                                                        purchase.</small>
+                                                                    <% } %>
+                                                        </div>
+
+                                                        <button type="button" class="btn btn-outline-brand btn-sm"
+                                                            data-bs-toggle="offcanvas"
+                                                            data-bs-target="#offcanvasapplycoupon"
+                                                            aria-controls="offcanvasapplycoupon">
+                                                            <%= deductedValue ? 'EDIT' : 'APPLY' %>
+                                                        </button>
+                                                    </div>
+                                </section>
+                            </div>
+                        </div>
+            </div>
+        </main>
+
+        <div class="offcanvas offcanvas-center" data-bs-scroll="true" tabindex="-1" id="offcanvasWithBothOptions"
+            aria-labelledby="addAddressLabel">
+            <div class="offcanvas-header">
+                <div>
+                    <h5 class="offcanvas-title" id="addAddressLabel">Add New Address</h5>
+                    <p class="text-muted small mb-0">Enter your delivery details.</p>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+
+            <div class="offcanvas-body">
+                <form action="/addaddress" method="post">
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="fullname" name="fullname" placeholder="Full Name"
+                            required>
+                        <label for="fullname">Full Name</label>
+                    </div>
+
+                    <div class="form-floating mb-3">
+                        <input type="tel" class="form-control" id="phoneno" name="phoneno" placeholder="Phone Number"
+                            required pattern="[0-9]{10}" maxlength="10">
+                        <label for="phoneno">Phone Number (10 digits)</label>
+                    </div>
+
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="houseno" name="houseno" placeholder="House number"
+                            required>
+                        <label for="houseno">Flat / House / Building</label>
+                    </div>
+
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="area" name="area" placeholder="Area" required>
+                        <label for="area">Area / Street / Village</label>
+                    </div>
+
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="landmark" name="landmark" placeholder="Landmark">
+                        <label for="landmark">Landmark (optional)</label>
+                    </div>
+
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="town" name="town" placeholder="Town or city"
+                            required>
+                        <label for="town">Town / City</label>
+                    </div>
+
+                    <div class="form-floating mb-3">
+                        <select class="form-select" id="state" name="state" required>
+                            <option value="Kerala">Kerala</option>
+                            <option value="Tamil Nadu">Tamil Nadu</option>
+                        </select>
+                        <label for="state">State</label>
+                    </div>
+
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="pincode" name="pincode" placeholder="Pincode"
+                            required pattern="[0-9]{6}" maxlength="6">
+                        <label for="pincode">Pincode (6 digits)</label>
+                    </div>
+
+                    <div class="form-check mb-4">
+                        <input class="form-check-input" type="checkbox" value="true" id="checkadd" name="default">
+                        <label class="form-check-label" for="checkadd">Set as default address</label>
+                    </div>
+
+                    <button class="btn btn-brand w-100" type="submit">
+                        <i class="fa-solid fa-plus me-2"></i>Add Address
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <div class="offcanvas offcanvas-center" data-bs-scroll="true" tabindex="-1" id="offcanvasEditAddress"
+            aria-labelledby="editAddressLabel">
+            <div class="offcanvas-header">
+                <div>
+                    <h5 class="offcanvas-title" id="editAddressLabel">Edit Address</h5>
+                    <p class="text-muted small mb-0">Update your delivery details.</p>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+
+            <div class="offcanvas-body">
+                <form method="post" action="#" id="edit-address-form">
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="edit-fullname" name="fullname"
+                            placeholder="Full Name" required>
+                        <label for="edit-fullname">Full Name</label>
+                    </div>
+
+                    <div class="form-floating mb-3">
+                        <input type="tel" class="form-control" id="edit-phoneno" name="phoneno"
+                            placeholder="Phone Number" required pattern="[0-9]{10}" maxlength="10">
+                        <label for="edit-phoneno">Phone Number (10 digits)</label>
+                    </div>
+
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="edit-houseno" name="houseno"
+                            placeholder="House number" required>
+                        <label for="edit-houseno">Flat / House / Building</label>
+                    </div>
+
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="edit-area" name="area" placeholder="Area" required>
+                        <label for="edit-area">Area / Street / Village</label>
+                    </div>
+
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="edit-landmark" name="landmark"
+                            placeholder="Landmark">
+                        <label for="edit-landmark">Landmark (optional)</label>
+                    </div>
+
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="edit-town" name="town" placeholder="Town or city"
+                            required>
+                        <label for="edit-town">Town / City</label>
+                    </div>
+
+                    <div class="form-floating mb-3">
+                        <select class="form-select" id="edit-state" name="state" required>
+                            <option value="Kerala">Kerala</option>
+                            <option value="kerala">kerala</option>
+                            <option value="Tamil Nadu">Tamil Nadu</option>
+                        </select>
+                        <label for="edit-state">State</label>
+                    </div>
+
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="edit-pincode" name="pincode" placeholder="Pincode"
+                            required pattern="[0-9]{6}" maxlength="6">
+                        <label for="edit-pincode">Pincode (6 digits)</label>
+                    </div>
+
+                    <div class="form-check mb-4">
+                        <input class="form-check-input" type="checkbox" value="true" id="flexCheckDefault"
+                            name="default">
+                        <label class="form-check-label" for="flexCheckDefault">Set as default address</label>
+                    </div>
+
+                    <button class="btn btn-brand w-100" type="submit">
+                        <i class="fa-solid fa-check me-2"></i>Update Address
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <div class="offcanvas offcanvas-center" data-bs-scroll="true" tabindex="-1" id="offcanvasapplycoupon"
+            aria-labelledby="applyCouponLabel">
+            <div class="offcanvas-header">
+                <div>
+                    <h5 class="offcanvas-title" id="applyCouponLabel">
+                        <i class="fa-solid fa-ticket-simple me-2" style="color: var(--brand);"></i>Available Coupons
+                    </h5>
+                    <p class="text-muted small mb-0">Choose a coupon to save on your order.</p>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+
+            <div class="offcanvas-body d-flex flex-column">
+                <div class="coupon-code-box">
+                    <input type="text" class="form-control" id="couponCodeInput" placeholder="Enter coupon code"
+                        aria-label="Enter coupon code">
+                    <button type="button" class="btn btn-outline-brand" id="checkCouponCode">
+                        CHECK
+                    </button>
+                </div>
+
+                <div class="coupon-details flex-grow-1">
+                    <% if (coupons && coupons.length> 0) { %>
+
+                        <% coupons.forEach(coupon=> {
+                            const couponSaving = coupon.discountType === 'percentage'
+                            ? Math.floor(subtotal * coupon.discountValue / 100)
+                            : Number(coupon.discountValue);
+                            %>
+
+                            <label class="coupon-item" for="coupon-<%= coupon._id %>">
+                                <input class="form-check-input coupon-checkbox" type="checkbox"
+                                    value="<%= coupon._id %>" id="coupon-<%= coupon._id %>"
+                                    data-code="<%= coupon.code %>" data-couponvalue="<%= couponSaving %>"
+                                    <%=users.coupon?.couponId?.toString()===coupon._id.toString() ? 'checked' : '' %>
+                                >
+
+                                <div class="coupon-item-content">
+                                    <span class="coupon-code">
+                                        <%= coupon.code %>
+                                    </span>
+
+                                    <div class="coupon-saving">
+                                        Save ₹<%= couponSaving.toLocaleString('en-IN') %>
+                                            <% if (coupon.discountType==='percentage' ) { %>
+                                                (<%= coupon.discountValue %>% OFF)
+                                                    <% } %>
+                                    </div>
+
+                                    <div class="coupon-description">
+                                        <%= coupon.description %>
+                                    </div>
+
+                                    <div class="coupon-expiry">
+                                        <i class="fa-regular fa-clock me-1"></i>
+                                        Expires:
+                                        <%= new Date(coupon.endDate).toLocaleDateString('en-IN', { day: 'numeric' ,
+                                            month: 'short' , year: 'numeric' }) %>
+                                            at
+                                            <%= new Date(coupon.endDate).toLocaleTimeString('en-IN', { hour: '2-digit' ,
+                                                minute: '2-digit' , hour12: true }) %>
+                                    </div>
+                                </div>
+                            </label>
+
+                            <% }) %>
+
+                                <% } else { %>
+
+                                    <div class="text-center py-5">
+                                        <i class="fa-solid fa-ticket-simple fs-1 text-secondary mb-3"></i>
+                                        <h6 class="fw-bold">No coupons available</h6>
+                                        <p class="text-muted small">Please check back later for offers.</p>
+                                    </div>
+
+                                    <% } %>
+                </div>
+
+                <div class="coupon-bottom mt-auto">
+                    <div class="coupon-max-saving">
+                        Potential savings
+                        <strong id="savings">₹0</strong>
+                    </div>
+
+                    <button class="btn btn-brand w-100 mt-3" type="button" onclick="applyCoupon()" <%=!coupons ||
+                        coupons.length===0 ? 'disabled' : '' %>
+                        >
+                        APPLY COUPON
+                    </button>
+
+                    <% if (deductedValue) { %>
+                        <button class="btn btn-outline-secondary w-100 mt-2" type="button" onclick="removeCoupon()">
+                            Remove Applied Coupon
+                        </button>
+                        <% } %>
+                </div>
+            </div>
+        </div>
+
+        <%- include('../partials/userfooter') %>
+
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+            <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+            <script>
+                $(document).ready(function () {
+
+                    function updateSavings() {
+                        const $checked = $('.coupon-checkbox:checked').first();
+
+                        if ($checked.length) {
+                            const saving = Number($checked.attr('data-couponvalue')) || 0;
+                            $('#savings').text(
+                                '₹' + saving.toLocaleString('en-IN')
+                            );
                         } else {
-                            $('#savings').text('0');
+                            $('#savings').text('₹0');
                         }
                     }
 
-                    initialSavings();
-
-                    $(document).on('change', '.checkboxes input[type="checkbox"]', function () {
+                    $('.coupon-checkbox').on('change', function () {
                         if ($(this).is(':checked')) {
-                            let couponValue = $(this).data('couponvalue');
-                            console.log(couponValue);
-                            $('#savings').text('₹' + couponValue);
-
-                            $('.checkboxes input[type="checkbox"]').not(this).prop('checked', false);
-                        } else {
-                            $('#savings').text('0');
+                            $('.coupon-checkbox').not(this).prop('checked', false);
                         }
+
+                        updateSavings();
+                    });
+
+                    updateSavings();
+
+                    $('#checkCouponCode').on('click', function () {
+                        const enteredCode = ($('#couponCodeInput').val() || '')
+                            .trim()
+                            .toUpperCase();
+
+                        if (!enteredCode) {
+                            Swal.fire({
+                                icon: 'info',
+                                title: 'Enter a coupon code',
+                                text: 'Type a coupon code before checking.'
+                            });
+                            return;
+                        }
+
+                        const $match = $('.coupon-checkbox').filter(function () {
+                            return String($(this).attr('data-code')).toUpperCase() === enteredCode;
+                        }).first();
+
+                        if (!$match.length) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Coupon not found',
+                                text: 'Please check the code or select an available coupon.'
+                            });
+                            return;
+                        }
+
+                        $('.coupon-checkbox').prop('checked', false);
+                        $match.prop('checked', true);
+                        updateSavings();
+
+                        Swal.fire({
+                            toast: true,
+                            position: 'top-end',
+                            icon: 'success',
+                            title: 'Coupon selected',
+                            showConfirmButton: false,
+                            timer: 1500
+                        });
+                    });
+
+
+                    $('#orderForm').on('submit', function (event) {
+                        event.preventDefault();
+
+                        const $button = $('#placeOrderButton');
+                        const formData = $(this).serialize();
+
+                        if (!$('input[name="paymentMethod"]:checked').length) {
+                            Swal.fire({
+                                icon: 'warning',
+                                title: 'Select a payment method',
+                                text: 'Choose how you want to pay for this order.'
+                            });
+                            return;
+                        }
+
+                        Swal.fire({
+                            title: 'Confirm your order',
+                            text: 'Are you sure you want to place this order?',
+                            icon: 'question',
+                            showCancelButton: true,
+                            confirmButtonColor: '#f4512c',
+                            cancelButtonColor: '#777',
+                            confirmButtonText: 'Yes, place order',
+                            cancelButtonText: 'Review order'
+                        }).then(function (result) {
+                            if (!result.isConfirmed) return;
+
+                            $button.prop('disabled', true)
+                                .html('<span class="spinner-border spinner-border-sm me-2"></span>Processing...');
+
+                            $.ajax({
+                                type: 'POST',
+                                url: '/place-order',
+                                data: formData,
+
+                                success: function (response) {
+
+                                    if (response.message === 'Razorpay order created') {
+
+                                        const options = {
+                                            key: 'rzp_test_x7mcrmmJeFQpUZ',
+                                            amount: response.amount * 100,
+                                            currency: 'INR',
+                                            name: 'Shoe Rack',
+                                            description: 'Shoe Rack purchase',
+                                            order_id: response.razorpayOrderId,
+
+                                            handler: function (razorpayResponse) {
+                                                $.ajax({
+                                                    type: 'POST',
+                                                    url: '/verify-payment',
+                                                    data: {
+                                                        orderId: response.orderId,
+                                                        razorpay_payment_id: razorpayResponse.razorpay_payment_id,
+                                                        razorpay_order_id: razorpayResponse.razorpay_order_id,
+                                                        razorpay_signature: razorpayResponse.razorpay_signature,
+                                                        totalPrice: response.totalPrice,
+                                                        finalPrice: response.finalPrice
+                                                    },
+
+                                                    success: function () {
+                                                        Swal.fire({
+                                                            icon: 'success',
+                                                            title: 'Payment successful!',
+                                                            text: 'Your payment has been verified.',
+                                                            confirmButtonColor: '#f4512c'
+                                                        }).then(function () {
+                                                            window.location.href = '/ordersuccess';
+                                                        });
+                                                    },
+
+                                                    error: function (xhr) {
+                                                        const message = xhr.responseJSON?.message ||
+                                                            'Your payment could not be verified. Please contact support if money was deducted.';
+
+                                                        Swal.fire({
+                                                            icon: 'error',
+                                                            title: 'Payment verification failed',
+                                                            text: message,
+                                                            confirmButtonColor: '#f4512c'
+                                                        });
+
+                                                        $button.prop('disabled', false)
+                                                            .html('Place Order <i class="fa-solid fa-arrow-right ms-2"></i>');
+                                                    }
+                                                });
+                                            },
+
+                                            modal: {
+                                                ondismiss: function () {
+                                                    Swal.fire({
+                                                        icon: 'warning',
+                                                        title: 'Payment cancelled',
+                                                        text: 'Your payment window was closed.',
+                                                        confirmButtonColor: '#f4512c'
+                                                    });
+
+                                                    $button.prop('disabled', false)
+                                                        .html('Place Order <i class="fa-solid fa-arrow-right ms-2"></i>');
+                                                }
+                                            },
+
+                                            prefill: {
+                                                name: 'Customer Name',
+                                                email: 'customer@example.com',
+                                                contact: '9999999999'
+                                            },
+
+                                            theme: {
+                                                color: '#f4512c'
+                                            }
+                                        };
+
+                                        const razorpay = new Razorpay(options);
+
+                                        razorpay.on('payment.failed', function (failure) {
+                                            Swal.fire({
+                                                icon: 'error',
+                                                title: 'Payment failed',
+                                                text: failure.error?.description ||
+                                                    'The payment could not be completed.',
+                                                confirmButtonColor: '#f4512c'
+                                            });
+
+                                            $button.prop('disabled', false)
+                                                .html('Place Order <i class="fa-solid fa-arrow-right ms-2"></i>');
+                                        });
+
+                                        razorpay.open();
+
+                                    } else {
+                                        Swal.fire({
+                                            icon: 'success',
+                                            title: 'Order placed successfully!',
+                                            text: 'Your order has been placed.',
+                                            confirmButtonColor: '#f4512c'
+                                        }).then(function () {
+                                            window.location.href = '/ordersuccess';
+                                        });
+                                    }
+                                },
+
+                                error: function (xhr) {
+                                    const errorMessage = xhr.responseJSON?.message ||
+                                        'Something went wrong. Please try again.';
+
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Unable to place order',
+                                        text: errorMessage,
+                                        confirmButtonColor: '#f4512c'
+                                    });
+
+                                    $button.prop('disabled', false)
+                                        .html('Place Order <i class="fa-solid fa-arrow-right ms-2"></i>');
+                                }
+                            });
+                        });
                     });
                 });
 
                 function populateEditForm(button) {
-                    console.log('triggered');
-                    let addressId = button.getAttribute('data-id');
-                    const fullname = button.getAttribute('data-fullname');
-                    const houseno = button.getAttribute('data-houseno');
-                    const area = button.getAttribute('data-area');
-                    const landmark = button.getAttribute('data-landmark');
-                    const town = button.getAttribute('data-town');
-                    const state = button.getAttribute('data-state');
-                    const pincode = button.getAttribute('data-pincode');
-                    const phoneno = button.getAttribute('data-phoneno');
-                    const Isdefault = button.getAttribute('data-default');
-                    console.log(Isdefault);
-                    console.log('Type of Isdefault:', typeof Isdefault);
+                    const addressId = button.getAttribute('data-id');
 
-                    document.getElementById('edit-fullname').value = fullname;
-                    document.getElementById('edit-houseno').value = houseno;
-                    document.getElementById('edit-area').value = area;
-                    document.getElementById('edit-landmark').value = landmark;
-                    document.getElementById('edit-town').value = town;
-                    document.getElementById('edit-state').value = state;
-                    document.getElementById('edit-pincode').value = pincode;
-                    document.getElementById('edit-phoneno').value = phoneno;
+                    document.getElementById('edit-fullname').value =
+                        button.getAttribute('data-fullname') || '';
 
-                    if (String(Isdefault).trim() === 'true') {
-                        document.getElementById('flexCheckDefault').checked = true;
-                    } else {
-                        document.getElementById('flexCheckDefault').checked = false;
-                    }
+                    document.getElementById('edit-houseno').value =
+                        button.getAttribute('data-houseno') || '';
 
-                    let url = `/edit-address/${addressId}`;
-                    document.getElementById('edit-address-form').action = url;
+                    document.getElementById('edit-area').value =
+                        button.getAttribute('data-area') || '';
+
+                    document.getElementById('edit-landmark').value =
+                        button.getAttribute('data-landmark') || '';
+
+                    document.getElementById('edit-town').value =
+                        button.getAttribute('data-town') || '';
+
+                    document.getElementById('edit-state').value =
+                        button.getAttribute('data-state') || 'Kerala';
+
+                    document.getElementById('edit-pincode').value =
+                        button.getAttribute('data-pincode') || '';
+
+                    document.getElementById('edit-phoneno').value =
+                        button.getAttribute('data-phoneno') || '';
+
+                    document.getElementById('flexCheckDefault').checked =
+                        String(button.getAttribute('data-default')).trim() === 'true';
+
+                    document.getElementById('edit-address-form').action =
+                        '/edit-address/' + encodeURIComponent(addressId);
                 }
 
                 function deleteAddress(addressId) {
-                    let url = `/delete-address/${addressId}`;
-                    const isConfirmed = window.confirm('Do you really want to delete the address?');
-                    if (isConfirmed) {
-                        window.location.href = url;
-                    } else {
-                        console.log("canceled");
-                    }
+                    Swal.fire({
+                        title: 'Delete this address?',
+                        text: 'This address will be removed from your saved addresses.',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#f4512c',
+                        cancelButtonColor: '#777',
+                        confirmButtonText: 'Yes, delete it',
+                        cancelButtonText: 'Keep address'
+                    }).then(function (result) {
+                        if (result.isConfirmed) {
+                            window.location.href =
+                                '/delete-address/' + encodeURIComponent(addressId);
+                        }
+                    });
                 }
 
                 function applyCoupon() {
-                    let checkedCheckboxes = $('.coupondetails .form-check-input:checked');
-                    let couponId = checkedCheckboxes.val();
+                    const $selected = $('.coupon-checkbox:checked').first();
+                    const couponId = $selected.val();
+
                     if (!couponId) {
-                        window.location.href = `/checkout/removeCoupon`;
-                    } else {
-                        window.location.href = `/checkout/applycoupon/${couponId}`;
+                        Swal.fire({
+                            icon: 'info',
+                            title: 'Choose a coupon',
+                            text: 'Select a coupon before applying it.',
+                            confirmButtonColor: '#f4512c'
+                        });
+                        return;
                     }
+
+                    window.location.href =
+                        '/checkout/applycoupon/' + encodeURIComponent(couponId);
                 }
 
+
+                function removeCoupon() {
+                    Swal.fire({
+                        title: 'Remove applied coupon?',
+                        text: 'The discount will be removed from this checkout.',
+                        icon: 'question',
+                        showCancelButton: true,
+                        confirmButtonColor: '#f4512c',
+                        cancelButtonColor: '#777',
+                        confirmButtonText: 'Remove coupon'
+                    }).then(function (result) {
+                        if (result.isConfirmed) {
+                            window.location.href = '/checkout/removeCoupon';
+                        }
+                    });
+                }
             </script>
 </body>
 

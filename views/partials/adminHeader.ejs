@@ -1,202 +1,645 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
-  <!-- Required meta tags -->
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- Bootstrap CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
-    integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
-    crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <title>Shoe Rack | Admin Panel</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
   <link href="https://cdn.datatables.net/v/bs5/dt-2.1.2/datatables.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <style>
     :root {
-      --offcanvas-width: 240px;
-      --topNavbarHeight: 62px
+      --sidebar-width: 250px;
+      --navbar-height: 70px;
+      --brand-green: #198754;
+      --sidebar-bg: #17191c;
+      --page-bg: #f5f7fa;
+      --text-muted: #89919b;
     }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--page-bg);
+      color: #212529;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+
+    .admin-navbar {
+      height: var(--navbar-height);
+      position: fixed;
+      top: 0;
+      left: var(--sidebar-width);
+      right: 0;
+      width: auto;
+      z-index: 1030;
+      background: #ffffff;
+      border-bottom: 1px solid #e9ecef;
+      padding: 0 25px;
+      box-sizing: border-box;
+      transition: left 0.25s ease;
+    }
+
+    .navbar-brand {
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      color: #212529;
+    }
+
+    .brand-accent {
+      color: var(--brand-green);
+    }
+
+    .sidebar-toggle {
+      width: 40px;
+      height: 40px;
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      border: 1px solid #e5e7eb;
+      background: #fff;
+      border-radius: 8px;
+      color: #343a40;
+    }
+
+    .sidebar-toggle:hover {
+      background: #f0f2f4;
+    }
+
+    .navbar-action {
+      width: 40px;
+      height: 40px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: #555e68;
+      text-decoration: none;
+      border-radius: 9px;
+      font-size: 17px;
+    }
+
+    .navbar-action:hover {
+      color: var(--brand-green);
+      background: #f1f8f4;
+    }
+
+    .admin-avatar {
+      width: 37px;
+      height: 37px;
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 50%;
+      background: #e6f4eb;
+      color: var(--brand-green);
+      font-size: 16px;
+    }
+
+    .dropdown-menu {
+      border: 1px solid #e9ecef;
+      border-radius: 10px;
+      padding: 8px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+    }
+
+    .dropdown-item {
+      padding: 10px 12px;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+
 
     .sidebar-nav {
-      width: var(--offcanvas-width) !important;
+      position: fixed;
+      top: var(--navbar-height);
+      left: 0;
+      bottom: 0;
+      width: var(--sidebar-width) !important;
+      height: calc(100vh - var(--navbar-height));
+      background: var(--sidebar-bg);
+      border: none !important;
+      visibility: visible !important;
+      transform: none !important;
+      z-index: 1020;
+      overflow-y: auto;
     }
 
-    @media (min-width: 992px) {
-      body {
-        overflow: auto !important;
-      }
-
-      .offcanvas-backdrop {
-        display: none !important;
-      }
-
-      .sidebar-nav {
-        transform: none !important;
-        visibility: visible !important;
-        /* top: var(--topNavbarHeight) !important; */
-        /* height: calc(100% - var(--topNavbarHeight)) !important; */
-      }
+    .sidebar-nav::-webkit-scrollbar {
+      width: 5px;
     }
 
-    .header {
-      font-weight: bold;
-      font-size: 25px;
+    .sidebar-nav::-webkit-scrollbar-thumb {
+      background: #3b4148;
+      border-radius: 10px;
     }
 
-    .logo {
-      margin-left: 260px;
+    .sidebar-brand {
+      padding: 24px 22px;
+      border-bottom: 1px solid #30343a;
     }
 
-    .nav-link {
-      color: black !important;
+    .sidebar-brand .brand-logo {
+      width: 42px;
+      height: 42px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      border-radius: 10px;
+      background: var(--brand-green);
+      color: white;
+      font-size: 20px;
+    }
+
+    .sidebar-brand h5 {
+      margin: 0;
+      color: #fff;
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: 1px;
+    }
+
+    .sidebar-brand small {
+      display: block;
+      margin-top: 4px;
+      color: #a0a7b0;
+      font-size: 11px;
+    }
+
+    .sidebar-section {
+      padding: 20px 20px 8px;
+      color: #78818c;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+    }
+
+    .sidebar-nav .nav {
+      padding: 0 12px 20px;
+    }
+
+    .sidebar-nav .nav-item {
+      margin: 3px 0;
+    }
+
+    .sidebar-nav .nav-link {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 13px;
+      min-height: 44px;
+      padding: 12px 13px;
+      color: #b8bec7 !important;
+      font-size: 13px;
+      font-weight: 500;
+      border-radius: 7px;
+      text-decoration: none;
+      transition: background 0.2s, color 0.2s;
+    }
+
+    .sidebar-nav .nav-link>i:first-child {
+      width: 19px;
+      text-align: center;
+      font-size: 15px;
+    }
+
+    .sidebar-nav .nav-link span {
+      position: static;
+      margin-left: 0;
+    }
+
+    .sidebar-nav .nav-link:hover {
+      background: #282d32;
+      color: #ffffff !important;
+    }
+
+    .sidebar-nav .nav-link.active {
+      color: #ffffff !important;
+      background: var(--brand-green);
+      box-shadow: 0 4px 10px rgba(25, 135, 84, 0.15);
+    }
+
+    .sidebar-nav .nav-link.active::before {
+      content: "";
+      position: absolute;
+      left: -12px;
+      top: 9px;
+      height: 26px;
+      width: 3px;
+      border-radius: 4px;
+      background: #68dca0;
+    }
+
+    .sidebar-nav .nav-link .menu-arrow {
+      margin-left: auto;
+      font-size: 11px;
+      transition: transform 0.2s;
+    }
+
+    .sidebar-nav .nav-link[aria-expanded="true"] .menu-arrow {
+      transform: rotate(180deg);
+    }
+
+    .submenu {
+      padding-left: 13px;
+    }
+
+    .sidebar-nav .submenu .nav-link {
+      min-height: 39px;
+      font-size: 12px;
+      padding-left: 14px;
+    }
+
+    main,
+    .admin-main {
+      display: block;
+      width: calc(100% - var(--sidebar-width));
+      margin-left: var(--sidebar-width);
+      margin-top: var(--navbar-height);
+      padding: 28px;
+      min-height: calc(100vh - var(--navbar-height));
+      min-width: 0;
+      box-sizing: border-box;
+      transition: margin-left 0.25s ease, width 0.25s ease;
+    }
+
+    body.sidebar-collapsed main,
+    body.sidebar-collapsed .admin-main {
+      width: 100%;
+      margin-left: 0;
+    }
+
+    body.sidebar-collapsed .admin-navbar {
+      left: 0;
+    }
+
+    body.sidebar-collapsed .admin-footer {
+      margin-left: 0;
+    }
+
+
+    #table-data {
+      width: 100% !important;
+    }
+
+    .dataTables_wrapper {
       font-size: 13px;
     }
 
-    .active {
-      background-color: black;
-      color: white !important;
+
+    @media (max-width: 991.98px) {
+      .admin-navbar {
+        padding: 0 15px;
+      }
+
+      .sidebar-nav {
+        top: 0;
+        height: 100vh;
+        z-index: 1050;
+        transform: translateX(-100%) !important;
+        visibility: hidden !important;
+        transition: transform 0.25s ease, visibility 0.25s;
+      }
+
+      .sidebar-nav.show {
+        transform: translateX(0) !important;
+        visibility: visible !important;
+      }
+
+      .sidebar-nav .offcanvas-header {
+        display: flex;
+      }
+
+      main,
+      .admin-main {
+        width: 100%;
+        margin-left: 0;
+        margin-top: var(--navbar-height);
+        padding: 20px 15px;
+      }
+
+      .admin-navbar {
+        left: 0;
+      }
     }
 
-    .nav-item {
-      text-align: left;
-    }
+    @media (min-width: 992px) {
+      .sidebar-nav .offcanvas-header {
+        display: none;
+      }
 
-    .nav-link span {
-      position: absolute;
-      margin-left: 25px;
-    }
-
-    .nav-link {
-      display: flex;
-      align-items: center;
-      padding: 10px 15px;
-    }
-
-    main {
-      margin-left: var(--offcanvas-width);
-    }
-
-    .offcanvas-header {
-      background-color: yellowgreen;
+      .sidebar-nav .sidebar-brand {
+        display: flex;
+      }
     }
   </style>
-  <title>Hello, world!</title>
 </head>
 
 <body>
-  <!-- navbar -->
-  <nav class="navbar navbar-expand-lg  bg-success" style="--bs-bg-opacity: .3;">
-    <div class="logo">
-      <a class="text-white mx-2" data-bs-toggle="offcanvas" href="#offcanvasExample" role="button"
-        aria-controls="offcanvasExample">
-        <i class="fa-solid fa-list text-dark"></i>
-      </a>
-      <a class="navbar-brand fw-bold" href="#">Admin Panel</a>
-    </div>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-      aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
 
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav  mb-2 mb-lg-0 d-flex ms-auto">
-        <li class="nav-item">
-          <a class="nav-link" href="#"><i class="fa-solid fa-bell"></i></a>
-        </li>
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            <i class="fa-solid fa-circle-user"></i>
-          </a>
-          <ul class="dropdown-menu dropdown-menu-end">
-            <li><a class="dropdown-item" href="#">Account</a></li>
-            <li><a class="dropdown-item" href="/admin/logout">Logout</a></li>
+  <nav class="navbar admin-navbar">
+    <div class="container-fluid p-0">
+
+      <div class="d-flex align-items-center gap-3">
+        <button class="sidebar-toggle" type="button" id="sidebarToggle" aria-label="Toggle sidebar"
+          aria-controls="offcanvasExample" aria-expanded="true">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+
+        <a class="navbar-brand" href="/admin/dashboard">
+          Shoe <span class="brand-accent">Rack</span>
+          <span class="text-secondary fw-normal fs-6 ms-1">Admin</span>
+        </a>
+      </div>
+
+      <div class="d-flex align-items-center gap-2">
+
+        <div class="dropdown">
+          <button class="btn p-0 border-0 navbar-action" type="button" data-bs-toggle="dropdown" aria-expanded="false"
+            aria-label="Admin account">
+            <span class="admin-avatar">
+              <i class="fa-solid fa-user-shield"></i>
+            </span>
+          </button>
+
+          <ul class="dropdown-menu dropdown-menu-end mt-2">
+            <li>
+              <span class="dropdown-item-text fw-semibold">
+                <i class="fa-solid fa-user-shield me-2 text-success"></i>
+                Store Administrator
+              </span>
+            </li>
+            <li>
+              <hr class="dropdown-divider">
+            </li>
+            <li>
+              <a class="dropdown-item text-danger" href="/admin/logout">
+                <i class="fa-solid fa-right-from-bracket me-2"></i>
+                Logout
+              </a>
+            </li>
           </ul>
-        </li>
-      </ul>
+        </div>
+
+      </div>
     </div>
   </nav>
-  <!-- navbar -->
-  <!-- offcanvas -->
-  <div class="offcanvas offcanvas-start sidebar-nav" tabindex="-1" id="offcanvasExample"
-    aria-labelledby="offcanvasExampleLabel">
-    <div class="offcanvas-header">
-      <a class="navbar-brand d-flex align-items-center fw-bold fs-3" href="#">
-        <img
-          src="https://media.istockphoto.com/id/1199509219/vector/running-shoes-icon-in-line-style.jpg?s=612x612&w=0&k=20&c=QgRq_L_-2wHTm2ORbeHfpU6JHjQVFEm2OC007fy5JOI="
-          alt="Shoe Rack Logo" style="width: 40px; height: 40px; margin-right: 10px; border-radius: 50%;">
-        <span
-          style="letter-spacing: 2px; font-weight: 700; color: #f0f0f0; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);">
-          Shoe <span style="color: rgb(168, 216, 35);">Rack</span>
-        </span>
-      </a>
+
+  <aside class="offcanvas offcanvas-start sidebar-nav" tabindex="-1" id="offcanvasExample"
+    aria-label="Admin navigation">
+
+    <div class="offcanvas-header border-bottom border-secondary">
+      <div class="d-flex align-items-center gap-2">
+        <div class="brand-logo">
+          <i class="fa-solid fa-shoe-prints"></i>
+        </div>
+        <div>
+          <h5 class="text-white mb-0 fw-bold">
+            SHOE <span class="brand-accent">RACK</span>
+          </h5>
+          <small class="text-secondary">ADMINISTRATION</small>
+        </div>
+      </div>
+
+      <button type="button" class="btn-close btn-close-white" id="closeSidebar" aria-label="Close sidebar">
+      </button>
     </div>
+
+    <div class="sidebar-brand align-items-center gap-3">
+      <div class="brand-logo">
+        <i class="fa-solid fa-shoe-prints"></i>
+      </div>
+
+      <div>
+        <h5>SHOE <span class="brand-accent">RACK</span></h5>
+        <small>ADMINISTRATION PANEL</small>
+      </div>
+    </div>
+
     <div class="offcanvas-body p-0">
-      <nav class="navbar-light">
+      <nav aria-label="Main administration">
+        <div class="sidebar-section">Overview</div>
+
         <ul class="nav flex-column">
-          <li class="nav-item ">
-            <a class="nav-link" href="/admin/dashboard"><i class="fa-solid fa-house "></i><span>Dashboard</span></a>
-          </li>
           <li class="nav-item">
-            <a class="nav-link " href="/admin/category"><i class="fa-solid fa-layer-group"></i><span>Category
-                Management</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/admin/users"><i class="fa-solid fa-user"></i><span>User Management</span></a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link " href="/admin/products"><i class="fa-solid fa-book"></i><span>Product
-                Management</span></a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link " href="/admin/orders"><i class="fa-solid fa-truck"></i></i><span>Order
-                Management</span></a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link " href="/admin/coupon"><i class="fa-solid fa-ticket-simple"></i><span>Coupon
-                Management</span></a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/admin/offer" id="offerManagementToggle">
-              <i class="fa-solid fa-clipboard"></i>
-              <span>Offer Management</span>
-              <i class="fa-solid fa-caret-down" style="margin-left: auto;"></i>
+            <a class="nav-link" href="/admin/dashboard">
+              <i class="fa-solid fa-house"></i>
+              <span>Dashboard</span>
             </a>
           </li>
-          <div id="offerManagementMenu" class="ms-3 d-none">
-            <li class="nav-item">
-              <a class="nav-link" href="/admin/offer/category">
-                <i class="fa-solid fa-tag"></i>
-                <span>Category Offer</span>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/admin/offer/product">
-                <i class="fa-solid fa-gift"></i>
-                <span>Product Offer</span>
-              </a>
-            </li>
-          </div>
+        </ul>
+
+        <div class="sidebar-section">Store Management</div>
+
+        <ul class="nav flex-column">
           <li class="nav-item">
-            <a class="nav-link" href="/admin/sales"><i class="fa-solid fa-money-bill"></i><span>Completed
-                Transactions</span></a>
+            <a class="nav-link" href="/admin/category">
+              <i class="fa-solid fa-layer-group"></i>
+              <span>Categories</span>
+            </a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link" href="/admin/products">
+              <i class="fa-solid fa-shoe-prints"></i>
+              <span>Products</span>
+            </a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link" href="/admin/orders">
+              <i class="fa-solid fa-truck-fast"></i>
+              <span>Orders</span>
+            </a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link" href="/admin/users">
+              <i class="fa-solid fa-users"></i>
+              <span>Customers</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/admin/carousal">
+              <i class="fa-solid fa-images"></i>
+              <span>Carousels</span>
+            </a>
+          </li>
+        </ul>
+
+        <div class="sidebar-section">Marketing & Finance</div>
+
+        <ul class="nav flex-column">
+          <li class="nav-item">
+            <a class="nav-link" href="/admin/coupon">
+              <i class="fa-solid fa-ticket"></i>
+              <span>Coupons</span>
+            </a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link" href="#offerManagementMenu" id="offerManagementToggle" data-bs-toggle="collapse"
+              aria-expanded="false">
+              <i class="fa-solid fa-tags"></i>
+              <span>Offers</span>
+              <i class="fa-solid fa-chevron-down menu-arrow"></i>
+            </a>
+
+            <div id="offerManagementMenu" class="collapse submenu">
+
+              <ul class="nav flex-column">
+                <li class="nav-item">
+                  <a class="nav-link" href="/admin/offer/category">
+                    <i class="fa-solid fa-tag"></i>
+                    <span>Category Offers</span>
+                  </a>
+                </li>
+
+                <li class="nav-item">
+                  <a class="nav-link" href="/admin/offer/product">
+                    <i class="fa-solid fa-gift"></i>
+                    <span>Product Offers</span>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link" href="/admin/sales">
+              <i class="fa-solid fa-chart-line"></i>
+              <span>Transactions</span>
+            </a>
           </li>
         </ul>
       </nav>
     </div>
-  </div>
+  </aside>
 
-
+  <!-- Page-specific content starts after this point -->
   <script>
-    document.getElementById('offerManagementToggle').addEventListener('click', function (event) {
-      event.preventDefault();
-      event.stopPropagation()
-      var menu = document.getElementById('offerManagementMenu');
-      menu.classList.toggle('d-none');
-    });
+    document.addEventListener('DOMContentLoaded', function () {
+      const sidebar = document.getElementById('offcanvasExample');
+      const toggleButton = document.getElementById('sidebarToggle');
+      const closeButton = document.getElementById('closeSidebar');
+      const offerMenu = document.getElementById('offerManagementMenu');
+      const offerToggle = document.getElementById('offerManagementToggle');
 
-    document.getElementById('offerManagementMenu').addEventListener('click', function (event) {
-      event.stopPropagation();
+      const isDesktop = () => window.innerWidth >= 992;
+
+      function updateSidebar() {
+        if (isDesktop()) {
+          sidebar.classList.remove('show');
+          toggleButton.setAttribute('aria-expanded', 'true');
+        } else {
+          toggleButton.setAttribute(
+            'aria-expanded',
+            String(sidebar.classList.contains('show'))
+          );
+        }
+      }
+
+      toggleButton.addEventListener('click', function () {
+        if (isDesktop()) {
+          // On desktop, allow the sidebar to be collapsed.
+          const collapsed = sidebar.classList.toggle('desktop-hidden');
+          sidebar.style.transform = collapsed
+            ? 'translateX(-100%)'
+            : 'translateX(0)';
+          sidebar.style.visibility = collapsed ? 'hidden' : 'visible';
+          document.querySelectorAll('main, .admin-main').forEach(main => {
+            main.style.marginLeft = collapsed ? '0' : '';
+          });
+        } else {
+          sidebar.classList.toggle('show');
+          toggleButton.setAttribute(
+            'aria-expanded',
+            String(sidebar.classList.contains('show'))
+          );
+        }
+      });
+
+      closeButton.addEventListener('click', function () {
+        sidebar.classList.remove('show');
+        toggleButton.setAttribute('aria-expanded', 'false');
+      });
+
+      window.addEventListener('resize', updateSidebar);
+
+      const currentPath = window.location.pathname.replace(/\/+$/, '') || '/';
+
+      document.querySelectorAll('.sidebar-nav a.nav-link[href]').forEach(link => {
+        const href = link.getAttribute('href');
+
+        if (!href || href.startsWith('#')) return;
+
+        const linkPath = href.replace(/\/+$/, '') || '/';
+
+        if (linkPath === currentPath) {
+          link.classList.add('active');
+
+          const parentMenu = link.closest('.submenu');
+
+          if (parentMenu) {
+            parentMenu.classList.add('show');
+
+            const parentToggle = document.querySelector(
+              '[href="#' + parentMenu.id + '"]'
+            );
+
+            if (parentToggle) {
+              parentToggle.classList.add('active');
+              parentToggle.setAttribute('aria-expanded', 'true');
+            }
+          }
+        }
+      });
+
+      updateSidebar();
+
+      // Keep a DataTable initialization for pages that use the table.
+      if (window.jQuery && $.fn.DataTable &&
+        document.querySelector('#table-data')) {
+
+        if (!$.fn.DataTable.isDataTable('#table-data')) {
+          $('#table-data').DataTable({
+            order: [[0, 'desc']],
+            pagingType: 'simple_numbers',
+            ordering: false,
+            autoWidth: false,
+            columnDefs: [
+              {
+                className: 'text-start',
+                targets: '_all'
+              }
+            ]
+          });
+        }
+      }
     });
+  </script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js">
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js">
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+  </script>
+
+  <script src="https://cdn.datatables.net/v/bs5/dt-2.1.2/datatables.min.js">
   </script>

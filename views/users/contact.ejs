@@ -5,52 +5,330 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contact Us - Shoe Rack</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 0;
+        *,
+        *::before,
+        *::after {
             box-sizing: border-box;
         }
 
-        .contact {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 30px;
-        }
-
-        .contact .address {
-            flex: 1;
-            text-align: center;
-        }
-
-        .contact i {
-            font-size: 2.5em;
-            color: #333;
-            margin-bottom: 10px;
-        }
-
-        .contact p {
+        body {
             margin: 0;
-            font-size: 1.1em;
-            color: #777;
+            font-family: Arial, sans-serif;
+            background: #faf9f7;
+            color: #202020;
         }
 
-        .contact .fw-bold {
-            font-size: 1.2em;
-            color: #333;
-            margin-top: 10px;
+        .contact-page {
+            padding: 25px 20px 70px;
+        }
+
+        .contact-breadcrumb {
+            max-width: 1150px;
+            margin: 0 auto 25px;
+            color: #777;
+            font-size: 14px;
+        }
+
+        .contact-breadcrumb a {
+            color: #777;
+            text-decoration: none;
+        }
+
+        .contact-breadcrumb a:hover {
+            color: #f4512c;
+        }
+
+        .contact-breadcrumb span {
+            color: #f4512c;
+            font-weight: 600;
+        }
+
+        .contact-wrapper {
+            max-width: 1150px;
+            margin: 0 auto;
+        }
+
+        .contact-heading {
+            text-align: center;
+            margin: 20px auto 40px;
+        }
+
+        .contact-heading .eyebrow {
+            display: inline-block;
+            color: #f4512c;
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+        }
+
+        .contact-heading h1 {
+            font-size: clamp(30px, 4vw, 43px);
+            font-weight: 800;
+            margin: 0 0 15px;
+            letter-spacing: -1px;
+        }
+
+        .contact-heading h1 span {
+            color: #f4512c;
+        }
+
+        .contact-heading p {
+            max-width: 600px;
+            margin: 0 auto;
+            color: #777;
+            line-height: 1.8;
+            font-size: 15px;
+        }
+
+        .contact-info-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 22px;
+            margin-bottom: 35px;
+        }
+
+        .contact-info-card {
+            background: #fff;
+            padding: 30px 20px;
+            border: 1px solid #f0eeeb;
+            border-radius: 16px;
+            text-align: center;
+            box-shadow: 0 5px 22px rgba(0, 0, 0, 0.035);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .contact-info-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.07);
+        }
+
+        .contact-icon {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 58px;
+            height: 58px;
+            margin: 0 auto 18px;
+            border-radius: 16px;
+            background: #fff0eb;
+            color: #f4512c;
+            font-size: 23px;
+        }
+
+        .contact-info-card h2 {
+            font-size: 15px;
+            font-weight: 800;
+            letter-spacing: 0.7px;
+            margin-bottom: 12px;
+        }
+
+        .contact-info-card p {
+            color: #777;
+            font-size: 14px;
+            line-height: 1.8;
+            margin: 0;
+            overflow-wrap: anywhere;
+        }
+
+        .contact-info-card a {
+            color: #777;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .contact-info-card a:hover {
+            color: #f4512c;
+        }
+
+        .contact-content {
+            display: grid;
+            grid-template-columns: 0.9fr 1.1fr;
+            gap: 35px;
+            align-items: stretch;
+        }
+
+        .contact-message-panel {
+            padding: 38px;
+            border-radius: 18px;
+            background:
+                radial-gradient(circle at 90% 15%, rgba(244, 81, 44, 0.10), transparent 35%),
+                linear-gradient(145deg, #fff, #fff5f1);
+        }
+
+        .contact-message-panel .small-label {
+            color: #f4512c;
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+
+        .contact-message-panel h2 {
+            font-size: 29px;
+            font-weight: 800;
+            line-height: 1.3;
+            margin: 15px 0;
+        }
+
+        .contact-message-panel>p {
+            color: #777;
+            font-size: 14px;
+            line-height: 1.9;
+            margin-bottom: 28px;
+        }
+
+        .contact-benefit {
+            display: flex;
+            align-items: flex-start;
+            gap: 13px;
+            margin-top: 22px;
+        }
+
+        .contact-benefit i {
+            color: #f4512c;
+            font-size: 17px;
+            margin-top: 3px;
+        }
+
+        .contact-benefit strong {
+            display: block;
+            font-size: 14px;
             margin-bottom: 5px;
         }
 
-        .container1 {
-            margin: 150px 0px;
-            padding: 40px;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        .contact-benefit span {
+            color: #777;
+            font-size: 13px;
+            line-height: 1.7;
+        }
+
+        .contact-form-panel {
+            background: #fff;
+            padding: 38px;
+            border: 1px solid #f0eeeb;
+            border-radius: 18px;
+            box-shadow: 0 5px 22px rgba(0, 0, 0, 0.035);
+        }
+
+        .contact-form-panel h2 {
+            font-size: 24px;
+            font-weight: 800;
+            margin: 0 0 8px;
+        }
+
+        .contact-form-description {
+            color: #777;
+            font-size: 14px;
+            line-height: 1.7;
+            margin-bottom: 25px;
+        }
+
+        .contact-form .form-label {
+            display: block;
+            font-size: 13px;
+            font-weight: 700;
+            margin-bottom: 9px;
+            color: #333;
+        }
+
+        .contact-form .form-control {
+            min-height: 48px;
+            border: 1px solid #e7e3df;
+            border-radius: 9px;
+            padding: 12px 14px;
+            font-size: 14px;
+            background: #fdfcfb;
+            box-shadow: none;
+        }
+
+        .contact-form textarea.form-control {
+            min-height: 135px;
+            resize: vertical;
+        }
+
+        .contact-form .form-control:focus {
+            border-color: #f4512c;
+            background: #fff;
+            box-shadow: 0 0 0 3px rgba(244, 81, 44, 0.10);
+        }
+
+        .contact-submit-btn {
+            width: 100%;
+            min-height: 49px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            border: 0;
+            border-radius: 9px;
+            background: #f4512c;
+            color: #fff;
+            font-size: 14px;
+            font-weight: 700;
+            transition: background 0.2s, transform 0.2s;
+        }
+
+        .contact-submit-btn:hover {
+            background: #df3f1c;
+            transform: translateY(-1px);
+        }
+
+        .contact-form-note {
+            color: #888;
             text-align: center;
+            font-size: 12px;
+            line-height: 1.6;
+            margin: 15px 0 0;
+        }
+
+        @media (max-width: 850px) {
+            .contact-info-grid {
+                gap: 14px;
+            }
+
+            .contact-content {
+                grid-template-columns: 1fr;
+                gap: 22px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .contact-page {
+                padding: 18px 14px 45px;
+            }
+
+            .contact-heading {
+                margin: 15px auto 28px;
+            }
+
+            .contact-info-grid {
+                grid-template-columns: 1fr;
+                gap: 14px;
+            }
+
+            .contact-info-card {
+                padding: 25px 18px;
+            }
+
+            .contact-message-panel,
+            .contact-form-panel {
+                padding: 26px 21px;
+            }
+
+            .contact-message-panel h2 {
+                font-size: 25px;
+            }
+
+            .contact-form-panel h2 {
+                font-size: 22px;
+            }
         }
     </style>
 </head>
@@ -58,27 +336,134 @@
 <body>
     <%- include('../partials/userHeader') %>
 
-        <p class="fw-bold text-dark fs-5 mt-4 ms-3">Home > <span class="text-warning fs-5"> Contact</span></p>
+        <main class="contact-page">
+            <nav class="contact-breadcrumb" aria-label="Breadcrumb">
+                <a href="/">Home</a>
+                <span> / Contact Us</span>
+            </nav>
 
-        <div class="container1">
-            <div class="contact">
-                <div class="address">
-                    <span><i class="fa-solid fa-location-dot"></i></span>
-                    <p class="fw-bold">ADDRESS</p>
-                    <p>Arabian Palace, Kakkanad, Ernakulam</p>
-                </div>
-                <div class="address">
-                    <span><i class="fa-solid fa-phone"></i></span>
-                    <p class="fw-bold">PHONE</p>
-                    <p>+145 258996</p>
-                </div>
-                <div class="address">
-                    <span><i class="fa-solid fa-envelope"></i></span>
-                    <p class="fw-bold">EMAIL</p>
-                    <p>neymarjr@gmail.com</p>
-                </div>
+            <div class="contact-wrapper">
+                <section class="contact-heading">
+                    <span class="eyebrow">We'd Love to Hear From You</span>
+                    <h1>Get in <span>Touch</span></h1>
+                    <p>
+                        Have a question about our shoes, your order, or anything
+                        else? Reach out to us. We're here to help make your
+                        Shoe Rack shopping experience better.
+                    </p>
+                </section>
+
+                <section class="contact-info-grid" aria-label="Contact information">
+                    <article class="contact-info-card">
+                        <div class="contact-icon">
+                            <i class="fa-solid fa-location-dot"></i>
+                        </div>
+                        <h2>OUR ADDRESS</h2>
+                        <p>Arabian Palace,<br>Kakkanad, Ernakulam</p>
+                    </article>
+
+                    <article class="contact-info-card">
+                        <div class="contact-icon">
+                            <i class="fa-solid fa-phone"></i>
+                        </div>
+                        <h2>PHONE NUMBER</h2>
+                        <p>
+                            <a href="tel:+145258996">+145 258996</a>
+                        </p>
+                    </article>
+
+                    <article class="contact-info-card">
+                        <div class="contact-icon">
+                            <i class="fa-solid fa-envelope"></i>
+                        </div>
+                        <h2>EMAIL ADDRESS</h2>
+                        <p>
+                            <a href="mailto:neymarjr@gmail.com">
+                                neymarjr@gmail.com
+                            </a>
+                        </p>
+                    </article>
+                </section>
+
+                <section class="contact-content">
+                    <div class="contact-message-panel">
+                        <span class="small-label">Customer Support</span>
+                        <h2>We're here to help with every step.</h2>
+                        <p>
+                            Whether you need help choosing the right footwear or
+                            have a question about an order, feel free to contact
+                            the Shoe Rack team.
+                        </p>
+
+                        <div class="contact-benefit">
+                            <i class="fa-solid fa-circle-check"></i>
+                            <div>
+                                <strong>Product Assistance</strong>
+                                <span>Get help with product details, sizes, and availability.</span>
+                            </div>
+                        </div>
+
+                        <div class="contact-benefit">
+                            <i class="fa-solid fa-circle-check"></i>
+                            <div>
+                                <strong>Order Support</strong>
+                                <span>Ask questions about your purchases and orders.</span>
+                            </div>
+                        </div>
+
+                        <div class="contact-benefit">
+                            <i class="fa-solid fa-circle-check"></i>
+                            <div>
+                                <strong>We're Listening</strong>
+                                <span>Your feedback helps us improve your shopping experience.</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="contact-form-panel">
+                        <h2>Send Us a Message</h2>
+                        <p class="contact-form-description">
+                            Fill out the form below and let us know how we can help.
+                        </p>
+
+                        <form class="contact-form" action="/contact" method="POST">
+                            <div class="mb-3">
+                                <label for="contactName" class="form-label">Your Name</label>
+                                <input type="text" class="form-control" id="contactName" name="name"
+                                    placeholder="Enter your name" autocomplete="name" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="contactEmail" class="form-label">Email Address</label>
+                                <input type="email" class="form-control" id="contactEmail" name="email"
+                                    placeholder="Enter your email" autocomplete="email" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="contactSubject" class="form-label">Subject</label>
+                                <input type="text" class="form-control" id="contactSubject" name="subject"
+                                    placeholder="What is your message about?" required>
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="contactMessage" class="form-label">Your Message</label>
+                                <textarea class="form-control" id="contactMessage" name="message"
+                                    placeholder="Write your message here..." required></textarea>
+                            </div>
+
+                            <button type="submit" class="contact-submit-btn">
+                                Send Message
+                                <i class="fa-solid fa-paper-plane"></i>
+                            </button>
+
+                            <p class="contact-form-note">
+                                Please avoid including passwords or other sensitive information.
+                            </p>
+                        </form>
+                    </div>
+                </section>
             </div>
-        </div>
+        </main>
 
         <%- include('../partials/userfooter') %>
 </body>

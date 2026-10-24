@@ -4,88 +4,448 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shoe Rack</title>
+    <title>Explore Categories | Shoe Rack</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
+        :root {
+            --accent: #f4512c;
+            --dark: #202020;
+            --muted: #777;
+            --background: #faf9f7;
+            --border: #eee8e4;
         }
 
-        .container {
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: var(--background);
+            color: var(--dark);
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+
+
+        .brands-page {
+            min-height: 75vh;
+            padding: 30px 20px 75px;
+        }
+
+        .brands-container {
+            width: 100%;
             max-width: 1200px;
             margin: 0 auto;
-            padding: 20px;
         }
 
-        .brands {
-            margin-top: 60px;
+
+        .brands-breadcrumb {
             display: flex;
+            align-items: center;
             flex-wrap: wrap;
+            gap: 9px;
+            margin-bottom: 30px;
+            color: #888;
+            font-size: 13px;
+        }
+
+        .brands-breadcrumb a {
+            color: #777;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .brands-breadcrumb a:hover {
+            color: var(--accent);
+        }
+
+        .brands-breadcrumb i {
+            font-size: 10px;
+            color: #bbb;
+        }
+
+        .brands-breadcrumb .current {
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .brands-heading {
+            position: relative;
+            overflow: hidden;
+            padding: 38px 40px;
+            margin-bottom: 35px;
+            border: 1px solid #f2e8e2;
+            border-radius: 18px;
+            background:
+                radial-gradient(circle at 90% 15%,
+                    rgba(244, 81, 44, 0.10),
+                    transparent 35%),
+                linear-gradient(145deg, #ffffff, #fff5f1);
+        }
+
+        .brands-heading-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .brands-eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 13px;
+            color: var(--accent);
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+
+        .brands-title {
+            margin: 0 0 12px;
+            font-size: clamp(29px, 4vw, 42px);
+            font-weight: 800;
+            letter-spacing: -1px;
+        }
+
+        .brands-title span {
+            color: var(--accent);
+        }
+
+        .brands-description {
+            max-width: 580px;
+            margin: 0;
+            color: #777;
+            font-size: 14px;
+            line-height: 1.8;
+        }
+
+
+
+        .brands-section-header {
+            display: flex;
+            align-items: center;
             justify-content: space-between;
+            gap: 15px;
+            margin-bottom: 22px;
+        }
+
+        .brands-section-title {
+            margin: 0;
+            font-size: 22px;
+            font-weight: 800;
+        }
+
+        .brands-count {
+            color: #888;
+            font-size: 13px;
+        }
+
+        .brands-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 25px;
         }
 
         .category-item {
-            max-width: 30%;
-            margin: 15px 10px;
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            text-align: center;
-            transition: transform 0.3s ease;
+            min-width: 0;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            background: #fff;
+            box-shadow: 0 5px 18px rgba(0, 0, 0, 0.025);
+            transition:
+                transform 0.25s ease,
+                box-shadow 0.25s ease,
+                border-color 0.25s ease;
         }
 
         .category-item:hover {
-            transform: translateY(-10px);
+            transform: translateY(-6px);
+            border-color: #f5c7b9;
+            box-shadow: 0 14px 30px rgba(0, 0, 0, 0.07);
         }
 
-        #category_image {
+        .category-image-wrapper {
+            position: relative;
+            overflow: hidden;
+            aspect-ratio: 4 / 3;
+            background:
+                radial-gradient(circle at 90% 10%,
+                    rgba(244, 81, 44, 0.08),
+                    transparent 40%),
+                #f5f3f1;
+        }
+
+        .category-image {
             width: 100%;
-            height: auto;
-            border-radius: 10%;
+            height: 100%;
+            display: block;
             object-fit: cover;
+            transition: transform 0.4s ease;
+        }
+
+        .category-item:hover .category-image {
+            transform: scale(1.05);
+        }
+
+        .category-details {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 20px;
         }
 
         .category-name {
-            font-weight: bold;
-            margin-top: 10px;
-            color: #333;
-            font-size: 1.2em;
+            margin: 0;
+            color: var(--dark);
+            font-size: 17px;
+            font-weight: 700;
+            line-height: 1.4;
+            overflow-wrap: anywhere;
         }
 
-        .no-category {
-            text-align: center;
-            font-size: 1.5em;
+        .category-label {
+            display: block;
+            margin-top: 5px;
             color: #999;
-            margin-top: 50px;
+            font-size: 12px;
+        }
+
+        .category-arrow {
+            width: 38px;
+            height: 38px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: #fff0e9;
+            color: var(--accent);
+            transition: background 0.2s, color 0.2s;
+        }
+
+        .category-item:hover .category-arrow {
+            background: var(--accent);
+            color: #fff;
+        }
+
+
+        .no-category {
+            grid-column: 1 / -1;
+            padding: 65px 20px;
+            border: 1px dashed #e5dcd6;
+            border-radius: 16px;
+            background: #fff;
+            text-align: center;
+        }
+
+        .no-category-icon {
+            width: 65px;
+            height: 65px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            border-radius: 18px;
+            background: #fff0e9;
+            color: var(--accent);
+            font-size: 25px;
+        }
+
+        .no-category h3 {
+            margin-bottom: 8px;
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .no-category p {
+            margin-bottom: 0;
+            color: #888;
+            font-size: 14px;
+        }
+
+
+        @media (max-width: 900px) {
+            .brands-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 20px;
+            }
+
+            .brands-heading {
+                padding: 32px;
+            }
+        }
+
+        @media (max-width: 520px) {
+            .brands-page {
+                padding: 22px 14px 45px;
+            }
+
+            .brands-breadcrumb {
+                margin-bottom: 22px;
+            }
+
+            .brands-heading {
+                padding: 25px 22px;
+                margin-bottom: 28px;
+                border-radius: 14px;
+            }
+
+            .brands-title {
+                font-size: 30px;
+            }
+
+            .brands-description {
+                font-size: 13px;
+            }
+
+            .brands-grid {
+                grid-template-columns: 1fr;
+                gap: 17px;
+            }
+
+            .category-image-wrapper {
+                aspect-ratio: 5 / 3;
+            }
+
+            .category-details {
+                padding: 16px;
+            }
+
+            .brands-section-title {
+                font-size: 19px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+
+            .category-item,
+            .category-image,
+            .category-arrow {
+                transition: none;
+            }
         }
     </style>
 </head>
 
 <body>
+
     <%- include('../partials/userHeader') %>
 
-        <p class="fw-bold text-dark fs-5 mt-4 ms-3">Home > <span class="text-warning fs-5"> Brands</span></p>
+        <main class="brands-page">
+            <div class="brands-container">
 
-        <div class="container">
-            <div class="brands">
-                <% if (category.length===0) { %>
-                    <p class="no-category">No categories found.</p>
-                    <% } else { %>
-                        <% category.forEach(element=> { %>
-                            <div class="category-item">
-                                <img id="category_image" src="/category_images/<%= element.image %>"
-                                    alt="<%= element.categoryname %>">
-                                <p class="category-name">
-                                    <%= element.categoryname %>
+
+
+                <nav class="brands-breadcrumb" aria-label="Breadcrumb">
+                    <a href="/">Home</a>
+                    <i class="fa-solid fa-chevron-right"></i>
+                    <span class="current">Categories</span>
+                </nav>
+
+
+
+                <section class="brands-heading">
+                    <div class="brands-heading-content">
+                        <div class="brands-eyebrow">
+                            <i class="fa-solid fa-shoe-prints"></i>
+                            Find your fit
+                        </div>
+
+                        <h1 class="brands-title">
+                            Explore our <span>collections.</span>
+                        </h1>
+
+                        <p class="brands-description">
+                            From everyday essentials to standout styles,
+                            discover footwear for every occasion.
+                            Find a collection that fits your lifestyle.
+                        </p>
+                    </div>
+                </section>
+
+
+                <section aria-labelledby="categoriesHeading">
+
+                    <div class="brands-section-header">
+                        <h2 class="brands-section-title" id="categoriesHeading">
+                            Shop by category
+                        </h2>
+
+                        <% if (category && category.length> 0) { %>
+                            <span class="brands-count">
+                                <%= category.length %>
+                                    <%= category.length===1 ? 'category' : 'categories' %>
+                            </span>
+                            <% } %>
+                    </div>
+
+                    <div class="brands-grid">
+
+                        <% if (!category || category.length===0) { %>
+
+                            <div class="no-category">
+                                <div class="no-category-icon">
+                                    <i class="fa-solid fa-shoe-prints"></i>
+                                </div>
+
+                                <h3>No categories found</h3>
+
+                                <p>
+                                    Our collections will appear here when they become available.
                                 </p>
                             </div>
-                            <% }) %>
-                                <% } %>
+
+                            <% } else { %>
+
+                                <% category.forEach(function(element) { %>
+
+                                    <article class="category-item">
+
+                                        <div class="category-image-wrapper">
+                                            <img class="category-image" src="<%= element.image %>"
+                                                alt="<%= element.categoryname %>" loading="lazy">
+                                        </div>
+
+                                        <div class="category-details">
+                                            <div>
+                                                <h3 class="category-name">
+                                                    <%= element.categoryname %>
+                                                </h3>
+
+                                                <span class="category-label">
+                                                    Explore collection
+                                                </span>
+                                            </div>
+
+                                            <span class="category-arrow" aria-hidden="true">
+                                                <i class="fa-solid fa-arrow-right"></i>
+                                            </span>
+                                        </div>
+
+                                    </article>
+
+                                    <% }); %>
+
+                                        <% } %>
+
+                    </div>
+                </section>
+
             </div>
-        </div>
+        </main>
 
         <%- include('../partials/userfooter') %>
+
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
 </body>
 
 </html>

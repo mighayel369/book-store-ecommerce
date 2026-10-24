@@ -4,109 +4,525 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shoe Rack</title>
+    <meta name="theme-color" content="#faf9f7">
+
+    <title>Verify Email | Shoe Rack</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
     <style>
-        body {
-            background-color: #eef2f7;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            color: #333;
+        :root {
+            --accent: #f4512c;
+            --accent-hover: #df3f1c;
+            --dark: #202020;
+            --muted: #777;
+            --background: #faf9f7;
         }
 
-        .container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 70vh;
-        }
-
-        .otp-form {
-            width: 100%;
-            max-width: 400px;
-            background-color: #fff;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            text-align: center;
-        }
-
-        h3 {
-            color: #2c3e50;
-            margin-bottom: 20px;
-        }
-
-        p {
-            color: #7f8c8d;
-            margin-bottom: 20px;
-            font-size: 16px;
-        }
-
-        .otp-form input[type="text"] {
-            width: 100%;
-            padding: 12px 15px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 16px;
-            margin-bottom: 20px;
+        *,
+        *::before,
+        *::after {
             box-sizing: border-box;
         }
 
-        .otp-form input[type="text"]:focus {
-            border-color: #007bff;
-            box-shadow: 0 0 5px rgba(0, 123, 255, 0.2);
-            outline: none;
+        body {
+            margin: 0;
+            background: var(--background);
+            color: var(--dark);
+            font-family: Arial, Helvetica, sans-serif;
         }
 
-        .otp-form button {
+        .verify-page {
             width: 100%;
-            padding: 12px;
-            background-color: #141414;
+            min-height: 85vh;
+            padding: 40px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .verify-card {
+            width: 100%;
+            max-width: 1000px;
+            min-height: 510px;
+            display: grid;
+            grid-template-columns: 0.9fr 1.1fr;
+            overflow: hidden;
+            background: #fff;
+            border: 1px solid rgba(0, 0, 0, 0.035);
+            border-radius: 22px;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.08);
+        }
+
+
+        .verify-promo {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 42px 34px;
+            background:
+                radial-gradient(circle at 90% 15%,
+                    rgba(244, 81, 44, 0.10),
+                    transparent 35%),
+                linear-gradient(145deg, #fff, #fff5f1);
+        }
+
+        .verify-brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            width: fit-content;
+            color: var(--dark);
+            font-size: 23px;
+            font-weight: 800;
+            text-decoration: none;
+        }
+
+        .verify-brand:hover {
+            color: var(--dark);
+        }
+
+        .verify-brand-icon {
+            width: 42px;
+            height: 42px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            border-radius: 12px;
+            background: var(--accent);
             color: #fff;
-            border: none;
-            border-radius: 5px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
         }
 
-        .otp-form button:hover {
-            background-color: #0056b3;
+        .verify-promo-content h1 {
+            margin-top: 70px;
+            margin-bottom: 20px;
+            font-size: clamp(32px, 3.5vw, 42px);
+            line-height: 1.2;
+            font-weight: 800;
+            letter-spacing: -1px;
         }
 
-        .change {
+        .verify-promo-content h1 span {
+            display: block;
+            color: var(--accent);
+        }
+
+        .verify-promo-description {
+            margin-bottom: 0;
+            color: #666;
+            font-size: 15px;
+            line-height: 1.8;
+        }
+
+        .verify-info {
+            display: flex;
+            align-items: flex-start;
+            gap: 13px;
+            margin-top: 35px;
+            padding: 17px;
+            border: 1px solid rgba(244, 81, 44, 0.12);
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.75);
+        }
+
+        .verify-info-icon {
+            width: 38px;
+            height: 38px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            background: #fff0e9;
+            color: var(--accent);
+        }
+
+        .verify-info strong {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 13px;
+        }
+
+        .verify-info p {
+            margin: 0;
+            color: #777;
+            font-size: 12px;
+            line-height: 1.6;
+        }
+
+        .verify-promo-bottom {
+            margin-top: 35px;
+            color: #777;
+            font-size: 12px;
+            line-height: 1.6;
+        }
+
+
+        .verify-form-panel {
+            min-width: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 45px 48px;
+        }
+
+        .verify-form-content {
+            width: 100%;
+            max-width: 390px;
+        }
+
+        .verify-step-icon {
+            width: 54px;
+            height: 54px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 24px;
+            border-radius: 15px;
+            background: #fff0e9;
+            color: var(--accent);
+            font-size: 22px;
+        }
+
+        .verify-heading {
+            margin: 0 0 10px;
+            font-size: 30px;
+            font-weight: 800;
+            letter-spacing: -0.7px;
+        }
+
+        .verify-subheading {
+            margin-bottom: 28px;
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        .verify-form .form-label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .verify-form .form-control {
+            width: 100%;
+            min-height: 48px;
+            padding: 12px 14px;
+            border: 1px solid #e1e1e1;
+            border-radius: 9px;
+            background: #fff;
+            color: var(--dark);
+            font-size: 14px;
+            box-shadow: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .verify-form .form-control::placeholder {
+            color: #aaa;
+        }
+
+        .verify-form .form-control:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(244, 81, 44, 0.10);
+        }
+
+        .verify-hint {
+            margin-top: 9px;
+            color: #888;
+            font-size: 12px;
+            line-height: 1.6;
+        }
+
+        .verify-error {
+            margin: 0 0 17px;
+            padding: 12px 14px;
+            border: 1px solid #f3caca;
+            border-radius: 8px;
+            background: #fff1f1;
+            color: #b42318;
+            font-size: 13px;
+            line-height: 1.6;
+            overflow-wrap: anywhere;
+        }
+
+        .verify-submit {
+            width: 100%;
+            min-height: 48px;
             margin-top: 10px;
-            color: #e74c3c;
+            padding: 12px 16px;
+            border: 0;
+            border-radius: 9px;
+            background: var(--accent);
+            color: #fff;
             font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.2s;
         }
 
-        #timer {
-            color: #555;
-            font-size: 14px;
-            margin-top: 15px;
+        .verify-submit:hover {
+            background: var(--accent-hover);
+            transform: translateY(-1px);
+        }
+
+        .verify-submit:focus-visible,
+        .verify-back-link:focus-visible {
+            outline: 3px solid rgba(244, 81, 44, 0.25);
+            outline-offset: 3px;
+        }
+
+        .verify-back-link {
+            display: block;
+            margin-top: 22px;
+            color: #777;
+            font-size: 13px;
+            text-align: center;
+            text-decoration: none;
+        }
+
+        .verify-back-link i {
+            margin-right: 6px;
+        }
+
+        .verify-back-link:hover {
+            color: var(--accent);
+        }
+
+
+
+        @media (max-width: 850px) {
+            .verify-page {
+                min-height: auto;
+                padding: 35px 20px;
+            }
+
+            .verify-card {
+                max-width: 550px;
+                min-height: auto;
+                grid-template-columns: 1fr;
+            }
+
+            .verify-promo {
+                padding: 30px;
+            }
+
+            .verify-promo-content h1 {
+                margin-top: 35px;
+                font-size: 32px;
+            }
+
+            .verify-info {
+                margin-top: 22px;
+            }
+
+            .verify-promo-bottom {
+                margin-top: 25px;
+            }
+
+            .verify-form-panel {
+                padding: 38px 35px 42px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .verify-page {
+                padding: 22px 12px;
+            }
+
+            .verify-card {
+                border-radius: 15px;
+            }
+
+            .verify-promo {
+                padding: 24px;
+            }
+
+            .verify-brand {
+                font-size: 21px;
+            }
+
+            .verify-brand-icon {
+                width: 38px;
+                height: 38px;
+            }
+
+            .verify-promo-content h1 {
+                margin-top: 27px;
+                margin-bottom: 12px;
+                font-size: 29px;
+            }
+
+            .verify-promo-description {
+                font-size: 13px;
+                line-height: 1.7;
+            }
+
+            .verify-info {
+                gap: 10px;
+                padding: 12px;
+            }
+
+            .verify-form-panel {
+                padding: 30px 22px;
+            }
+
+            .verify-step-icon {
+                width: 47px;
+                height: 47px;
+                margin-bottom: 20px;
+                font-size: 19px;
+            }
+
+            .verify-heading {
+                font-size: 27px;
+            }
+
+            .verify-subheading {
+                margin-bottom: 24px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+
+            .verify-form .form-control,
+            .verify-submit {
+                transition: none;
+            }
+
+            .verify-submit:hover {
+                transform: none;
+            }
         }
     </style>
 </head>
 
 <body>
+
     <%- include('../partials/userHeader') %>
-        <div class="container">
-            <div class="otp-form">
-                <h3 class="fw-bold">Verify Your Email</h3>
-                <p>Please enter your registered email address:</p>
-                <form action="/verify-email" method="post">
-                    <div class="mb-3">
-                        <input type="text" class="form-control" id="email" placeholder="Enter email" name="email">
-                    </div>
-                    <% if (message) { %>
-                        <div class="text-danger change">
-                            <%= message.message %>
+
+        <main class="verify-page">
+            <div class="verify-card">
+
+                <section class="verify-promo">
+                    <div class="verify-promo-content">
+
+                        <a href="/" class="verify-brand">
+                            <span class="verify-brand-icon">
+                                <i class="fa-solid fa-shoe-prints" aria-hidden="true"></i>
+                            </span>
+                            <span>Shoe Rack</span>
+                        </a>
+
+                        <h1>
+                            One step closer
+                            <span>to your account.</span>
+                        </h1>
+
+                        <p class="verify-promo-description">
+                            Verify your registered email address to continue
+                            resetting your password and get back to shopping
+                            for your favorite footwear.
+                        </p>
+
+                        <div class="verify-info">
+                            <div class="verify-info-icon">
+                                <i class="fa-solid fa-envelope-circle-check" aria-hidden="true"></i>
+                            </div>
+
+                            <div>
+                                <strong>Secure email verification</strong>
+                                <p>
+                                    Enter the email address linked to your
+                                    account so we can help you continue securely.
+                                </p>
+                            </div>
                         </div>
-                        <% } %>
-                            <div id="timer" class="mt-3"></div>
-                            <button type="submit" class="btn btn-dark" id="verify">Verify</button>
-                </form>
+                    </div>
+
+                    <div class="verify-promo-bottom">
+                        Your next favorite pair is waiting.
+                    </div>
+                </section>
+
+
+                <section class="verify-form-panel">
+                    <div class="verify-form-content">
+
+                        <div class="verify-step-icon">
+                            <i class="fa-solid fa-envelope" aria-hidden="true"></i>
+                        </div>
+
+                        <h2 class="verify-heading">Verify your email</h2>
+
+                        <p class="verify-subheading">
+                            Please enter the email address registered with
+                            your Shoe Rack account.
+                        </p>
+
+                        <form action="/verify-email" method="post" class="verify-form" id="verifyEmailForm">
+
+                            <div class="mb-4">
+                                <label for="email" class="form-label">
+                                    Email address
+                                </label>
+
+                                <input type="email" class="form-control" id="email" name="email"
+                                    placeholder="you@example.com" autocomplete="email" inputmode="email" maxlength="254"
+                                    required>
+
+                                <div class="verify-hint">
+                                    Use the same email address you used when creating your account.
+                                </div>
+                            </div>
+
+                            <% if (typeof message !=='undefined' && message) { %>
+                                <div class="verify-error" role="alert">
+                                    <%= message.message %>
+                                </div>
+                                <% } %>
+
+                                    <button type="submit" class="verify-submit" id="verify">
+                                        Continue
+                                        <i class="fa-solid fa-arrow-right ms-2" aria-hidden="true"></i>
+                                    </button>
+
+                                    <a href="/login" class="verify-back-link">
+                                        <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
+                                        Back to login
+                                    </a>
+
+                        </form>
+                    </div>
+                </section>
+
             </div>
-        </div>
+        </main>
+
         <%- include('../partials/userfooter') %>
+
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+            <script>
+                document.addEventListener('DOMContentLoaded', function () {
+                    const form = document.getElementById('verifyEmailForm');
+                    const emailInput = document.getElementById('email');
+
+                    form.addEventListener('submit', function (event) {
+                        emailInput.value = emailInput.value.trim();
+
+                        if (!emailInput.checkValidity()) {
+                            event.preventDefault();
+                            emailInput.reportValidity();
+                        }
+                    });
+                });
+            </script>
+
 </body>
 
 </html>

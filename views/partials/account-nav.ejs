@@ -1,48 +1,252 @@
-<div class="account">
-    <span class="fw-bold fs-4">My Account</span>
-    <div class="account-nav mt-4">
-        <p style="font-size: 1.2em; color: #333; font-weight: bold;">
-            Welcome <span style="color: #dc3545; font-weight: normal;">
-                <%= users.username %>
-            </span>
-        </p>
+<style>
+    .account-sidebar {
+        --sidebar-primary: #f4512c;
+        --sidebar-text: #343741;
+        --sidebar-muted: #777b85;
+        --sidebar-border: #ececf0;
 
-        <ul class="navbar-nav mb-2">
-            <li class="nav-item account-navitem">
-                <a class="nav-link" href="/profile">
-                    <span><i class="fa-solid fa-user"></i></span>
-                    <span>Personal Data</span>
-                    <span class="arrow"><i class="fa-solid fa-angle-right"></i></span>
-                </a>
-            </li>
-            <li class="nav-item account-navitem">
-                <a class="nav-link" href="/accountaddress">
-                    <span><i class="fa-solid fa-house-chimney"></i></span>
-                    <span>Addresses</span>
-                    <span class="arrow"><i class="fa-solid fa-angle-right"></i></span>
-                </a>
-            </li>
-            <li class="nav-item account-navitem ">
-                <a class="nav-link " href="/account">
-                    <span><i class="fa-solid fa-truck"></i></span>
-                    <span>Orders</span>
-                    <span class="arrow"><i class="fa-solid fa-angle-right"></i></span>
-                </a>
-            </li>
-            <li class="nav-item account-navitem">
-                <a class="nav-link" href="/change-password">
-                    <span><i class="fa-solid fa-lock"></i></span>
-                    <span>Change Password</span>
-                    <span class="arrow"><i class="fa-solid fa-angle-right"></i></span>
-                </a>
-            </li>
-            <li class="nav-item account-navitem">
-                <a class="nav-link" href="/wallet">
-                    <span><i class="fa-solid fa-wallet"></i></span>
-                    <span>Wallet</span>
-                    <span class="arrow"><i class="fa-solid fa-angle-right"></i></span>
-                </a>
-            </li>
-        </ul>
-    </div>
-</div>
+        width: 100%;
+        margin-bottom: 24px;
+    }
+
+    .account-sidebar .sidebar-heading {
+        font-size: 22px;
+        font-weight: 750;
+        color: #202124;
+        margin: 0 0 18px;
+        letter-spacing: -0.5px;
+    }
+
+    .account-sidebar .sidebar-card {
+        background: #fff;
+        border: 1px solid var(--sidebar-border);
+        border-radius: 14px;
+        padding: 20px 14px 12px;
+        box-shadow: 0 5px 24px rgba(30, 35, 50, 0.045);
+        overflow: hidden;
+    }
+
+    .account-sidebar .sidebar-welcome {
+        background: #fff5f1;
+        border: 1px solid #ffebe4;
+        border-radius: 10px;
+        padding: 15px 13px;
+        margin: 0 0 17px;
+    }
+
+    .account-sidebar .welcome-label {
+        display: block;
+        color: var(--sidebar-muted);
+        font-size: 11px;
+        font-weight: 600;
+        margin-bottom: 5px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .account-sidebar .welcome-name {
+        display: block;
+        color: var(--sidebar-primary);
+        font-size: 15px;
+        font-weight: 700;
+        overflow-wrap: anywhere;
+    }
+
+    .account-sidebar .account-menu {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .account-sidebar .account-navitem {
+        margin-bottom: 5px;
+    }
+
+    .account-sidebar .account-navlink {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        width: 100%;
+        padding: 12px 11px;
+        color: var(--sidebar-text);
+        text-decoration: none;
+        font-size: 13px;
+        font-weight: 600;
+        border-radius: 9px;
+        transition:
+            background 0.2s ease,
+            color 0.2s ease;
+    }
+
+    .account-sidebar .nav-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        width: 34px;
+        height: 34px;
+        border-radius: 9px;
+        background: #f5f6f8;
+        color: #656a74;
+        font-size: 14px;
+        transition: background 0.2s ease, color 0.2s ease;
+    }
+
+    .account-sidebar .nav-label {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .account-sidebar .nav-arrow {
+        color: #b0b3bb;
+        font-size: 12px;
+        transition: transform 0.2s ease, color 0.2s ease;
+    }
+
+    .account-sidebar .account-navlink:hover {
+        color: var(--sidebar-primary);
+        background: #fff7f4;
+    }
+
+    .account-sidebar .account-navlink:hover .nav-icon {
+        color: var(--sidebar-primary);
+        background: #ffebe4;
+    }
+
+    .account-sidebar .account-navlink:hover .nav-arrow {
+        color: var(--sidebar-primary);
+        transform: translateX(2px);
+    }
+
+    .account-sidebar .account-navitem.active .account-navlink {
+        color: var(--sidebar-primary);
+        background: #fff0eb;
+        font-weight: 700;
+    }
+
+    .account-sidebar .account-navitem.active .nav-icon {
+        color: #fff;
+        background: var(--sidebar-primary);
+    }
+
+    .account-sidebar .account-navitem.active .nav-arrow {
+        color: var(--sidebar-primary);
+    }
+
+    @media (max-width: 767.98px) {
+        .account-sidebar .sidebar-heading {
+            font-size: 20px;
+            margin-bottom: 13px;
+        }
+
+        .account-sidebar .sidebar-card {
+            padding: 15px 12px 10px;
+        }
+
+        .account-sidebar .sidebar-welcome {
+            padding: 12px;
+        }
+
+        .account-sidebar .account-menu {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 7px;
+        }
+
+        .account-sidebar .account-navitem {
+            margin-bottom: 0;
+            min-width: 0;
+        }
+
+        .account-sidebar .account-navlink {
+            height: 100%;
+            gap: 8px;
+            padding: 9px;
+            font-size: 12px;
+        }
+
+        .account-sidebar .nav-icon {
+            width: 30px;
+            height: 30px;
+            font-size: 12px;
+        }
+
+        .account-sidebar .nav-arrow {
+            display: none;
+        }
+    }
+
+    @media (max-width: 380px) {
+        .account-sidebar .account-menu {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<% const accountMenuItems=[ { label: 'Personal Data' , href: '/profile' , icon: 'fa-user' }, { label: 'Addresses' ,
+    href: '/accountaddress' , icon: 'fa-house-chimney' }, { label: 'Orders' , href: '/account' , icon: 'fa-truck' }, {
+    label: 'Change Password' , href: '/change-password' , icon: 'fa-lock' }, { label: 'Wallet' , href: '/wallet' ,
+    icon: 'fa-wallet' } ]; const currentPath=(typeof currentPathForAccount !=='undefined' ) ? currentPathForAccount : ''
+    ; %>
+
+    <aside class="account-sidebar">
+        <h2 class="sidebar-heading">My Account</h2>
+
+        <div class="sidebar-card">
+            <div class="sidebar-welcome">
+                <span class="welcome-label">Welcome back</span>
+                <span class="welcome-name">
+                    <%= users && users.username ? users.username : 'User' %>
+                </span>
+            </div>
+
+            <nav aria-label="Account navigation">
+                <ul class="account-menu">
+                    <% accountMenuItems.forEach(item=> { %>
+                        <li class="account-navitem">
+                            <a class="account-navlink" href="<%= item.href %>" <%=currentPath===item.href
+                                ? 'aria-current="page"' : '' %>>
+                                <span class="nav-icon">
+                                    <i class="fa-solid <%= item.icon %>" aria-hidden="true"></i>
+                                </span>
+
+                                <span class="nav-label">
+                                    <%= item.label %>
+                                </span>
+
+                                <span class="nav-arrow">
+                                    <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
+                                </span>
+                            </a>
+                        </li>
+                        <% }) %>
+                </ul>
+            </nav>
+        </div>
+    </aside>
+
+    <script>
+        (function () {
+            const sidebar = document.querySelector('.account-sidebar');
+
+            if (!sidebar) return;
+
+            const links = sidebar.querySelectorAll('.account-navlink');
+            const currentPath = window.location.pathname.replace(/\/+$/, '') || '/';
+
+            links.forEach(function (link) {
+                const linkPath = new URL(link.href, window.location.origin)
+                    .pathname.replace(/\/+$/, '') || '/';
+
+                const isActive = currentPath === linkPath;
+
+                link.parentElement.classList.toggle('active', isActive);
+
+                if (isActive) {
+                    link.setAttribute('aria-current', 'page');
+                } else {
+                    link.removeAttribute('aria-current');
+                }
+            });
+        })();
+    </script>

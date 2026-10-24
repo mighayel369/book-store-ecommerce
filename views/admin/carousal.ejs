@@ -1,0 +1,407 @@
+<%- include('../partials/adminHeader') %>
+
+    <style>
+        .carousel-page {
+            width: 100%;
+            min-width: 0;
+        }
+
+        .carousel-page .page-heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .carousel-page .page-heading h2 {
+            margin: 0;
+            font-weight: 700;
+            font-size: 1.6rem;
+        }
+
+        .carousel-page .card {
+            margin: 0 !important;
+            border: 1px solid #e9ecef;
+            border-radius: 12px;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.04);
+            background: #fff;
+        }
+
+        .carousel-page .section-title {
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .carousel-page .form-label {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .carousel-page .form-control,
+        .carousel-page .form-select {
+            border-radius: 8px;
+            padding: 10px 12px;
+        }
+
+        .carousel-page .banner-image {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            border-radius: 8px;
+            background: #f1f3f5;
+        }
+
+        .carousel-page .banner-title {
+            font-weight: 700;
+            overflow-wrap: anywhere;
+        }
+
+        .carousel-page .banner-description {
+            color: #6c757d;
+            white-space: pre-wrap;
+            overflow-wrap: anywhere;
+        }
+
+        .carousel-page .banner-details {
+            font-size: 0.9rem;
+        }
+
+        .carousel-page .status-badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.78rem;
+            font-weight: 600;
+        }
+
+        .carousel-page .status-active {
+            color: #146c43;
+            background: #d1e7dd;
+        }
+
+        .carousel-page .status-inactive {
+            color: #664d03;
+            background: #fff3cd;
+        }
+
+        .carousel-page .banner-form {
+            border-top: 1px solid #edf0f2;
+            margin-top: 18px;
+            padding-top: 18px;
+        }
+
+        .carousel-page .btn {
+            border-radius: 8px;
+        }
+
+        .carousel-page .empty-state {
+            padding: 40px 20px;
+            text-align: center;
+            color: #6c757d;
+            background: #fff;
+            border: 1px dashed #ced4da;
+            border-radius: 12px;
+        }
+
+        @media (max-width: 575.98px) {
+            .carousel-page .page-heading {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .carousel-page .page-heading h2 {
+                font-size: 1.35rem;
+            }
+
+            .carousel-page .banner-image {
+                height: 180px;
+            }
+        }
+    </style>
+
+    <main class="admin-main">
+        <div class="carousel-page">
+
+            <div class="page-heading">
+                <div>
+                    <h2>Carousel Management</h2>
+                    <p class="text-muted mb-0 mt-2">
+                        Add, update, and manage your homepage banners.
+                    </p>
+                </div>
+
+                <span class="badge text-bg-secondary">
+                    <%= carousels.length %> Banner(s)
+                </span>
+            </div>
+
+            <div class="card p-3 p-md-4 mb-4">
+                <h5 class="section-title">
+                    <i class="fa-solid fa-circle-plus text-success me-2"></i>
+                    Add New Banner
+                </h5>
+
+                <form action="/admin/carousal/add" method="POST" enctype="multipart/form-data">
+
+                    <div class="row g-3">
+                        <div class="col-12">
+                            <label for="newTitle" class="form-label">
+                                Banner Title
+                            </label>
+
+                            <input type="text" id="newTitle" name="title" class="form-control" maxlength="150"
+                                placeholder="Enter banner title" required>
+                        </div>
+
+                        <div class="col-12">
+                            <label for="newDescription" class="form-label">
+                                Description
+                            </label>
+
+                            <textarea id="newDescription" name="description" class="form-control" rows="3"
+                                maxlength="1000" placeholder="Enter a short banner description"></textarea>
+                        </div>
+
+                        <div class="col-12">
+                            <label for="newLink" class="form-label">
+                                Banner Link (optional)
+                            </label>
+
+                            <input type="text" id="newLink" name="link" class="form-control" placeholder="/shop">
+                        </div>
+
+                        <div class="col-12">
+                            <label for="newImage" class="form-label">
+                                Banner Image
+                            </label>
+
+                            <input type="file" id="newImage" name="image" class="form-control"
+                                accept="image/jpeg,image/png,image/webp,image/avif" required>
+
+                            <small class="text-muted">
+                                Choose a JPG, PNG, WEBP, or AVIF image.
+                            </small>
+
+                            <div id="newImagePreviewContainer" class="mt-3 d-none">
+                                <img id="newImagePreview" src="" alt="New banner preview" class="banner-image">
+                            </div>
+                        </div>
+
+                        <div class="col-12">
+                            <button type="submit" class="btn btn-success">
+                                <i class="fa-solid fa-upload me-1"></i>
+                                Add Banner
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div class="d-flex align-items-center justify-content-between mb-3">
+                <h5 class="fw-bold mb-0">Existing Banners</h5>
+            </div>
+
+            <% if (carousels.length===0) { %>
+
+                <div class="empty-state">
+                    <i class="fa-regular fa-images fs-1 mb-3 d-block"></i>
+
+                    <h5>No carousel banners yet</h5>
+
+                    <p class="mb-0">
+                        Use the form above to add your first banner.
+                    </p>
+                </div>
+
+                <% } else { %>
+
+                    <div class="row g-4">
+                        <% carousels.forEach(carousel=> { %>
+
+                            <div class="col-12 col-xl-6">
+                                <div class="card p-3 p-md-4 h-100">
+
+                                    <img src="<%= carousel.image %>" alt="<%= carousel.title %>"
+                                        class="banner-image mb-3" loading="lazy">
+
+                                    <div class="d-flex align-items-start justify-content-between gap-2 mb-2">
+                                        <h5 class="banner-title mb-0">
+                                            <%= carousel.title %>
+                                        </h5>
+
+                                        <% if (carousel.isActive) { %>
+                                            <span class="status-badge status-active">
+                                                Active
+                                            </span>
+                                            <% } else { %>
+                                                <span class="status-badge status-inactive">
+                                                    Inactive
+                                                </span>
+                                                <% } %>
+                                    </div>
+
+                                    <p class="banner-description mb-2">
+                                        <%= carousel.description || 'No description provided.' %>
+                                    </p>
+
+                                    <div class="banner-details mb-2">
+                                        <strong>Link:</strong>
+
+                                        <% if (carousel.link) { %>
+                                            <span class="text-break">
+                                                <%= carousel.link %>
+                                            </span>
+                                            <% } else { %>
+                                                <span class="text-muted">No link</span>
+                                                <% } %>
+                                    </div>
+
+                                    <form action="/admin/carousal/<%= carousel._id %>/replace" method="POST"
+                                        enctype="multipart/form-data" class="banner-form">
+
+                                        <h6 class="fw-bold mb-3">
+                                            <i class="fa-solid fa-pen-to-square me-2 text-primary"></i>
+                                            Update Banner
+                                        </h6>
+
+                                        <div class="mb-3">
+                                            <label for="title-<%= carousel._id %>" class="form-label">
+                                                Banner Title
+                                            </label>
+
+                                            <input type="text" id="title-<%= carousel._id %>" name="title"
+                                                class="form-control" value="<%= carousel.title %>" maxlength="150"
+                                                required>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label for="description-<%= carousel._id %>" class="form-label">
+                                                Description
+                                            </label>
+
+                                            <textarea id="description-<%= carousel._id %>" name="description"
+                                                class="form-control" rows="3"
+                                                maxlength="1000"><%= carousel.description || '' %></textarea>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label for="link-<%= carousel._id %>" class="form-label">
+                                                Banner Link
+                                            </label>
+
+                                            <input type="text" id="link-<%= carousel._id %>" name="link"
+                                                class="form-control" value="<%= carousel.link || '' %>"
+                                                placeholder="/shop">
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label for="image-<%= carousel._id %>" class="form-label">
+                                                Replace Image (optional)
+                                            </label>
+
+                                            <input type="file" id="image-<%= carousel._id %>" name="image"
+                                                class="form-control carousel-image-input"
+                                                accept="image/jpeg,image/png,image/webp,image/avif"
+                                                data-preview="preview-<%= carousel._id %>">
+
+                                            <small class="text-muted">
+                                                Leave empty to keep the current image.
+                                            </small>
+
+                                            <div class="mt-3 d-none" id="preview-container-<%= carousel._id %>">
+                                                <img id="preview-<%= carousel._id %>" src=""
+                                                    alt="Replacement banner preview" class="banner-image">
+                                            </div>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label for="status-<%= carousel._id %>" class="form-label">
+                                                Banner Status
+                                            </label>
+
+                                            <select id="status-<%= carousel._id %>" name="isActive" class="form-select">
+
+                                                <option value="true" <%=carousel.isActive ? 'selected' : '' %>>
+                                                    Active
+                                                </option>
+
+                                                <option value="false" <%=!carousel.isActive ? 'selected' : '' %>>
+                                                    Inactive
+                                                </option>
+                                            </select>
+                                        </div>
+
+                                        <button type="submit" class="btn btn-primary">
+                                            <i class="fa-solid fa-floppy-disk me-1"></i>
+                                            Save Changes
+                                        </button>
+                                    </form>
+
+                                    <form action="/admin/carousal/<%= carousel._id %>/delete" method="POST" class="mt-3"
+                                        onsubmit="return confirm('Are you sure you want to delete this carousel banner?');">
+
+                                        <button type="submit" class="btn btn-outline-danger">
+                                            <i class="fa-solid fa-trash me-1"></i>
+                                            Delete Banner
+                                        </button>
+                                    </form>
+
+                                </div>
+                            </div>
+
+                            <% }) %>
+                    </div>
+
+                    <% } %>
+
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const newImageInput = document.getElementById('newImage');
+            const newPreviewContainer = document.getElementById('newImagePreviewContainer');
+            const newPreview = document.getElementById('newImagePreview');
+
+            if (newImageInput && newPreview && newPreviewContainer) {
+                newImageInput.addEventListener('change', function () {
+                    const file = this.files && this.files[0];
+
+                    if (!file) {
+                        newPreview.src = '';
+                        newPreviewContainer.classList.add('d-none');
+                        return;
+                    }
+
+                    newPreview.src = URL.createObjectURL(file);
+                    newPreviewContainer.classList.remove('d-none');
+                });
+            }
+
+
+            document.querySelectorAll('.carousel-image-input').forEach(function (input) {
+                input.addEventListener('change', function () {
+                    const file = this.files && this.files[0];
+                    const previewId = this.dataset.preview;
+                    const preview = document.getElementById(previewId);
+                    const container = document.getElementById(
+                        'preview-container-' + previewId.replace('preview-', '')
+                    );
+
+                    if (!preview || !container) return;
+
+                    if (!file) {
+                        preview.src = '';
+                        container.classList.add('d-none');
+                        return;
+                    }
+
+                    preview.src = URL.createObjectURL(file);
+                    container.classList.remove('d-none');
+                });
+            });
+        });
+    </script>
+
+    <%- include('../partials/adminfooter') %>

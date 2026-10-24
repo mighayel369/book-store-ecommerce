@@ -4,34 +4,161 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Shoe Rack</title>
+  <title>Add Customer | Shoe Rack</title>
+
   <style>
-    .couponDiv {
-      background-color: #f8f9fa;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-      width: 450px;
-      margin-top: 70px;
+    .add-customer-page {
+      width: 100%;
+      max-width: none;
+      min-width: 0;
+      box-sizing: border-box;
+      padding: 24px;
     }
 
-    .coupon-header {
+    .add-customer-page *,
+    .add-customer-page *::before,
+    .add-customer-page *::after {
+      box-sizing: border-box;
+    }
+
+    .add-customer-page .page-heading {
+      margin-bottom: 24px;
+    }
+
+    .add-customer-page .page-heading h2 {
+      margin: 0 0 6px;
+      font-size: 26px;
+      font-weight: 600;
+      color: #212529;
+    }
+
+    .add-customer-page .page-heading p {
+      margin: 0;
+      color: #6c757d;
+      font-size: 14px;
+    }
+
+    .add-customer-page .customer-form-card {
+      width: 100%;
+      max-width: 650px;
+      margin: 0 auto;
+      padding: 28px;
+      background: #fff;
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    }
+
+    .add-customer-page .form-card-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding-bottom: 20px;
+      margin-bottom: 24px;
       border-bottom: 1px solid #dee2e6;
-      padding-bottom: 8px;
-      margin-bottom: 15px;
     }
 
-    .form-label {
-      font-size: 0.9rem;
+    .add-customer-page .header-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 46px;
+      height: 46px;
+      flex-shrink: 0;
+      border-radius: 10px;
+      background: #e9f2ff;
+      color: #0d6efd;
+      font-size: 20px;
     }
 
-    .form-control,
-    .form-select {
-      font-size: 0.9rem;
+    .add-customer-page .form-card-header h3 {
+      margin: 0 0 4px;
+      font-size: 20px;
+      font-weight: 600;
+      color: #212529;
     }
 
-    .btn {
-      font-size: 0.9rem;
+    .add-customer-page .form-card-header p {
+      margin: 0;
+      font-size: 13px;
+      color: #6c757d;
+    }
+
+    .add-customer-page .form-label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      color: #343a40;
+    }
+
+    .add-customer-page .form-control {
+      width: 100%;
+      min-height: 43px;
+      padding: 10px 12px;
+      font-size: 14px;
+      border: 1px solid #ced4da;
+      border-radius: 6px;
+    }
+
+    .add-customer-page .form-control:focus {
+      border-color: #86b7fe;
+      box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.12);
+      outline: none;
+    }
+
+
+    .add-customer-page .form-group {
+      margin-bottom: 20px;
+    }
+
+    .add-customer-page .error-message {
+      padding: 10px 12px;
+      margin: 0 0 18px;
+      background: #f8d7da;
+      color: #842029;
+      border: 1px solid #f5c2c7;
+      border-radius: 6px;
+      font-size: 13px;
+    }
+
+    .add-customer-page .form-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      padding-top: 8px;
+    }
+
+    .add-customer-page .btn-cancel {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 16px;
+      border: 1px solid #ced4da;
+      border-radius: 6px;
+      color: #343a40;
+      background: #fff;
+      text-decoration: none;
+      font-size: 14px;
+    }
+
+    .add-customer-page .btn-submit {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 18px;
+      border: none;
+      border-radius: 6px;
+      background: #212529;
+      color: #fff;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    .add-customer-page .btn-submit:hover {
+      background: #343a40;
     }
   </style>
 </head>
@@ -40,53 +167,110 @@
 
   <%- include('../partials/adminHeader') %>
 
-    <main>
-      <div class="container mt-4">
-        <div class="row">
-          <div class="col-lg-6 mx-auto">
-            <div class="couponDiv">
-              <div class="coupon-header text-center">
-                <h5 class="fw-bold"><i class="fa-solid fa-user mx-1"></i> Add User</h5>
-              </div>
-              <form action="/admin/adduser" method="post">
-                <div class="mb-3">
-                  <label for="username" class="form-label">Name</label>
-                  <input type="string" class="form-control" id="username" placeholder="Name" name="username">
-                </div>
-                <div class="mb-3">
-                  <label for="email" class="form-label">Email</label>
-                  <input type="email" class="form-control" id="email" placeholder="email@gmail.com" name="email">
-                </div>
-                <div class="mb-3">
-                  <label for="phoneno" class="form-label">Phone No:</label>
-                  <input type="number" class="form-control" id="phoneno" placeholder="Phone Number" name="phoneno">
-                </div>
-                <div class="mb-3">
-                  <label for="password" class="form-label">Password</label>
-                  <input type="password" class="form-control" id="password" name="password"
-                    placeholder="Enter password">
-                </div>
-                <% if (adminmessage) { %>
-                  <p class="text-danger fw-light" id="change">
-                    <%= adminmessage.message %>
-                  </p>
-                  <% } %>
-                    <div class="d-grid mt-3">
-                      <button type="submit" class="btn btn-dark btn-sm"> Add User</button>
-                    </div>
-              </form>
-            </div>
+    <main class="add-customer-page">
+
+      <div class="page-heading">
+        <h2>Customer Management</h2>
+        <p>Add a new customer to your Shoe Rack store.</p>
+      </div>
+
+      <div class="customer-form-card">
+
+        <div class="form-card-header">
+          <div class="header-icon">
+            <i class="fa-solid fa-user-plus"></i>
+          </div>
+
+          <div>
+            <h3>Add Customer</h3>
+            <p>Enter the customer's details below.</p>
           </div>
         </div>
+
+        <form action="/admin/adduser" method="post">
+
+          <div class="form-group">
+            <label for="username" class="form-label">Full Name</label>
+            <input type="text" class="form-control" id="username" name="username" placeholder="Enter customer name"
+              required>
+          </div>
+
+          <div class="form-group">
+            <label for="email" class="form-label">Email Address</label>
+            <input type="email" class="form-control" id="email" name="email" placeholder="customer@example.com"
+              required>
+          </div>
+
+          <div class="form-group">
+            <label for="phoneno" class="form-label">Phone Number</label>
+            <input type="tel" class="form-control" id="phoneno" name="phoneno" placeholder="Enter phone number"
+              inputmode="numeric" pattern="[0-9]{10}" maxlength="10" required>
+          </div>
+
+          <div class="form-group">
+            <label for="password" class="form-label">Password</label>
+            <input type="password" class="form-control" id="password" name="password" placeholder="Create a password"
+              minlength="8" required>
+          </div>
+          <% if (typeof adminmessage !=='undefined' && adminmessage) { %>
+            <div id="flash-message" hidden data-message="<%= adminmessage.message %>"
+              data-type="<%= adminmessage.type || 'success' %>">
+            </div>
+            <% } %>
+
+              <div class="form-actions">
+                <a href="/admin/customers" class="btn-cancel">
+                  Cancel
+                </a>
+
+                <button type="submit" class="btn-submit">
+                  <i class="fa-solid fa-user-plus"></i>
+                  Add Customer
+                </button>
+              </div>
+
+        </form>
+
       </div>
+
     </main>
+
     <%- include('../partials/adminfooter') %>
+
       <script>
-        let usernameInput = document.querySelector('#username');
-        let changeElement = document.querySelector('#change');
+        const usernameInput = document.querySelector('#username');
+        const changeElement = document.querySelector('#change');
 
+        if (usernameInput && changeElement) {
+          usernameInput.addEventListener('input', () => {
+            changeElement.textContent = '';
+          });
+        }
 
-        usernameInput.addEventListener('focus', () => {
-          changeElement.innerText = '';
-        });
+        const flashMessage = document.getElementById('flash-message');
+
+        if (flashMessage && typeof Swal !== 'undefined') {
+          const message = flashMessage.dataset.message;
+          const type = flashMessage.dataset.type;
+
+          const icon = type === 'danger'
+            ? 'error'
+            : ['success', 'error', 'warning', 'info', 'question'].includes(type)
+              ? type
+              : 'info';
+
+          Swal.fire({
+            toast: true,
+            position: 'top-end',
+            icon: icon,
+            title: message,
+            showConfirmButton: false,
+            timer: 2500,
+            timerProgressBar: true
+          });
+        }
       </script>
+
+</body>
+
+</html>

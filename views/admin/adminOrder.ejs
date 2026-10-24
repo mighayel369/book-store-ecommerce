@@ -1,140 +1,351 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Shoe Rack</title>
-  <link rel="stylesheet" href="path/to/your/css/styles.css">
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-
+<%- include('../partials/adminHeader') %>
   <style>
-    .btn-no-caret::after {
-      content: none !important;
+    main,
+    .admin-main {
+      margin-left: var(--sidebar-width);
+      margin-top: var(--navbar-height);
+      padding: 28px;
+      min-height: calc(100vh - var(--navbar-height));
+      min-width: 0;
+      box-sizing: border-box;
     }
 
-    .productname {
+    .orders-page {
+      padding: 24px;
+    }
+
+    .orders-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .orders-title {
+      font-size: 26px;
+      font-weight: 700;
+      margin: 0;
+      color: #212529;
+    }
+
+    .orders-subtitle {
+      color: #6c757d;
+      margin: 6px 0 0;
+      font-size: 14px;
+    }
+
+    .orders-card {
+      background: #fff;
+      border: 1px solid #e9ecef;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 3px 12px rgba(0, 0, 0, 0.04);
+    }
+
+    .orders-table {
+      width: 100% !important;
+      vertical-align: middle;
+    }
+
+    .orders-table thead th {
+      background: #f8f9fa;
+      color: #495057;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      padding: 15px 12px;
       white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      max-width: 200px;
+      border-bottom: 1px solid #dee2e6;
+    }
+
+    .orders-table tbody td {
+      padding: 15px 12px;
+      font-size: 13px;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    .order-id {
+      font-weight: 700;
+      color: #343a40;
+      white-space: nowrap;
+    }
+
+    .customer-name {
+      font-weight: 600;
+      color: #343a40;
+    }
+
+    .product-list {
+      min-width: 140px;
+      max-width: 220px;
+      margin: 0;
+      padding-left: 18px;
+    }
+
+    .product-list li {
+      margin-bottom: 5px;
+      overflow-wrap: anywhere;
+    }
+
+    .product-list li:last-child {
+      margin-bottom: 0;
+    }
+
+    .order-total {
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 6px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .status-pending {
+      color: #856404;
+      background: #fff3cd;
+    }
+
+    .status-shipped {
+      color: #084298;
+      background: #cfe2ff;
+    }
+
+    .status-delivered {
+      color: #146c43;
+      background: #d1e7dd;
+    }
+
+    .status-canceled {
+      color: #842029;
+      background: #f8d7da;
+    }
+
+    .status-processing {
+      color: #41464b;
+      background: #e2e3e5;
+    }
+
+    .status-select {
+      width: 125px;
+      min-width: 110px;
+      font-size: 12px;
+    }
+
+    .view-order-btn {
+      white-space: nowrap;
+      font-size: 12px;
+      font-weight: 600;
+      border-radius: 6px;
+    }
+
+    .orders-empty {
+      padding: 30px;
+      text-align: center;
+      color: #6c757d;
+    }
+
+    @media (max-width: 767px) {
+      .orders-page {
+        padding: 14px;
+      }
+
+      .orders-card {
+        padding: 12px;
+      }
+
+      .orders-title {
+        font-size: 22px;
+      }
     }
   </style>
-</head>
 
-<body>
-  <%- include('../partials/adminHeader') %>
-    <main>
-      <div class="container">
-        <% if (adminmessage) { %>
-          <div class="alert m-4 alert-dismissible fade show alert-<%= adminmessage.type %>" role="alert">
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            <strong>
-              <%= adminmessage.message %>
-            </strong>
+  <main class="orders-page">
+    <div class="container-fluid">
+      <% if (typeof adminmessage !=='undefined' && adminmessage) { %>
+        <div id="flash-message" hidden data-message="<%= adminmessage.message %>"
+          data-type="<%= adminmessage.type || 'success' %>">
+        </div>
+        <% } %>
+
+          <div class="orders-header">
+            <div>
+              <h1 class="orders-title">Order Management</h1>
+              <p class="orders-subtitle">
+                View customer orders and manage order status.
+              </p>
+            </div>
+
+            <div class="text-md-end">
+              <span class="text-secondary small">Total orders</span>
+              <h4 class="fw-bold mb-0">
+                <%= orders.length %>
+              </h4>
+            </div>
           </div>
-          <% } %>
-            <div class="d-flex justify-content-end m-5">
-              <h3 class="me-auto">Order Management</h3>
-            </div>
-            <div class="row m-4">
-              <div class="col-lg-12">
-                <div class="table-responsive">
-                  <table class="table table-striped text-center" id="table-data">
-                    <thead>
-                      <tr class="table-dark">
-                        <th>Order ID</th>
-                        <th>Username</th>
-                        <th>Products</th>
-                        <th>Total</th>
-                        <th>Status</th>
-                        <th>Payment Method</th>
-                        <th>Action</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <% orders.forEach(order=> { %>
-                        <tr>
-                          <td>
-                            <%= order.orderId %>
-                          </td>
-                          <td>
-                            <%= order.userId.username %>
-                          </td>
-                          <td class="text-start">
-                            <% order.products.forEach(product=> { %>
-                              <p class="productname">
-                                <%= product.productName %>
-                              </p>
-                              <% }) %>
-                          </td>
-                          <td class="text-center">
-                            <%= order.totalAmount %>
-                          </td>
-                          <td>
-                            <div class="btn-group">
-                              <button type="button"
-                                class="btn  btn-no-caret dropdown-toggle status-button text-success fw-semibold "
-                                data-bs-toggle="dropdown" aria-expanded="false">
-                                <%= order.status %>
-                              </button>
-                              <ul class="dropdown-menu">
-                                <li><a href="#" class="dropdown-item " data-status="Shipped"
-                                    data-order-id="<%= order._id %>">Shipped</a></li>
-                                <li><a href="#" class="dropdown-item " data-status="Delivered"
-                                    data-order-id="<%= order._id %>">Delivered</a></li>
-                                <li><a href="#" class="dropdown-item " data-status="Canceled"
-                                    data-order-id="<%= order._id %>">Canceled</a></li>
-                              </ul>
-                            </div>
-                          </td>
-                          <td>
-                            <%= order.paymentMethod %>
-                          </td>
-                          <td><a type="button" href="/admin/orders/details/<%= order._id %>"
-                              class="btn btn-danger btn-sm">View Details</a></td>
-                        </tr>
-                        <% }) %>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
 
-      </div>
-    </main>
-    <%- include('../partials/adminfooter') %>
-      <script>
-        $(document).ready(function () {
-          $('.btn-group button.status-button').each(function () {
-            if ($(this).text().trim() === 'Canceled' || $(this).text().trim() === 'Delivered') {
-              $(this).prop('disabled', true);
+          <div class="orders-card">
+            <div class="table-responsive">
+              <table class="table orders-table text-center" id="table-data">
+                <thead>
+                  <tr>
+                    <th>Order ID</th>
+                    <th>Customer</th>
+                    <th>Products</th>
+                    <th>Total</th>
+                    <th>Status</th>
+                    <th>Payment</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  <% orders.forEach(order=> { %>
+                    <tr>
+                      <td class="order-id">
+                        <%= order.orderId %>
+                      </td>
+
+                      <td class="customer-name">
+                        <%= order.userId ? order.userId.username : 'Unknown customer' %>
+                      </td>
+
+                      <td class="text-start">
+                        <ul class="product-list">
+                          <% order.products.forEach(product=> { %>
+                            <li>
+                              <%= product.productName %>
+                            </li>
+                            <% }) %>
+                        </ul>
+                      </td>
+
+                      <td class="order-total">
+                        ₹<%= Number(order.totalAmount || 0).toLocaleString('en-IN') %>
+                      </td>
+
+                      <td>
+                        <% const normalizedStatus=String(order.status || '' ).toLowerCase(); %>
+
+                          <span class="status-badge
+                    <%= normalizedStatus === 'pending' ? 'status-pending' :
+                        normalizedStatus === 'shipped' ? 'status-shipped' :
+                        normalizedStatus === 'delivered' ? 'status-delivered' :
+                        normalizedStatus === 'canceled' ? 'status-canceled' :
+                        'status-processing' %>">
+                            <%= order.status %>
+                          </span>
+
+                          <% if (!['delivered', 'canceled' ].includes(normalizedStatus)) { %>
+                            <select class="form-select form-select-sm status-select mt-2"
+                              data-order-id="<%= order._id %>" aria-label="Update order status">
+                              <option value="" selected disabled>Update status</option>
+                              <% if (normalizedStatus !=='shipped' ) { %>
+                                <option value="Shipped">Shipped</option>
+                                <% } %>
+                                  <option value="Delivered">Delivered</option>
+                                  <option value="Canceled">Canceled</option>
+                            </select>
+                            <% } %>
+                      </td>
+
+                      <td>
+                        <%= order.paymentMethod || 'N/A' %>
+                      </td>
+
+                      <td>
+                        <a href="/admin/orderdetails/<%= order._id %>"
+                          class="btn btn-outline-primary btn-sm view-order-btn">
+                          View Details
+                        </a>
+                      </td>
+                    </tr>
+                    <% }) %>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+    </div>
+  </main>
+
+  <%- include('../partials/adminfooter') %>
+
+    <script>
+      $(document).ready(function () {
+        $('.status-select').on('change', function () {
+          const select = $(this);
+          const status = select.val();
+          const orderId = select.data('order-id');
+
+          if (!status || !orderId) return;
+
+          const previousValue = select.data('previous-value') || '';
+
+          select.prop('disabled', true);
+
+          $.ajax({
+            url: '/admin/update-order-status',
+            type: 'POST',
+            data: {
+              orderId: orderId,
+              status: status
+            },
+            success: function (response) {
+              if (response && response.success === false) {
+                Swal.fire('Update failed', response.message || 'Unable to update order status.', 'error');
+                select.val(previousValue);
+                select.prop('disabled', false);
+                return;
+              }
+
+              Swal.fire({
+                icon: 'success',
+                title: 'Status updated',
+                text: 'Order status changed to ' + status + '.',
+                timer: 1500,
+                showConfirmButton: false
+              }).then(() => {
+                window.location.reload();
+              });
+            },
+            error: function (xhr) {
+              const message = xhr.responseJSON?.message || 'Unable to update order status.';
+              Swal.fire('Error', message, 'error');
+              select.val(previousValue);
+              select.prop('disabled', false);
             }
           });
-
-          $('.dropdown-item').on('click', function (e) {
-            e.preventDefault();
-            const status = $(this).data('status');
-            const orderId = $(this).data('order-id');
-            const statusButton = $(this).closest('.btn-group').find('.status-button');
-            $.ajax({
-              url: '/admin/update-order-status',
-              type: 'POST',
-              data: { orderId: orderId, status: status },
-              success: function (response) {
-                statusButton.text(status);
-                if (status === 'Delivered' || status === 'Canceled') {
-                  statusButton.prop('disabled', true);
-                }
-              },
-              error: function (error) {
-                console.error(error);
-              }
-            });
-          });
         });
-      </script>
-</body>
+      });
 
-</html>
+      const flashMessage = document.getElementById('flash-message');
+
+      if (flashMessage && typeof Swal !== 'undefined') {
+        const message = flashMessage.dataset.message;
+        const type = flashMessage.dataset.type;
+
+        const icon = type === 'danger'
+          ? 'error'
+          : ['success', 'error', 'warning', 'info', 'question'].includes(type)
+            ? type
+            : 'info';
+
+        Swal.fire({
+          toast: true,
+          position: 'top-end',
+          icon: icon,
+          title: message,
+          showConfirmButton: false,
+          timer: 2500,
+          timerProgressBar: true
+        });
+      }
+    </script>

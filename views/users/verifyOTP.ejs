@@ -4,105 +4,499 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shoe Rack</title>
+
+    <title>Verify OTP | Shoe Rack</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
     <style>
-        .otp-form {
-            width: 400px;
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
         }
 
-        .container {
+        body {
+            margin: 0;
+            background: #faf9f7;
+            color: #202020;
+            font-family: Arial, Helvetica, sans-serif;
+        }
 
+        .otp-page {
+            min-height: 75vh;
             display: flex;
-            justify-content: center;
             align-items: center;
-            height: 60vh;
+            justify-content: center;
+            padding: 45px 20px;
         }
 
-        .disable {
-            pointer-events: none;
-            cursor: default;
+        .otp-card {
+            width: 100%;
+            max-width: 950px;
+            min-height: 490px;
+            display: grid;
+            grid-template-columns: 0.9fr 1.1fr;
+            overflow: hidden;
+            background: #fff;
+            border: 1px solid #f0e8e4;
+            border-radius: 22px;
+            box-shadow: 0 15px 45px rgba(32, 32, 32, 0.07);
+        }
+
+
+        .otp-info {
+            padding: 48px 38px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            background:
+                radial-gradient(circle at 90% 15%,
+                    rgba(244, 81, 44, 0.10),
+                    transparent 35%),
+                linear-gradient(145deg, #ffffff, #fff5f1);
+        }
+
+        .otp-brand {
+            color: #f4512c;
+            font-size: 14px;
+            font-weight: 800;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 28px;
+        }
+
+        .otp-info h1 {
+            font-size: 34px;
+            font-weight: 800;
+            line-height: 1.25;
+            margin: 0 0 18px;
+        }
+
+        .otp-info h1 span {
+            color: #f4512c;
+        }
+
+        .otp-info>p {
+            color: #777;
+            font-size: 14px;
+            line-height: 1.8;
+            margin: 0;
+        }
+
+        .otp-security {
+            display: flex;
+            gap: 14px;
+            align-items: flex-start;
+            margin-top: 35px;
+            padding: 18px;
+            border: 1px solid #f3d9d0;
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.75);
+        }
+
+        .otp-security-icon {
+            width: 42px;
+            height: 42px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            background: #fff0ea;
+            color: #f4512c;
+            font-size: 21px;
+        }
+
+        .otp-security h3 {
+            font-size: 14px;
+            font-weight: 700;
+            margin: 2px 0 6px;
+        }
+
+        .otp-security p {
+            color: #777;
+            font-size: 12px;
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        .otp-form-panel {
+            padding: 48px 45px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .otp-heading {
+            margin-bottom: 30px;
+        }
+
+        .otp-heading h2 {
+            font-size: 28px;
+            font-weight: 800;
+            margin: 0 0 12px;
+        }
+
+        .otp-heading p {
+            color: #777;
+            font-size: 14px;
+            line-height: 1.7;
+            margin: 0;
+        }
+
+        .otp-label {
+            display: block;
+            margin-bottom: 9px;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .otp-input {
+            width: 100%;
+            height: 55px;
+            padding: 12px 15px;
+            border: 1px solid #e5ded9;
+            border-radius: 11px;
+            background: #fff;
+            color: #202020;
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: 8px;
+            text-align: center;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .otp-input::placeholder {
+            color: #c7c0bc;
+            font-size: 16px;
+            font-weight: 400;
+            letter-spacing: 2px;
+        }
+
+        .otp-input:focus {
+            border-color: #f4512c;
+            box-shadow: 0 0 0 4px rgba(244, 81, 44, 0.10);
+        }
+
+        .otp-error {
+            margin-top: 12px;
+            padding: 11px 13px;
+            border-radius: 9px;
+            background: #fff0ed;
+            color: #c62828;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .otp-timer {
+            min-height: 24px;
+            margin-top: 18px;
+            color: #777;
+            font-size: 13px;
+            text-align: center;
+        }
+
+        .otp-timer strong {
+            color: #f4512c;
+            font-weight: 700;
+        }
+
+        .otp-submit {
+            width: 100%;
+            min-height: 50px;
+            margin-top: 16px;
+            border: none;
+            border-radius: 11px;
+            background: #f4512c;
+            color: #fff;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.2s;
+        }
+
+        .otp-submit:hover {
+            background: #df3f1c;
+            transform: translateY(-1px);
+        }
+
+        .otp-submit:focus-visible,
+        .otp-resend:focus-visible,
+        .otp-back:focus-visible {
+            outline: 3px solid rgba(244, 81, 44, 0.3);
+            outline-offset: 3px;
+        }
+
+        .otp-resend-text {
+            margin: 25px 0 0;
+            color: #777;
+            font-size: 13px;
+            text-align: center;
+        }
+
+        .otp-resend {
+            margin-left: 4px;
+            padding: 0;
+            border: none;
+            background: transparent;
+            color: #f4512c;
+            font: inherit;
+            font-weight: 700;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .otp-resend:hover:not(:disabled) {
+            color: #df3f1c;
+            text-decoration: underline;
+        }
+
+        .otp-resend:disabled {
+            color: #aaa;
+            cursor: not-allowed;
+        }
+
+        .otp-back {
+            display: block;
+            margin-top: 24px;
+            color: #777;
+            font-size: 13px;
+            text-align: center;
+            text-decoration: none;
+        }
+
+        .otp-back:hover {
+            color: #f4512c;
+        }
+
+        @media (max-width: 760px) {
+            .otp-page {
+                min-height: auto;
+                padding: 30px 15px;
+            }
+
+            .otp-card {
+                max-width: 500px;
+                grid-template-columns: 1fr;
+            }
+
+            .otp-info {
+                padding: 30px 28px;
+            }
+
+            .otp-info h1 {
+                font-size: 28px;
+            }
+
+            .otp-brand {
+                margin-bottom: 18px;
+            }
+
+            .otp-security {
+                margin-top: 22px;
+            }
+
+            .otp-form-panel {
+                padding: 35px 28px;
+            }
+
+            .otp-heading h2 {
+                font-size: 25px;
+            }
+        }
+
+        @media (max-width: 380px) {
+
+            .otp-info,
+            .otp-form-panel {
+                padding: 28px 20px;
+            }
+
+            .otp-input {
+                letter-spacing: 5px;
+            }
         }
     </style>
 </head>
 
 <body>
+
     <%- include('../partials/userHeader') %>
-        <div class="container">
-            <div class="text-center">
-                <h3 class="fw-bold text-center mb-5 fs-2">Verify OTP</h3>
-                <p>Enter otp send to your email</p>
-                <div class="otp-form">
-                    <form action="/verify-otp" method="post">
-                        <div class="mb-3">
-                            <input type="text" class="form-control" id="otp" placeholder="Enter otp" name="otp">
+
+        <main class="otp-page">
+            <section class="otp-card">
+
+                <div class="otp-info">
+                    <div class="otp-brand">Shoe Rack</div>
+
+                    <h1>
+                        One final step to
+                        <span>get started.</span>
+                    </h1>
+
+                    <p>
+                        Verify your email using the OTP sent to your inbox.
+                        Once verified, you can continue your Shoe Rack journey.
+                    </p>
+
+                    <div class="otp-security">
+                        <div class="otp-security-icon" aria-hidden="true">
+                            &#128274;
                         </div>
-                        <% if (message) { %>
-                            <div class="text-black change">
+
+                        <div>
+                            <h3>Your account, protected</h3>
+                            <p>
+                                Never share your OTP with anyone.
+                                Enter the code only on the official Shoe Rack website.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="otp-form-panel">
+
+                    <div class="otp-heading">
+                        <h2>Verify OTP</h2>
+                        <p>
+                            Enter the verification code sent to your email address
+                            to continue.
+                        </p>
+                    </div>
+
+                    <form action="/verify-otp" method="post" id="otpForm">
+                        <div>
+                            <label class="otp-label" for="otp">
+                                One-time password
+                            </label>
+
+                            <input type="text" class="otp-input" id="otp" name="otp" placeholder="Enter OTP"
+                                inputmode="numeric" autocomplete="one-time-code" maxlength="6" pattern="[0-9]{6}"
+                                title="Please enter the 6-digit OTP." required aria-describedby="otpHelp" />
+
+                            <div id="otpHelp" class="otp-timer" aria-live="polite">
+                                Enter the code before it expires.
+                            </div>
+                        </div>
+
+                        <% if (typeof message !=='undefined' && message) { %>
+                            <div class="otp-error change" role="alert">
                                 <%= message.message %>
                             </div>
                             <% } %>
-                                <div id="timer" class="mt-3"></div>
-                                <button type="submit" class="btn btn-dark" id="verify">Verify</button>
-                                <p class="mt-3">Didn't receive otp ? <a
-                                        class="fw-bold text-dark text-decoration-none disable" href="/resend-otp"
-                                        id="resend">Resend OTP</a></p>
+
+                                <div id="timer" class="otp-timer" aria-live="polite"></div>
+
+                                <button type="submit" class="otp-submit" id="verify">
+                                    Verify OTP
+                                </button>
+
+                                <p class="otp-resend-text">
+                                    Didn't receive the OTP?
+                                    <button type="button" class="otp-resend" id="resend" disabled>
+                                        Resend OTP
+                                    </button>
+                                </p>
+
+                                <a href="/login" class="otp-back">
+                                    &larr; Back to Login
+                                </a>
                     </form>
-
                 </div>
+
+            </section>
+            <div id="otpTimerData"
+                data-created-at="<%= typeof otpCreatedAt !== 'undefined' && otpCreatedAt !== null ? otpCreatedAt : '' %>"
+                hidden>
             </div>
-        </div>
+        </main>
+
         <script>
-            let defaultduration = 120
-            let verifybutton = document.getElementById('verify')
-            startcountdown(duration())
-            function startcountdown(duration) {
-                let now = Date.now()
-                let endtime = now + duration * 1000
-                localStorage.setItem('countdown', endtime)
-                updatetime()
-                let countdown = setInterval(updatetime, 1000)
+            const verifyButton = document.getElementById('verify');
+            const resendButton = document.getElementById('resend');
+            const timerElement = document.getElementById('timer');
+            const otpInput = document.getElementById('otp');
+            const changeElement = document.querySelector('.change');
+            const otpForm = document.getElementById('otpForm');
 
-                function updatetime() {
-                    let now = Date.now()
-                    let timeleft = Math.round((endtime - now) / 1000)
-                    if (timeleft <= 0) {
-                        clearInterval(countdown);
-                        localStorage.removeItem('countdown');
-                        document.getElementById('timer').innerText = "Time up!"
-                        document.getElementById('resend').classList.remove('disable')
-                    } else {
-                        const minutes = Math.floor(timeleft / 60);
-                        const seconds = timeleft % 60;
-                        document.getElementById('timer').innerText = `Time left: ${minutes}m ${seconds}s`;
-                    }
+            const timerData = document.getElementById('otpTimerData');
+            const createdAtValue = timerData.dataset.createdAt;
+
+            const otpCreatedAt = createdAtValue !== ''
+                ? Number(createdAtValue)
+                : null;
+            const otpDuration = 120;
+            let countdownInterval;
+
+            function updateCountdown() {
+                if (!otpCreatedAt) {
+                    timerElement.textContent =
+                        'No active OTP found. Please request a new OTP.';
+                    resendButton.disabled = false;
+                    return;
                 }
+
+                const elapsedSeconds = Math.floor(
+                    (Date.now() - Number(otpCreatedAt)) / 1000
+                );
+
+                const remaining = Math.max(0, otpDuration - elapsedSeconds);
+
+                if (remaining <= 0) {
+                    clearInterval(countdownInterval);
+                    timerElement.textContent =
+                        'OTP expired. You can request a new OTP now.';
+                    resendButton.disabled = false;
+                    return;
+                }
+
+                resendButton.disabled = true;
+
+                const minutes = Math.floor(remaining / 60);
+                const seconds = remaining % 60;
+
+                timerElement.innerHTML =
+                    'OTP expires in <strong>' +
+                    minutes + ':' +
+                    String(seconds).padStart(2, '0') +
+                    '</strong>';
             }
 
-            function duration() {
-                let endtime = localStorage.getItem('countdown')
-                if (!endtime) return defaultduration
-                const now = Date.now();
-                const timeleft = Math.round((endtime - now) / 1000)
-                return timeleft >= 0 ? timeleft : defaultduration
-            }
+            updateCountdown();
+            countdownInterval = setInterval(updateCountdown, 1000);
 
+            resendButton.addEventListener('click', () => {
+                if (resendButton.disabled) return;
 
+                resendButton.disabled = true;
+                window.location.href = '/resend-otp';
+            });
 
-            let resendotp = document.getElementById('resend')
-            resendotp.addEventListener('click', () => {
-                startcountdown(defaultduration)
-                resendotp.classList.add('disable')
-            })
+            otpInput.addEventListener('input', () => {
+                otpInput.value = otpInput.value.replace(/\D/g, '').slice(0, 6);
 
-            let usernameInput = document.querySelector('#otp');
-            let changeElement = document.querySelector('.change');
+                if (changeElement) {
+                    changeElement.textContent = '';
+                }
+            });
 
+            otpForm.addEventListener('submit', (event) => {
+                if (!otpInput.checkValidity()) {
+                    event.preventDefault();
+                    otpInput.reportValidity();
+                    return;
+                }
 
-            usernameInput.addEventListener('focus', () => {
-                changeElement.innerText = '';
+                verifyButton.disabled = true;
+                verifyButton.textContent = 'Verifying...';
             });
         </script>
+
         <%- include('../partials/userfooter') %>
+
 </body>
 
 </html>

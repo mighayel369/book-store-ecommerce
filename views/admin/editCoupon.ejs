@@ -4,34 +4,203 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Shoe Rack</title>
+  <title>Edit Coupon | Shoe Rack</title>
+
   <style>
-    .couponDiv {
-      background-color: #a2c7ec;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-      width: 450px;
-      margin: 0 auto;
+    :root {
+      --coupon-primary: #171717;
+      --coupon-muted: #6b7280;
+      --coupon-border: #e5e7eb;
+      --coupon-background: #f6f7f9;
+      --coupon-danger: #dc3545;
     }
 
-    .coupon-header {
-      border-bottom: 1px solid #dee2e6;
-      padding-bottom: 8px;
-      margin-bottom: 15px;
+    body {
+      background: var(--coupon-background);
+    }
+
+    .coupon-page {
+      margin-left: 260px;
+      width: calc(100% - 260px);
+      padding: 32px 24px 48px;
+      box-sizing: border-box;
+    }
+
+    .page-heading {
+      margin-bottom: 24px;
+    }
+
+    .page-heading h2 {
+      color: var(--coupon-primary);
+      font-size: 1.65rem;
+      font-weight: 750;
+      margin-bottom: 6px;
+    }
+
+    .page-heading p {
+      color: var(--coupon-muted);
+      font-size: 0.92rem;
+      margin: 0;
+    }
+
+    .coupon-form-card {
+      max-width: 850px;
+      margin: 0 auto;
+      background: #fff;
+      border: 1px solid var(--coupon-border);
+      border-radius: 16px;
+      box-shadow: 0 5px 22px rgba(0, 0, 0, 0.035);
+      overflow: hidden;
+    }
+
+    .form-section {
+      padding: 26px;
+      border-bottom: 1px solid var(--coupon-border);
+    }
+
+    .section-heading {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .section-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 42px;
+      height: 42px;
+      flex-shrink: 0;
+      border-radius: 11px;
+      background: #f0f0f0;
+      color: var(--coupon-primary);
+      font-size: 1rem;
+    }
+
+    .section-heading h5 {
+      font-size: 1rem;
+      font-weight: 700;
+      margin: 2px 0 5px;
+    }
+
+    .section-heading p {
+      color: var(--coupon-muted);
+      font-size: 0.84rem;
+      margin: 0;
     }
 
     .form-label {
-      font-size: 0.9rem;
+      color: #303030;
+      font-weight: 600;
+      font-size: 0.88rem;
+      margin-bottom: 8px;
+    }
+
+    .required-mark {
+      color: var(--coupon-danger);
     }
 
     .form-control,
     .form-select {
+      min-height: 44px;
+      border-color: #dfe3e8;
+      border-radius: 8px;
       font-size: 0.9rem;
+      box-shadow: none;
     }
 
-    .btn {
-      font-size: 0.9rem;
+    textarea.form-control {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    .form-control:focus,
+    .form-select:focus {
+      border-color: #777;
+      box-shadow: 0 0 0 3px rgba(23, 23, 23, 0.07);
+    }
+
+    .form-hint {
+      color: var(--coupon-muted);
+      font-size: 0.78rem;
+      margin-top: 6px;
+    }
+
+    .field-error {
+      display: block;
+      color: var(--coupon-danger);
+      font-size: 0.8rem;
+      margin-top: 6px;
+    }
+
+    .server-error {
+      padding: 12px 14px;
+      margin: 0 26px 20px;
+      border: 1px solid #f5c2c7;
+      border-radius: 8px;
+      background: #f8d7da;
+      color: #842029;
+      font-size: 0.88rem;
+    }
+
+    .form-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      padding: 22px 26px;
+      background: #fafafa;
+    }
+
+    .form-actions-note {
+      color: var(--coupon-muted);
+      font-size: 0.8rem;
+    }
+
+    .btn-coupon {
+      min-height: 42px;
+      padding: 9px 20px;
+      border-radius: 8px;
+      font-size: 0.87rem;
+      font-weight: 600;
+    }
+
+    .btn-coupon-primary {
+      background: var(--coupon-primary);
+      border: 1px solid var(--coupon-primary);
+      color: #fff;
+    }
+
+    .btn-coupon-primary:hover {
+      background: #333;
+      border-color: #333;
+      color: #fff;
+    }
+
+    @media (max-width: 767px) {
+      .coupon-page {
+        margin-left: 0;
+        width: 100%;
+        padding: 22px 12px 32px;
+      }
+
+      .page-heading h2 {
+        font-size: 1.4rem;
+      }
+
+      .form-section {
+        padding: 20px 16px;
+      }
+
+      .form-actions {
+        padding: 18px 16px;
+      }
+
+      .server-error {
+        margin: 0 16px 18px;
+      }
     }
   </style>
 </head>
@@ -40,67 +209,314 @@
 
   <%- include('../partials/adminHeader') %>
 
-    <main>
-      <div class="container mt-4">
-        <div class="row">
-          <div class="col-lg-6 mx-auto">
-            <div class="couponDiv">
-              <div class="coupon-header text-center">
-                <h5 class="fw-bold"><i class="fas fa-ticket-alt me-2"></i>Edit Coupon</h5>
-              </div>
-              <form action="/admin/editcoupon/<%= Coupon._id %>" method="post">
-                <input type="hidden" class="form-control" id="couponcode" name="couponcode" value="<%= Coupon.code %>">
-                <div class="mb-2">
-                  <label for="coupontype" class="form-label">Type</label>
-                  <select class="form-select" id="coupontype" name="coupontype">
-                    <option selected disabled>Select Type</option>
-                    <option value="percentage" <%=Coupon.discountType==='percentage' ?'selected':"" %>>Percentage
-                    </option>
-                    <option value="fixed" <%=Coupon.discountType==='fixed' ?'selected':"" %>>Fixed-Amount</option>
-                  </select>
-                </div>
-                <div class="mb-2">
-                  <label for="discountvalue" class="form-label">Discount-Value</label>
-                  <input type="number" class="form-control" id="discountvalue" value="<%= Coupon.discountValue %>"
-                    name="discountvalue">
-                </div>
-                <div class="mb-2">
-                  <label for="minamount" class="form-label">Min-Amount</label>
-                  <input type="number" class="form-control" id="minamount" name="minamount"
-                    value="<%= Coupon.minimumPurchaseAmount %>">
-                </div>
-                <div class="mb-2">
-                  <label for="description" class="form-label">Description</label>
-                  <textarea class="form-control" id="description" name="description"
-                    rows="2"><%= Coupon.description %></textarea>
-                </div>
-                <div class="mb-2">
-                  <label for="startdate" class="form-label">Start Date</label>
-                  <input type="date" class="form-control" id="startdate" name="startdate"
-                    value="<%= Coupon.startDate.toISOString().split('T')[0] %>">
-                </div>
-                <div class="mb-2">
-                  <label for="enddate" class="form-label">End Date</label>
-                  <input type="date" class="form-control" id="enddate" name="enddate"
-                    value="<%= Coupon.endDate.toISOString().split('T')[0] %>">
-                </div>
-                <% if (adminmessage) { %>
-                  <p class="text-danger fw-light" id="change">
-                    <%= adminmessage.message %>
-                  </p>
-                  <% } %>
-                    <div class="d-grid mt-3">
-                      <button type="submit" class="btn btn-dark btn-sm"> Save Changes</button>
-                    </div>
-              </form>
+    <main class="coupon-page">
+
+      <div class="page-heading">
+        <h2>Edit Coupon</h2>
+        <p>Update the discount, purchase requirements and validity period for this coupon.</p>
+      </div>
+
+      <form action="/admin/editcoupon/<%= Coupon._id %>" method="post" id="editCouponForm" class="coupon-form-card"
+        novalidate>
+
+        <section class="form-section">
+
+          <div class="section-heading">
+            <div class="section-icon">
+              <i class="fas fa-ticket-alt"></i>
+            </div>
+
+            <div>
+              <h5>Coupon Information</h5>
+              <p>Review the coupon code and choose the discount type.</p>
             </div>
           </div>
-        </div>
-      </div>
+
+          <div class="row g-4">
+
+            <div class="col-md-6">
+              <label for="couponcode" class="form-label">Coupon Code</label>
+
+              <input type="text" class="form-control" id="couponcode" name="couponcode" value="<%= Coupon.code %>"
+                readonly>
+
+              <div class="form-hint">The coupon code cannot be changed here.</div>
+            </div>
+
+            <div class="col-md-6">
+              <label for="coupontype" class="form-label">
+                Discount Type <span class="required-mark">*</span>
+              </label>
+
+              <select class="form-select" id="coupontype" name="coupontype" required>
+                <option value="">Select discount type</option>
+
+                <option value="percentage" <%=Coupon.discountType==='percentage' ? 'selected' : '' %>>
+                  Percentage
+                </option>
+
+                <option value="fixed" <%=Coupon.discountType==='fixed' ? 'selected' : '' %>>
+                  Fixed Amount (₹)
+                </option>
+              </select>
+
+              <span class="field-error" id="coupontypeError"></span>
+            </div>
+
+            <div class="col-md-6">
+              <label for="discountvalue" class="form-label">
+                Discount Value <span class="required-mark">*</span>
+              </label>
+
+              <input type="number" class="form-control" id="discountvalue" name="discountvalue"
+                value="<%= Coupon.discountValue %>" min="0.01" step="0.01" required>
+
+              <div class="form-hint" id="discountHint">
+                Enter the discount amount or percentage.
+              </div>
+
+              <span class="field-error" id="discountvalueError"></span>
+            </div>
+
+            <div class="col-md-6">
+              <label for="minamount" class="form-label">
+                Minimum Purchase Amount (₹) <span class="required-mark">*</span>
+              </label>
+
+              <input type="number" class="form-control" id="minamount" name="minamount"
+                value="<%= Coupon.minimumPurchaseAmount %>" min="0" step="0.01" required>
+
+              <div class="form-hint">Minimum cart value required to use the coupon.</div>
+
+              <span class="field-error" id="minamountError"></span>
+            </div>
+
+            <div class="col-12">
+              <label for="description" class="form-label">
+                Description <span class="required-mark">*</span>
+              </label>
+
+              <textarea class="form-control" id="description" name="description" rows="3" maxlength="500"
+                required><%= Coupon.description %></textarea>
+
+              <div class="d-flex justify-content-between flex-wrap gap-2">
+                <span class="field-error" id="descriptionError"></span>
+                <span class="form-hint">
+                  <span id="descriptionCount">
+                    <%= (Coupon.description || '' ).length %>
+                  </span>/500 characters
+                </span>
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+        <section class="form-section">
+
+          <div class="section-heading">
+            <div class="section-icon">
+              <i class="fas fa-calendar-alt"></i>
+            </div>
+
+            <div>
+              <h5>Coupon Validity</h5>
+              <p>Set when customers can use this coupon.</p>
+            </div>
+          </div>
+
+          <div class="row g-4">
+
+            <div class="col-md-6">
+              <label for="startdate" class="form-label">
+                Start Date <span class="required-mark">*</span>
+              </label>
+
+              <input type="date" class="form-control" id="startdate" name="startdate"
+                value="<%= new Date(Coupon.startDate).toISOString().split('T')[0] %>" required>
+
+              <span class="field-error" id="startdateError"></span>
+            </div>
+
+            <div class="col-md-6">
+              <label for="enddate" class="form-label">
+                End Date <span class="required-mark">*</span>
+              </label>
+
+              <input type="date" class="form-control" id="enddate" name="enddate"
+                value="<%= new Date(Coupon.endDate).toISOString().split('T')[0] %>" required>
+
+              <span class="field-error" id="enddateError"></span>
+            </div>
+
+          </div>
+        </section>
+
+        <% if (adminmessage) { %>
+          <div class="server-error" role="alert">
+            <i class="fas fa-exclamation-circle me-2"></i>
+            <%= adminmessage.message %>
+          </div>
+          <% } %>
+
+            <div class="form-actions">
+
+              <div class="form-actions-note">
+                <span class="required-mark">*</span> Required fields
+              </div>
+
+              <div class="d-flex gap-2 flex-wrap">
+                <a href="/admin/coupons" class="btn btn-outline-secondary btn-coupon">
+                  Cancel
+                </a>
+
+                <button type="submit" class="btn btn-coupon btn-coupon-primary">
+                  <i class="fas fa-save me-1"></i>
+                  Save Changes
+                </button>
+              </div>
+
+            </div>
+
+      </form>
+
     </main>
 
-
     <%- include('../partials/adminfooter') %>
+
+      <script>
+        const couponForm = document.getElementById('editCouponForm');
+        const couponType = document.getElementById('coupontype');
+        const discountValue = document.getElementById('discountvalue');
+        const minimumAmount = document.getElementById('minamount');
+        const startDate = document.getElementById('startdate');
+        const endDate = document.getElementById('enddate');
+        const description = document.getElementById('description');
+        const descriptionCount = document.getElementById('descriptionCount');
+        const discountHint = document.getElementById('discountHint');
+
+        function setError(fieldId, message) {
+          document.getElementById(fieldId + 'Error').textContent = message;
+        }
+
+        function clearErrors() {
+          [
+            'coupontype',
+            'discountvalue',
+            'minamount',
+            'description',
+            'startdate',
+            'enddate'
+          ].forEach(fieldId => setError(fieldId, ''));
+        }
+
+        function updateDiscountHint() {
+          if (couponType.value === 'percentage') {
+            discountValue.max = '100';
+            discountHint.textContent = 'Enter a percentage greater than zero and no more than 100.';
+          } else if (couponType.value === 'fixed') {
+            discountValue.removeAttribute('max');
+            discountHint.textContent = 'Enter a fixed discount amount greater than zero.';
+          } else {
+            discountValue.removeAttribute('max');
+            discountHint.textContent = 'Select a discount type first.';
+          }
+        }
+
+        couponType.addEventListener('change', updateDiscountHint);
+        updateDiscountHint();
+
+        description.addEventListener('input', function () {
+          descriptionCount.textContent = this.value.length;
+          setError('description', '');
+        });
+
+        [
+          couponType,
+          discountValue,
+          minimumAmount,
+          startDate,
+          endDate
+        ].forEach(input => {
+          input.addEventListener('input', function () {
+            setError(this.id, '');
+          });
+
+          input.addEventListener('change', function () {
+            setError(this.id, '');
+          });
+        });
+
+        couponForm.addEventListener('submit', function (event) {
+          clearErrors();
+
+          let isValid = true;
+
+          const discount = Number(discountValue.value);
+          const minimum = Number(minimumAmount.value);
+
+          if (!couponType.value) {
+            setError('coupontype', 'Please select a discount type.');
+            isValid = false;
+          }
+
+          if (
+            discountValue.value === '' ||
+            !Number.isFinite(discount) ||
+            discount <= 0
+          ) {
+            setError('discountvalue', 'Enter a discount value greater than zero.');
+            isValid = false;
+          } else if (
+            couponType.value === 'percentage' &&
+            discount > 100
+          ) {
+            setError('discountvalue', 'Percentage discount cannot exceed 100%.');
+            isValid = false;
+          }
+
+          if (
+            minimumAmount.value === '' ||
+            !Number.isFinite(minimum) ||
+            minimum < 0
+          ) {
+            setError('minamount', 'Enter a valid minimum purchase amount of zero or greater.');
+            isValid = false;
+          }
+
+          if (!description.value.trim()) {
+            setError('description', 'Please enter a coupon description.');
+            isValid = false;
+          }
+
+          if (!startDate.value) {
+            setError('startdate', 'Please select a start date.');
+            isValid = false;
+          }
+
+          if (!endDate.value) {
+            setError('enddate', 'Please select an end date.');
+            isValid = false;
+          } else if (startDate.value && endDate.value < startDate.value) {
+            setError('enddate', 'End date must be on or after the start date.');
+            isValid = false;
+          }
+
+          if (!isValid) {
+            event.preventDefault();
+
+            const firstError = document.querySelector('.field-error:not(:empty)');
+
+            if (firstError) {
+              firstError.scrollIntoView({
+                behavior: 'smooth',
+                block: 'center'
+              });
+            }
+          }
+        });
+      </script>
+
 </body>
 
 </html>

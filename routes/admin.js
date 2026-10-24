@@ -1,106 +1,90 @@
-const express=require('express')
-const router=express.Router()
-let session=require('express-session')
-let adminAuthController=require('../controllers/admincontrollers/adminAuthcontroller')
-let categoryController=require('../controllers/admincontrollers/adminCategorycontroller')
-let productController=require('../controllers/admincontrollers/Productcontroller')
-let orderController=require('../controllers/usercontrollers/orderController')
-let couponController=require('../controllers/admincontrollers/couponController')
-let offerController=require('../controllers/admincontrollers/offerController')
-let salesController=require('../controllers/admincontrollers/salesController')
-let authMiddleware=require('../authMiddleware/adminAuthmiddleware')
-let multer=require('multer')
+const express = require('express')
+const router = express.Router()
+let session = require('express-session')
+let adminAuthController = require('../controllers/admincontrollers/adminAuthcontroller')
+let categoryController = require('../controllers/admincontrollers/adminCategorycontroller')
+let productController = require('../controllers/admincontrollers/Productcontroller')
+let couponController = require('../controllers/admincontrollers/couponController')
+let offerController = require('../controllers/admincontrollers/offerController')
+let salesController = require('../controllers/admincontrollers/salesController')
+let authMiddleware = require('../authMiddleware/adminAuthmiddleware')
+
+const {
+  productStorage,
+  categoryStorage,
+  offerStorage,
+  carouselStorage
+} = require('../config/cloudinary');
+let multer = require('multer')
+const adminOrderController = require('../controllers/admincontrollers/adminOrderController')
+const adminAccountController = require('../controllers/admincontrollers/adminAccountController')
 
 
-router.use(express.static('public/category_images'))
-router.use(express.static('public/product_images'))
-router.use(express.static('public/offerBannerImages'))
-var storage=multer.diskStorage({
-  destination:(req,file,callback)=>{
-    callback(null,'public/category_images')
-  },
-  filename:(req,file,callback)=>{
-    callback(null,file.fieldname+ "_" +Date.now() +"_"+ file.originalname)
-  }
-})
-var upload=multer({
-  storage:storage
-}).single('image')
 
-const bannerStorage = multer.diskStorage({
-  destination: (req, file, callback) => {
-    callback(null, 'public/offerBannerImages'); 
-  },
-  filename: (req, file, callback) => {
-    callback(null, file.fieldname + "_" + Date.now() + "_" + file.originalname);
-  }
-});
 
-let bannerUpload=multer({
-  storage:bannerStorage
-}).single('image')
 
-var productstorage=multer.diskStorage({
-  destination:(req,file,callback)=>{
-    callback(null,'public/product_images')
-  },
-  filename:(req,file,callback)=>{
-    callback(null,file.fieldname+ "_" +Date.now() +"_"+ file.originalname)
-  }
-})
+const bannerUpload = multer({
+  storage: offerStorage,
+  limits: { fileSize: 5 * 1024 * 1024 }
+}).single('image');
+
+
 const productupload = multer({
-  storage: productstorage,
-  limits: { fileSize: 5 * 1024 * 1024 } 
+  storage: productStorage,
+  limits: { fileSize: 5 * 1024 * 1024 }
 }).fields([
   { name: 'cover_image', maxCount: 1 },
   { name: 'image1', maxCount: 1 },
   { name: 'image2', maxCount: 1 }
 ]);
 
+const categoryUpload = multer({
+  storage: categoryStorage,
+  limits: { fileSize: 5 * 1024 * 1024 }
+}).single('image');
 
+const uploadCarousel = multer({ storage: carouselStorage });
 
 //------------------------------------------------------------------------------------//
 router.use(session({
-  name:"sid1",
+  name: "sid1",
   secret: "my secret key",
   saveUninitialized: false,
   resave: false,
-  cookie: { secure: false } 
+  cookie: { secure: false }
 }));
 
-router.use((req,res,next)=>{
-  res.locals.adminmessage=req.session.adminmessage
+router.use((req, res, next) => {
+  res.locals.adminmessage = req.session.adminmessage
   delete req.session.adminmessage
   next()
 })
 
 //------------------------------------------login----------------------------------------------//
-router.get('/login',authMiddleware.isAlreadylogged,(req,res)=>{
+router.get('/login', authMiddleware.isAlreadylogged, (req, res) => {
   res.render('admin/login')
 })
 
+router.post('/login', adminAuthController.postLogin)
 
-router.post('/login',adminAuthController.postLogin)
+router.use(authMiddleware.isAdmin);
 
-
-router.get('/logout',adminAuthController.logout)
-
-
+router.get('/logout', adminAuthController.logout)
 
 //------------------------------------------login----------------------------------------------//
 //---------------------------users--------------------------------------------------------//
-router.get('/users',authMiddleware.isAdmin,adminAuthController.getAdminUser)
+router.get('/users', adminAuthController.getAdminUser)
 
-router.get('/adduser',(req,res)=>{
+router.get('/adduser', (req, res) => {
   res.render('admin/addUser')
 })
 
-router.post('/adduser',adminAuthController.postAddUser)
+router.post('/adduser', adminAuthController.postAddUser)
 
 
-router.get('/block/:id',adminAuthController.blockuser)
+router.get('/block/:id', adminAuthController.blockuser)
 
-router.get('/unblock/:id',adminAuthController.unblockuser)
+router.get('/unblock/:id', adminAuthController.unblockuser)
 
 
 
@@ -108,76 +92,86 @@ router.get('/unblock/:id',adminAuthController.unblockuser)
 
 //---------------------------users--------------------------------------------------------//
 //------------------------------------category-------------------------------------------//
-router.get('/category',authMiddleware.isAdmin,categoryController.getAllcategory)
+router.get('/category', categoryController.getAllcategory)
 
-router.get('/addcategory',(req,res)=>{
+router.get('/addcategory', (req, res) => {
   res.render('admin/addCategory')
 })
 
-router.post('/addcategory',upload,categoryController.addCategory)
+router.post('/addcategory', categoryUpload, categoryController.addCategory)
 
-router.get('/editcategory/:id',categoryController.getEditCategory)
+router.get('/editcategory/:id', categoryController.getEditCategory)
 
-router.post('/editcategory/:id',upload,categoryController.postEditCategory)
+router.post('/editcategory/:id', categoryUpload, categoryController.postEditCategory)
 
 
-router.get('/deletecategory/:id',categoryController.deleteCategory)
+router.get('/deletecategory/:id', categoryController.deleteCategory)
 //------------------------------------category-------------------------------------------//
 //------------------------------------product------------------------------------------//
-router.get('/products',authMiddleware.isAdmin,productController.getProducts)
+router.get('/products', productController.getProducts)
 
-router.get('/addproduct',productController.getAddProduct)
+router.get('/addproduct', productController.getAddProduct)
 
 
-router.post('/addproduct',productupload,productController.addProduct)
+router.post('/addproduct', productupload, productController.addProduct)
 
-router.get('/editproduct/:id',productController.getEditProduct)
+router.get('/editproduct/:id', productController.getEditProduct)
 
-router.post('/editproduct/:id',productupload,productController.postEditProduct)
-router.get('/deleteproduct/:id',productController.deleteProduct)
+router.post('/editproduct/:id', productupload, productController.postEditProduct)
+router.get('/deleteproduct/:id', productController.deleteProduct)
 //------------------------------------product------------------------------------------//
 //------------------------------------order------------------------------------------//
 
-router.get('/orders',authMiddleware.isAdmin,orderController.getOrder)
+router.get('/orders', adminOrderController.getOrder)
 
-router.post('/update-order-status',orderController.updateStatus)
+router.post('/update-order-status', adminOrderController.updateStatus)
 
-router.get('/orderdetails/:id',orderController.orderDetails)
-
-router.get('/orders/details/:id',orderController.getSingleOrder)
+router.get('/orderdetails/:id', adminOrderController.orderDetails)
 
 //------------------------------------order------------------------------------------//
-router.get('/coupon',authMiddleware.isAdmin,couponController.getCoupon)
-router.get('/addcoupon',couponController.addCoupon)
-router.post('/addcoupon',couponController.postAddCoupon)
-router.get('/editcoupon/:id',couponController.getEditCoupon)
-router.post('/editcoupon/:id',couponController.postEditCoupon)
-router.get('/deletecoupon/:id',couponController.deleteCoupon)
+router.get('/coupon', couponController.getCoupon)
+router.get('/addcoupon', couponController.addCoupon)
+router.post('/addcoupon', couponController.postAddCoupon)
+router.get('/editcoupon/:id', couponController.getEditCoupon)
+router.post('/editcoupon/:id', couponController.postEditCoupon)
+router.get('/deletecoupon/:id', couponController.deleteCoupon)
 //------------------------------------coupon------------------------------------------//
 
-router.get('/offer/category',authMiddleware.isAdmin,offerController.getCategoryOffer)
-router.get('/offers/addoffer/:id',offerController.addOffer)
-router.post('/offers/addoffer',bannerUpload,offerController.postAddOffer)
+router.get('/offer/category', offerController.getCategoryOffer)
+router.get('/offers/addoffer/:id', offerController.addOffer)
+router.post('/offers/addoffer', bannerUpload, offerController.postAddOffer)
 
 
 
-router.get('/offer/product',authMiddleware.isAdmin,offerController.getProductOffer)
-router.get('/productoffers/addoffer/:id',offerController.addProductOffer)
-router.post('/offers/addproductoffer',bannerUpload,offerController.postProductOffer)
+router.get('/offer/product', offerController.getProductOffer)
+router.get('/productoffers/addoffer/:id', offerController.addProductOffer)
+router.post('/offers/addproductoffer', bannerUpload, offerController.postProductOffer)
 //---------------------------------------offer----------------------------------------//
 
-router.get('/sales',authMiddleware.isAdmin,salesController.getSales)
-router.get('/download-report',salesController.downloadReport)
+router.get('/sales', salesController.getSales)
+router.get('/download-report', salesController.downloadReport)
 
-router.get('/approve/:id/product/:productid',salesController.approveReturn)
-router.get('/reject/:id/product/:productid',salesController.rejectReturn)
+router.get('/approve/:id/product/:productid', salesController.approveReturn)
+router.get('/reject/:id/product/:productid', salesController.rejectReturn)
 //--------------------------------------sales-----------------------------------------//
 
-router.get('/dashboard',authMiddleware.isAdmin,salesController.getDashboard)
+router.get('/dashboard', salesController.getDashboard)
 
-router.get('/sales-data',salesController.getSalesData)
+router.get('/sales-data', salesController.getSalesData)
 
-router.get('/index',(req,res)=>{
+//--------------------------------------------------------------------------------//
+
+
+
+router.get('/carousal', adminAccountController.getCourosal);
+
+router.post('/carousal/add', uploadCarousel.single('image'), adminAccountController.addCourosal);
+
+router.post('/carousal/:id/replace', uploadCarousel.single('image'), adminAccountController.replaceCourosal);
+
+router.post('/carousal/:id/delete', adminAccountController.deleteCourosal);
+
+router.get('/index', (req, res) => {
   res.render('admin/index')
 })
-module.exports=router
+module.exports = router

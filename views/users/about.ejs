@@ -5,137 +5,546 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>About Us - Shoe Rack</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 0;
+        *,
+        *::before,
+        *::after {
             box-sizing: border-box;
         }
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #faf9f7;
+            color: #202020;
         }
 
-        .about-section {
-            background-color: #fff;
-            padding: 40px;
-            border-radius: 10px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            text-align: center;
-        }
-
-        .about-section h1 {
-            font-size: 2.5em;
-            margin-bottom: 20px;
-            color: #333;
-        }
-
-        .about-section p {
-            font-size: 1.2em;
-            color: #555;
-            line-height: 1.6;
-            margin-bottom: 20px;
-        }
-
-        .about-section img {
+        .about-page {
             width: 100%;
-            max-width: 600px;
-            margin-top: 30px;
-            border-radius: 10px;
+            padding: 24px 20px 70px;
         }
 
-        .team-section {
-            background-color: #fff;
-            padding: 40px;
-            margin-top: 40px;
-            border-radius: 10px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        .about-breadcrumb {
+            max-width: 1200px;
+            margin: 0 auto 25px;
+            color: #777;
+            font-size: 14px;
         }
 
-        .team-section h2 {
-            font-size: 2em;
-            margin-bottom: 30px;
-            color: #333;
+        .about-breadcrumb a {
+            color: #777;
+            text-decoration: none;
+        }
+
+        .about-breadcrumb a:hover {
+            color: #f4512c;
+        }
+
+        .about-breadcrumb span {
+            color: #f4512c;
+            font-weight: 600;
+        }
+
+        .about-wrapper {
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        .about-hero {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            align-items: center;
+            gap: 45px;
+            padding: 55px;
+            background:
+                radial-gradient(circle at 90% 15%, rgba(244, 81, 44, 0.10), transparent 35%),
+                linear-gradient(145deg, #fff, #fff5f1);
+            border-radius: 22px;
+            overflow: hidden;
+        }
+
+        .about-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 9px 15px;
+            border-radius: 30px;
+            background: #ffe5dc;
+            color: #df3f1c;
+            font-size: 13px;
+            font-weight: 700;
+            margin-bottom: 22px;
+        }
+
+        .about-hero h1 {
+            font-size: clamp(32px, 4vw, 52px);
+            line-height: 1.15;
+            font-weight: 800;
+            margin: 0 0 22px;
+            letter-spacing: -1.5px;
+        }
+
+        .about-hero h1 span {
+            color: #f4512c;
+        }
+
+        .about-hero p {
+            color: #666;
+            font-size: 16px;
+            line-height: 1.9;
+            margin-bottom: 18px;
+        }
+
+        .about-contact-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 22px;
+            margin-top: 8px;
+            background: #f4512c;
+            color: #fff;
+            border-radius: 9px;
+            text-decoration: none;
+            font-weight: 700;
+            transition: background 0.2s, transform 0.2s;
+        }
+
+        .about-contact-btn:hover {
+            color: #fff;
+            background: #df3f1c;
+            transform: translateY(-2px);
+        }
+
+        .about-hero-image {
+            position: relative;
+        }
+
+        .about-hero-image img {
+            display: block;
+            width: 100%;
+            height: 390px;
+            object-fit: cover;
+            border-radius: 18px;
+        }
+
+        .about-image-caption {
+            position: absolute;
+            left: 18px;
+            right: 18px;
+            bottom: 18px;
+            padding: 16px 18px;
+            background: rgba(255, 255, 255, 0.94);
+            border-radius: 12px;
+        }
+
+        .about-image-caption strong {
+            display: block;
+            font-size: 16px;
+            margin-bottom: 4px;
+        }
+
+        .about-image-caption span {
+            color: #777;
+            font-size: 13px;
+        }
+
+        .about-values {
+            padding: 65px 0 15px;
+        }
+
+        .about-section-heading {
             text-align: center;
+            margin-bottom: 35px;
         }
 
-        .team-container {
+        .about-section-heading .eyebrow {
+            color: #f4512c;
+            text-transform: uppercase;
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: 2px;
+        }
+
+        .about-section-heading h2 {
+            font-size: clamp(27px, 3vw, 36px);
+            font-weight: 800;
+            margin: 12px 0;
+        }
+
+        .about-section-heading p {
+            color: #777;
+            line-height: 1.8;
+            max-width: 600px;
+            margin: auto;
+        }
+
+        .about-value-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 24px;
+        }
+
+        .about-value-card {
+            background: #fff;
+            border: 1px solid #f0eeeb;
+            border-radius: 16px;
+            padding: 30px 25px;
+            box-shadow: 0 5px 22px rgba(0, 0, 0, 0.035);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .about-value-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.07);
+        }
+
+        .about-value-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 55px;
+            height: 55px;
+            border-radius: 14px;
+            background: #fff0eb;
+            color: #f4512c;
+            font-size: 23px;
+            margin-bottom: 22px;
+        }
+
+        .about-value-card h3 {
+            font-size: 19px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .about-value-card p {
+            color: #777;
+            font-size: 14px;
+            line-height: 1.8;
+            margin: 0;
+        }
+
+        .about-team-section {
+            margin-top: 55px;
+            padding: 55px 35px;
+            background: #fff;
+            border: 1px solid #f0eeeb;
+            border-radius: 20px;
+        }
+
+        .about-team-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 24px;
+        }
+
+        .about-team-card {
+            text-align: center;
+            padding: 28px 20px;
+            border: 1px solid #f0eeeb;
+            border-radius: 15px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .about-team-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.06);
+        }
+
+        .about-team-card img {
+            width: 115px;
+            height: 115px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid #ffe5dc;
+            margin-bottom: 18px;
+        }
+
+        .about-team-card h3 {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 7px;
+        }
+
+        .about-team-card p {
+            color: #777;
+            font-size: 14px;
+            margin: 0;
+        }
+
+        .about-team-card .team-social {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            width: 34px;
+            height: 34px;
+            margin-top: 17px;
+            background: #fff0eb;
+            color: #f4512c;
+            border-radius: 50%;
+        }
+
+        .about-cta {
             display: flex;
             justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 30px;
+            align-items: center;
+            gap: 25px;
+            margin-top: 35px;
+            padding: 35px 40px;
+            border-radius: 18px;
+            background: #202020;
+            color: #fff;
         }
 
-        .team-member {
-            text-align: center;
-            flex: 1;
-            max-width: 30%;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            border-radius: 10px;
-            background-color: #fff;
+        .about-cta h2 {
+            font-size: 25px;
+            font-weight: 800;
+            margin: 0 0 10px;
         }
 
-        .team-member img {
-            width: 100%;
-            max-width: 150px;
-            border-radius: 50%;
-            margin-bottom: 10px;
+        .about-cta p {
+            color: #c7c7c7;
+            line-height: 1.7;
+            margin: 0;
         }
 
-        .team-member h3 {
-            font-size: 1.2em;
-            color: #333;
+        .about-cta .about-contact-btn {
+            flex-shrink: 0;
         }
 
-        .team-member p {
-            color: #777;
+        @media (max-width: 900px) {
+            .about-hero {
+                gap: 28px;
+                padding: 35px;
+            }
+
+            .about-hero-image img {
+                height: 340px;
+            }
+
+            .about-value-grid,
+            .about-team-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 600px) {
+            .about-page {
+                padding: 18px 14px 45px;
+            }
+
+            .about-hero {
+                grid-template-columns: 1fr;
+                padding: 27px 22px;
+                gap: 25px;
+                border-radius: 16px;
+            }
+
+            .about-hero h1 {
+                letter-spacing: -0.7px;
+            }
+
+            .about-hero p {
+                font-size: 14px;
+            }
+
+            .about-hero-image img {
+                height: 270px;
+            }
+
+            .about-values {
+                padding-top: 45px;
+            }
+
+            .about-value-grid,
+            .about-team-grid {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+
+            .about-value-card {
+                padding: 25px 22px;
+            }
+
+            .about-team-section {
+                padding: 35px 18px;
+                margin-top: 35px;
+            }
+
+            .about-cta {
+                align-items: flex-start;
+                flex-direction: column;
+                padding: 28px 23px;
+            }
+
+            .about-cta h2 {
+                font-size: 22px;
+            }
         }
     </style>
 </head>
 
 <body>
     <%- include('../partials/userHeader') %>
-        <p class="fw-bold text-dark fs-5 mt-4 ms-3">Home > <span class="text-warning fs-5"> About</span></p>
 
-        <div class="container">
-            <div class="about-section">
-                <h1>About Shoe Rack</h1>
-                <p>Welcome to Shoe Rack, your number one source for all things footwear. We're dedicated to providing
-                    you with the best shoes, with a focus on quality, customer service, and uniqueness.</p>
-                <p>Founded in 2024, Shoe Rack has come a long way from its beginnings. We now serve customers all over
-                    the world and are thrilled to be a part of the fair trade wing of the fashion industry.</p>
-                <p>We hope you enjoy our products as much as we enjoy offering them to you. If you have any questions or
-                    comments, please don't hesitate to contact us.</p>
-                <img src="https://i0.wp.com/picjumbo.com/wp-content/uploads/bumps-yellow-sidewalk-road-marking-free-photo.jpg?w=600&quality=80" alt="Banner 1">
-            </div>
+        <main class="about-page">
+            <nav class="about-breadcrumb" aria-label="Breadcrumb">
+                <a href="/">Home</a>
+                <span> / About Us</span>
+            </nav>
 
-            <div class="team-section">
-                <h2>Meet Our Team</h2>
-                <div class="team-container">
-                    <div class="team-member">
-                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQSU1SYfuEy_PHvWze-NB7S0Ruwv16xA1edMg&s" alt="Team Member 1">
-                        <h3>Neymar Jr</h3>
-                        <p>Founder & CEO</p>
+            <div class="about-wrapper">
+                <section class="about-hero">
+                    <div class="about-hero-content">
+                        <span class="about-tag">
+                            <i class="fa-solid fa-shoe-prints"></i>
+                            OUR STORY
+                        </span>
+
+                        <h1>
+                            Every Step Tells <span>Your Story.</span>
+                        </h1>
+
+                        <p>
+                            Welcome to Shoe Rack, your destination for footwear
+                            that brings together comfort, quality, and style.
+                            Whether you're heading to work, exploring the outdoors,
+                            or enjoying a casual day, we help you find the right pair.
+                        </p>
+
+                        <p>
+                            We believe the right shoes do more than complete an outfit.
+                            They give you the confidence to take your next step.
+                            That's why we focus on bringing you a carefully selected
+                            range of footwear for different occasions and lifestyles.
+                        </p>
+
+                        <a href="/contact" class="about-contact-btn">
+                            Get in Touch
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </a>
                     </div>
-                    <div class="team-member">
-                        <img src="https://i.pinimg.com/originals/b4/58/19/b4581953196352a07103703d1c79aada.jpg" alt="Team Member 2">
-                        <h3>Cristiano</h3>
-                        <p>Chief Marketing Officer</p>
+
+                    <div class="about-hero-image">
+                        <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=1000&q=85"
+                            alt="Stylish red sports shoe" loading="lazy">
+
+                        <div class="about-image-caption">
+                            <strong>Find Your Perfect Fit</strong>
+                            <span>Comfort, quality and style in every step.</span>
+                        </div>
                     </div>
-                    <div class="team-member">
-                        <img src="https://i.pinimg.com/originals/81/6c/62/816c627333273be5a5eb66880f980b85.jpg" alt="Team Member 3">
-                        <h3>Messi</h3>
-                        <p>Head of Sales</p>
+                </section>
+
+                <section class="about-values">
+                    <div class="about-section-heading">
+                        <span class="eyebrow">What We Stand For</span>
+                        <h2>More Than Just Shoes</h2>
+                        <p>
+                            Our goal is to make finding your next favourite pair
+                            simple, enjoyable, and reliable.
+                        </p>
                     </div>
-                </div>
+
+                    <div class="about-value-grid">
+                        <article class="about-value-card">
+                            <div class="about-value-icon">
+                                <i class="fa-solid fa-gem"></i>
+                            </div>
+                            <h3>Quality First</h3>
+                            <p>
+                                We focus on footwear that balances durability,
+                                comfort, and thoughtful design for everyday use.
+                            </p>
+                        </article>
+
+                        <article class="about-value-card">
+                            <div class="about-value-icon">
+                                <i class="fa-solid fa-heart"></i>
+                            </div>
+                            <h3>Customer Focus</h3>
+                            <p>
+                                Your shopping experience matters. We aim to make
+                                discovering and choosing shoes straightforward.
+                            </p>
+                        </article>
+
+                        <article class="about-value-card">
+                            <div class="about-value-icon">
+                                <i class="fa-solid fa-shoe-prints"></i>
+                            </div>
+                            <h3>Style for Every Step</h3>
+                            <p>
+                                From sports and casual shoes to formal footwear,
+                                explore styles suited to different moments in life.
+                            </p>
+                        </article>
+                    </div>
+                </section>
+
+                <section class="about-team-section">
+                    <div class="about-section-heading">
+                        <span class="eyebrow">The People Behind the Brand</span>
+                        <h2>Meet Our Team</h2>
+                        <p>
+                            A team dedicated to helping you find footwear
+                            that fits your needs and personal style.
+                        </p>
+                    </div>
+
+                    <div class="about-team-grid">
+                        <article class="about-team-card">
+                            <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&q=80"
+                                alt="Founder portrait" loading="lazy">
+                            <h3>Neymar Jr</h3>
+                            <p>Founder &amp; CEO</p>
+                            <span class="team-social" aria-label="Team member">
+                                <i class="fa-solid fa-user"></i>
+                            </span>
+                        </article>
+
+                        <article class="about-team-card">
+                            <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=300&q=80"
+                                alt="Marketing team member portrait" loading="lazy">
+                            <h3>Cristiano</h3>
+                            <p>Chief Marketing Officer</p>
+                            <span class="team-social" aria-label="Team member">
+                                <i class="fa-solid fa-bullhorn"></i>
+                            </span>
+                        </article>
+
+                        <article class="about-team-card">
+                            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80"
+                                alt="Sales team member portrait" loading="lazy">
+                            <h3>Messi</h3>
+                            <p>Head of Sales</p>
+                            <span class="team-social" aria-label="Team member">
+                                <i class="fa-solid fa-handshake"></i>
+                            </span>
+                        </article>
+                    </div>
+                </section>
+
+                <section class="about-cta">
+                    <div>
+                        <h2>Ready to find your next favourite pair?</h2>
+                        <p>
+                            Explore our collection and find footwear for your
+                            everyday adventures.
+                        </p>
+                    </div>
+
+                    <a href="/shop" class="about-contact-btn">
+                        Explore Shoes
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </a>
+                </section>
             </div>
-        </div>
+        </main>
 
         <%- include('../partials/userfooter') %>
 </body>

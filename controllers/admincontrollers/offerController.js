@@ -1,68 +1,157 @@
-let categorymodel=require('../../models/categorydetails')
-let productmodel=require('../../models/productdetails')
+
+const categorymodel = require('../../models/categorydetails');
+const productmodel = require('../../models/productdetails');
+const coupon = require('../../models/coupon');
+const { deleteCloudinaryImage } = require('../../config/cloudinary');
+const { validationResult, body } = require('express-validator');
 const cron = require('node-cron');
-let fs=require('fs')
-let coupon=require('../../models/coupon')
-const {check,validationResult,body } = require('express-validator')
+const logger = require('../../config/logger');
+
+
+function calculateDiscountPrice(price, discountType, discountValue) {
+  let discountPrice;
+
+  if (discountType === 'percentage') {
+    discountPrice = price - (price * discountValue / 100);
+  } else if (discountType === 'fixed') {
+    discountPrice = price - discountValue;
+  } else {
+    throw new Error(`Unsupported discount type: ${discountType}`);
+  }
+
+  return Math.max(Number(discountPrice.toFixed(2)), 0);
+}
+
+function validateEndDate(value, { req }) {
+  const startDate = new Date(req.body.startDate);
+  const endDate = new Date(value);
+
+  if (
+    !req.body.startDate ||
+    !Number.isFinite(startDate.getTime()) ||
+    !Number.isFinite(endDate.getTime())
+  ) {
+    throw new Error('Please enter valid offer dates');
+  }
+
+  if (endDate < startDate) {
+    throw new Error('End date cannot be earlier than start date');
+  }
+
+  return true;
+}
+
 cron.schedule('0 0 * * *', async () => {
   try {
     const currentDate = new Date();
-    let expiredProducts = await productmodel.find({
+
+    const expiredProducts = await productmodel.find({
       'offer.isOfferActive': true,
       'offer.endDate': { $lt: currentDate },
-      discountSource: 'product'  
+      discountSource: 'product'
     });
 
-    for (let product of expiredProducts) {
-      await productmodel.updateOne(
-        { _id: product._id },
-        {$set: {  discountPrice: null, 'offer.isOfferActive': false}});
+    for (const product of expiredProducts) {
+      const category = await categorymodel.findOne({
+        _id: product.productcategory,
+        'offer.startDate': { $lte: currentDate },
+        'offer.endDate': { $gte: currentDate }
+      });
+
+      if (category) {
+        const discountPrice = calculateDiscountPrice(
+          product.productprice,
+          category.offer.discountType,
+          category.offer.discountValue
+        );
+
+        await productmodel.updateOne(
+          { _id: product._id },
+          {
+            $set: {
+              discountPrice,
+              discountSource: 'category'
+            },
+            $unset: {
+              'offer.isOfferActive': 1
+            }
+          }
+        );
+      } else {
+        await productmodel.updateOne(
+          { _id: product._id },
+          {
+            $set: {
+              discountPrice: null,
+              discountSource: null,
+              'offer.isOfferActive': false
+            }
+          }
+        );
+      }
     }
 
-    let expiredCategories = await categorymodel.find({
+    const expiredCategories = await categorymodel.find({
       'offer.isOfferActive': true,
       'offer.endDate': { $lt: currentDate }
     });
 
-    for (let category of expiredCategories) {
+    for (const category of expiredCategories) {
       await categorymodel.updateOne(
         { _id: category._id },
         { $set: { 'offer.isOfferActive': false } }
       );
 
       await productmodel.updateMany(
-        { productcategory: category._id, discountSource: 'category' },
-        { $set: { discountPrice: null }}
+        {
+          productcategory: category._id,
+          discountSource: 'category'
+        },
+        {
+          $set: {
+            discountPrice: null,
+            discountSource: null
+          }
+        }
       );
     }
-    let upcomingCategories = await categorymodel.find({
+
+    const upcomingCategories = await categorymodel.find({
       'offer.isOfferActive': false,
       'offer.startDate': { $lte: currentDate },
-      'offer.endDate': { $gte: currentDate } 
+      'offer.endDate': { $gte: currentDate }
     });
 
-    for (let category of upcomingCategories) {
+    for (const category of upcomingCategories) {
       await categorymodel.updateOne(
         { _id: category._id },
         { $set: { 'offer.isOfferActive': true } }
       );
-      const { discountType, discountValue } = category.offer;
-      let products = await productmodel.find({ productcategory: category._id });
 
-      for (let product of products) {
-        let discountPrice = 0;
+      const products = await productmodel.find({
+        productcategory: category._id
+      });
 
-        if (discountType === 'percentage') {
-          discountPrice = product.productprice - (product.productprice * (discountValue / 100));
-        } else if (discountType === 'fixed') {
-          discountPrice = product.productprice - discountValue;
+      for (const product of products) {
+        const hasActiveProductOffer =
+          product.offer?.isOfferActive &&
+          product.offer?.endDate >= currentDate;
+
+        if (hasActiveProductOffer) {
+          continue;
         }
-        discountPrice = Math.max(discountPrice, 0);
+
+        const discountPrice = calculateDiscountPrice(
+          product.productprice,
+          category.offer.discountType,
+          category.offer.discountValue
+        );
+
         await productmodel.updateOne(
           { _id: product._id },
           {
             $set: {
-              discountPrice: discountPrice,
+              discountPrice,
               discountSource: 'category'
             }
           }
@@ -70,188 +159,408 @@ cron.schedule('0 0 * * *', async () => {
       }
     }
 
-    let upcomingProducts = await productmodel.find({
+    const upcomingProducts = await productmodel.find({
       'offer.isOfferActive': false,
       'offer.startDate': { $lte: currentDate },
-      'offer.endDate': { $gte: currentDate },
+      'offer.endDate': { $gte: currentDate }
     });
 
-    for (let product of upcomingProducts) {
-      const { discountType, discountValue } = product.offer;
-      let discountPrice = 0;
+    for (const product of upcomingProducts) {
+      const discountPrice = calculateDiscountPrice(
+        product.productprice,
+        product.offer.discountType,
+        product.offer.discountValue
+      );
 
-      if (discountType === 'percentage') {
-        discountPrice = product.productprice - (product.productprice * (discountValue / 100));
-      } else if (discountType === 'fixed') {
-        discountPrice = product.productprice - discountValue;
-      }
-      discountPrice = Math.max(discountPrice, 0);
       await productmodel.updateOne(
         { _id: product._id },
         {
           $set: {
-            discountPrice: discountPrice,
+            discountPrice,
             discountSource: 'product',
-            'offer.isOfferActive':true
+            'offer.isOfferActive': true
           }
         }
       );
     }
 
+    const expiredCoupons = await coupon.find({
+      isActive: true,
+      endDate: { $lt: currentDate }
+    });
 
-
-    let expiredCoupons=await coupon.find({isActive:true,endDate:{$lt:currentDate}})
-
-    for(let coupons of expiredCoupons){
-      await coupon.updateOne({_id: coupons._id},{
-        $set:{isActive:false}
-      })
+    for (const item of expiredCoupons) {
+      await coupon.updateOne(
+        { _id: item._id },
+        { $set: { isActive: false } }
+      );
     }
 
-    let upcomingCoupons=await coupon.find({isActive:false,startDate:{$lte:currentDate},endDate:{$gte:currentDate}})
+    const upcomingCoupons = await coupon.find({
+      isActive: false,
+      startDate: { $lte: currentDate },
+      endDate: { $gte: currentDate }
+    });
 
-    for(let coupons of upcomingCoupons){
-      await coupon.updateOne({_id:coupons._id},{
-        $set:{isActive:true}
-      })
+    for (const item of upcomingCoupons) {
+      await coupon.updateOne(
+        { _id: item._id },
+        { $set: { isActive: true } }
+      );
     }
 
-    console.log("Offers and coupons have been updated successfully.");
+    logger.info('Daily offer and coupon update completed', {
+      expiredProductOffers: expiredProducts.length,
+      expiredCategoryOffers: expiredCategories.length,
+      activatedCategoryOffers: upcomingCategories.length,
+      activatedProductOffers: upcomingProducts.length,
+      expiredCoupons: expiredCoupons.length,
+      activatedCoupons: upcomingCoupons.length
+    });
   } catch (error) {
-    console.error("Error updating offers:", error);
+    logger.error('Daily offer and coupon update failed', {
+      error: error.message,
+      stack: error.stack
+    });
   }
-})
+});
 
-module.exports={
-    getCategoryOffer:async(req,res)=>{
-        try{
-            let category=await categorymodel.find()
-            res.render('admin/categoryOffer',{category})
-        }
-        catch(error){
-            console.log(error)
-        }
-    },
-    addOffer:async(req,res)=>{
-        try{
-            let id=req.params.id
-            let category=await categorymodel.findById(id)
-            res.render('admin/addCategoryOffer',{category})
-        }
-        catch(error){
-            console.log(error)
-        }
-    },
-    postAddOffer:[check('offerType').notEmpty().withMessage('Please fill out all fields')
-      ,check('offerValue').notEmpty().withMessage('Please fill out all fields'),
-      check('startDate').notEmpty().withMessage('Please fill out all fields'),
-      check('endDate').notEmpty().withMessage('Please fill out all fields'),
-      check('offerDescription').notEmpty().withMessage('Please fill out all fields'),
-      body('endDate').custom((value, { req }) => {
-        if (new Date(value) < new Date(req.body.startDate)) {
-            throw new Error('End date cannot be earlier than start date');
-        }
-        return true;
-    })
-      ,async(req,res)=>{
-        try{
-           let {offerType,offerValue,startDate,endDate,offerDescription,categoryId}=req.body
-           const errors = validationResult(req);
-  
-           if (!errors.isEmpty()) {
-             const errorMessage = errors.array()[0].msg;
-             req.session.adminmessage={message:errorMessage}
-             return res.redirect(`/admin/offers/addoffer/${categoryId}`);
-           }
-           let filename=req.file.filename
-           let category=await categorymodel.findById(categoryId)
-           let offerExist = category.offer;
-           if(offerExist && category.offer.bannerImage){
-            fs.unlinkSync('public/offerBannerImages/'+offerExist.bannerImage)
-          }
-           isOfferActive=false
-           let offerDetails = {
-            isOfferActive,
-            discountType: offerType,
-            discountValue: offerValue,
-            startDate: new Date(startDate),
-            endDate: new Date(endDate),
-            bannerImage: filename,
-            offerDescription: offerDescription
-          }
-          category.offer=offerDetails
-          category.save()
+module.exports = {
+  getCategoryOffer: async (req, res) => {
+    try {
+      const category = await categorymodel.find();
 
-          res.redirect(`/admin/offers/addoffer/${categoryId}`);
-        }
-        catch(error){
-            console.log(error)
-        }
-    }],
+      return res.render('admin/categoryOffer', { category });
+    } catch (error) {
+      logger.error('Failed to fetch category offers', {
+        error: error.message,
+        stack: error.stack
+      });
 
-    getProductOffer:async(req,res)=>{
-        try{
-          let products=await productmodel.find()
-            res.render('admin/productOffer',{products})
-        }
-        catch(error){
-            console.log(error)
-        }
-    },
-    addProductOffer:async(req,res)=>{
-      try{
-        let id=req.params.id
-        let product=await productmodel.findById(id)
-        res.render('admin/addProductOffer',{product})
+      return res.status(500).send('Internal Server Error');
+    }
+  },
+
+  addOffer: async (req, res) => {
+    try {
+      const id = req.params.id;
+      const category = await categorymodel.findById(id);
+
+      if (!category) {
+        return res.status(404).send('Category not found');
       }
-      catch(error){
-        console.log(error)
-      }
-    },
-    postProductOffer:[check('offerType').notEmpty().withMessage('Please fill out all fields')
-      ,check('offerValue').notEmpty().withMessage('Please fill out all fields'),
-      check('startDate').notEmpty().withMessage('Please fill out all fields'),
-      check('endDate').notEmpty().withMessage('Please fill out all fields'),
-      check('offerDescription').notEmpty().withMessage('Please fill out all fields'),
-      body('endDate').custom((value, { req }) => {
-        if (new Date(value) < new Date(req.body.startDate)) {
-            throw new Error('End date cannot be earlier than start date');
+
+      return res.render('admin/addCategoryOffer', { category });
+    } catch (error) {
+      logger.error('Failed to load category offer form', {
+        categoryId: req.params.id,
+        error: error.message,
+        stack: error.stack
+      });
+
+      return res.status(500).send('Internal Server Error');
+    }
+  },
+
+  postAddOffer: [
+    body('offerType')
+      .notEmpty()
+      .withMessage('Please select an offer type')
+      .isIn(['percentage', 'fixed'])
+      .withMessage('Invalid offer type'),
+
+    body('offerValue')
+      .notEmpty()
+      .withMessage('Please enter the offer value')
+      .bail()
+      .isFloat({ gt: 0 })
+      .withMessage('Offer value must be greater than zero')
+      .bail()
+      .custom((value, { req }) => {
+        if (
+          req.body.offerType === 'percentage' &&
+          Number(value) > 100
+        ) {
+          throw new Error('Percentage discount cannot exceed 100%');
         }
+
         return true;
-    }),async(req,res)=>{
-      try{
-        let {offerType,offerValue,startDate,endDate,offerDescription,productId}=req.body
+      }),
+
+    body('startDate')
+      .notEmpty()
+      .withMessage('Please select a start date')
+      .bail()
+      .isISO8601()
+      .withMessage('Please enter a valid start date'),
+
+    body('endDate')
+      .notEmpty()
+      .withMessage('Please select an end date')
+      .bail()
+      .isISO8601()
+      .withMessage('Please enter a valid end date')
+      .bail()
+      .custom(validateEndDate),
+
+    body('offerDescription')
+      .trim()
+      .notEmpty()
+      .withMessage('Please enter an offer description'),
+
+    async (req, res) => {
+      const { categoryId } = req.body;
+
+      try {
         const errors = validationResult(req);
-  
-           if (!errors.isEmpty()) {
-             const errorMessage = errors.array()[0].msg;
-             req.session.adminmessage={message:errorMessage}
-             return res.redirect(`/admin/productoffers/addoffer/${productId}`);
-           }
-        let filename=req.file.filename
-        let product=await productmodel.findById(productId)
-       let offerExist = product.offer;
-       if(offerExist && product.offer.bannerImage){
-         fs.unlinkSync('public/offerBannerImages/'+offerExist.bannerImage)
-       }
-        isOfferActive=false
-        let offerDetails = {
-         isOfferActive,
-         discountType: offerType,
-         discountValue: offerValue,
-         startDate: new Date(startDate),
-         endDate: new Date(endDate),
-         bannerImage: filename,
-         offerDescription: offerDescription
-       }
-       product.offer = offerDetails
-       await product.save();
-        res.redirect(`/admin/productoffers/addoffer/${productId}`);
-      }
-      catch(error){
-        console.log(error)
-      }
-    }]
-}
 
+        if (!errors.isEmpty()) {
+          req.session.adminmessage = {
+            message: errors.array()[0].msg
+          };
 
+          return res.redirect(
+            `/admin/offers/addoffer/${categoryId}`
+          );
+        }
+
+        if (!req.file) {
+          req.session.adminmessage = {
+            message: 'Please upload an offer banner'
+          };
+
+          return res.redirect(
+            `/admin/offers/addoffer/${categoryId}`
+          );
+        }
+
+        const category = await categorymodel.findById(categoryId);
+
+        if (!category) {
+          return res.status(404).send('Category not found');
+        }
+
+        const oldPublicId = category.offer?.publicId;
+
+        category.offer = {
+          isOfferActive: false,
+          discountType: req.body.offerType,
+          discountValue: Number(req.body.offerValue),
+          startDate: new Date(req.body.startDate),
+          endDate: new Date(req.body.endDate),
+          bannerImage: req.file.path,
+          publicId: req.file.filename,
+          offerDescription: req.body.offerDescription.trim()
+        };
+
+        await category.save();
+
+        if (oldPublicId) {
+          try {
+            await deleteCloudinaryImage(oldPublicId);
+          } catch (error) {
+            logger.error('Failed to delete previous category offer banner', {
+              categoryId,
+              publicId: oldPublicId,
+              error: error.message,
+              stack: error.stack
+            });
+          }
+        }
+
+        req.session.adminmessage = {
+          type: 'success',
+          message: 'Category offer saved successfully'
+        };
+
+        return res.redirect(
+          `/admin/offers/addoffer/${categoryId}`
+        );
+      } catch (error) {
+        logger.error('Failed to save category offer', {
+          categoryId,
+          error: error.message,
+          stack: error.stack
+        });
+
+        req.session.adminmessage = {
+          type: 'error',
+          message: 'Unable to save category offer'
+        };
+
+        return res.redirect(
+          `/admin/offers/addoffer/${categoryId}`
+        );
+      }
+    }
+  ],
+
+  getProductOffer: async (req, res) => {
+    try {
+      const products = await productmodel.find();
+
+      return res.render('admin/productOffer', { products });
+    } catch (error) {
+      logger.error('Failed to fetch product offers', {
+        error: error.message,
+        stack: error.stack
+      });
+
+      return res.status(500).send('Internal Server Error');
+    }
+  },
+
+  addProductOffer: async (req, res) => {
+    try {
+      const id = req.params.id;
+      const product = await productmodel.findById(id);
+
+      if (!product) {
+        return res.status(404).send('Product not found');
+      }
+
+      return res.render('admin/addProductOffer', { product });
+    } catch (error) {
+      logger.error('Failed to load product offer form', {
+        productId: req.params.id,
+        error: error.message,
+        stack: error.stack
+      });
+
+      return res.status(500).send('Internal Server Error');
+    }
+  },
+
+  postProductOffer: [
+    body('offerType')
+      .notEmpty()
+      .withMessage('Please select an offer type')
+      .isIn(['percentage', 'fixed'])
+      .withMessage('Invalid offer type'),
+
+    body('offerValue')
+      .notEmpty()
+      .withMessage('Please enter the offer value')
+      .bail()
+      .isFloat({ gt: 0 })
+      .withMessage('Offer value must be greater than zero')
+      .bail()
+      .custom((value, { req }) => {
+        if (
+          req.body.offerType === 'percentage' &&
+          Number(value) > 100
+        ) {
+          throw new Error('Percentage discount cannot exceed 100%');
+        }
+
+        return true;
+      }),
+
+    body('startDate')
+      .notEmpty()
+      .withMessage('Please select a start date')
+      .bail()
+      .isISO8601()
+      .withMessage('Please enter a valid start date'),
+
+    body('endDate')
+      .notEmpty()
+      .withMessage('Please select an end date')
+      .bail()
+      .isISO8601()
+      .withMessage('Please enter a valid end date')
+      .bail()
+      .custom(validateEndDate),
+
+    body('offerDescription')
+      .trim()
+      .notEmpty()
+      .withMessage('Please enter an offer description'),
+
+    async (req, res) => {
+      const { productId } = req.body;
+
+      try {
+        const errors = validationResult(req);
+
+        if (!errors.isEmpty()) {
+          req.session.adminmessage = {
+            message: errors.array()[0].msg
+          };
+
+          return res.redirect(
+            `/admin/productoffers/addoffer/${productId}`
+          );
+        }
+
+        if (!req.file) {
+          req.session.adminmessage = {
+            message: 'Please upload an offer banner'
+          };
+
+          return res.redirect(
+            `/admin/productoffers/addoffer/${productId}`
+          );
+        }
+
+        const product = await productmodel.findById(productId);
+
+        if (!product) {
+          return res.status(404).send('Product not found');
+        }
+
+        const oldPublicId = product.offer?.publicId;
+
+        product.offer = {
+          isOfferActive: false,
+          discountType: req.body.offerType,
+          discountValue: Number(req.body.offerValue),
+          startDate: new Date(req.body.startDate),
+          endDate: new Date(req.body.endDate),
+          bannerImage: req.file.path,
+          publicId: req.file.filename,
+          offerDescription: req.body.offerDescription.trim()
+        };
+
+        await product.save();
+
+        if (oldPublicId) {
+          try {
+            await deleteCloudinaryImage(oldPublicId);
+          } catch (error) {
+            logger.error('Failed to delete previous product offer banner', {
+              productId,
+              publicId: oldPublicId,
+              error: error.message,
+              stack: error.stack
+            });
+          }
+        }
+
+        req.session.adminmessage = {
+          type: 'success',
+          message: 'Product offer saved successfully'
+        };
+
+        return res.redirect(
+          `/admin/productoffers/addoffer/${productId}`
+        );
+      } catch (error) {
+        logger.error('Failed to save product offer', {
+          productId,
+          error: error.message,
+          stack: error.stack
+        });
+
+        req.session.adminmessage = {
+          type: 'error',
+          message: 'Unable to save product offer'
+        };
+
+        return res.redirect(
+          `/admin/productoffers/addoffer/${productId}`
+        );
+      }
+    }
+  ]
+};

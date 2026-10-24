@@ -4,111 +4,345 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Shoe Rack</title>
+
+  <title>Shoe Rack | Category Offers</title>
+
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
   <style>
-    .categoryBox {
+    body {
+      background-color: #f7f8fa;
+    }
+
+    .offers-container {
+      padding: 30px 15px 50px;
+    }
+
+    .page-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 15px;
       margin-bottom: 30px;
     }
 
-    .card {
-      border: none;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      transition: transform 0.2s;
-      display: flex;
-      flex-direction: column;
-      height: 100%;
-      width: 280px;
+    .page-title {
+      font-size: 28px;
+      font-weight: 700;
+      color: #212529;
+      margin: 0;
     }
 
-    .card:hover {
+    .page-subtitle {
+      font-size: 14px;
+      color: #777;
+      margin-top: 6px;
+      margin-bottom: 0;
+    }
+
+    .category-count {
+      background-color: #212529;
+      color: #fff;
+      padding: 9px 15px;
+      border-radius: 5px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .category-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 25px;
+    }
+
+    .category-card {
+      background-color: #fff;
+      border: 1px solid #ececec;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 3px 12px rgba(0, 0, 0, 0.05);
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .category-card:hover {
       transform: translateY(-5px);
+      box-shadow: 0 8px 22px rgba(0, 0, 0, 0.10);
     }
 
-    .card-img-top {
+    .category-image-wrapper {
+      height: 210px;
       width: 100%;
-      height: 150px;
-      object-fit: cover;
+      overflow: hidden;
+      background-color: #f1f1f1;
     }
 
-    .card-body {
-      padding: 1.25rem;
-      text-align: center;
-      flex-grow: 1;
+    .category-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.3s ease;
+    }
+
+    .category-card:hover .category-image {
+      transform: scale(1.04);
+    }
+
+    .category-details {
+      padding: 20px;
       display: flex;
       flex-direction: column;
+      flex: 1;
+    }
+
+    .category-name {
+      font-size: 18px;
+      font-weight: 700;
+      color: #252525;
+      margin: 0 0 18px;
+      overflow-wrap: anywhere;
+    }
+
+    .offer-info {
+      display: flex;
       justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 22px;
+      font-size: 13px;
     }
 
-    .btn-dark {
-      width: 100%;
-      margin-top: 10px;
-      padding: 10px 0;
-      border-radius: 0;
-    }
-
-    .add-category-btn {
-      margin-left: 10px;
+    .offer-label {
+      color: #777;
     }
 
     .offer-status {
-      font-weight: bold;
+      font-weight: 700;
     }
 
     .offer-status.actives {
-      color: yellowgreen;
+      color: #198754;
     }
 
     .offer-status.inactive {
-      color: red;
+      color: #dc3545;
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 5px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .status-active {
+      background-color: #dcfce7;
+      color: #166534;
+    }
+
+    .status-inactive {
+      background-color: #fee2e2;
+      color: #991b1b;
+    }
+
+    .offer-button {
+      display: block;
+      width: 100%;
+      margin-top: auto;
+      padding: 11px 14px;
+      text-align: center;
+      text-decoration: none;
+      background-color: #212529;
+      color: #fff;
+      border: 1px solid #212529;
+      border-radius: 5px;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.4px;
+      transition: background-color 0.2s ease, color 0.2s ease;
+    }
+
+    .offer-button:hover {
+      background-color: #fff;
+      color: #212529;
+    }
+
+    .empty-state {
+      padding: 60px 20px;
+      text-align: center;
+      background-color: #fff;
+      border: 1px dashed #ddd;
+      border-radius: 10px;
+    }
+
+    .empty-state h5 {
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .empty-state p {
+      color: #777;
+      margin-bottom: 0;
+    }
+
+    @media (max-width: 576px) {
+      .offers-container {
+        padding: 20px 12px 35px;
+      }
+
+      .page-title {
+        font-size: 23px;
+      }
+
+      .category-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+      }
+
+      .category-image-wrapper {
+        height: 145px;
+      }
+
+      .category-details {
+        padding: 12px;
+      }
+
+      .category-name {
+        font-size: 15px;
+      }
+
+      .offer-info {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
+      }
+
+      .offer-button {
+        font-size: 11px;
+        padding: 10px 5px;
+      }
     }
   </style>
 </head>
 
 <body>
+
   <%- include('../partials/adminHeader') %>
 
     <main>
-      <div class="container">
-        <% if (adminmessage) { %>
-          <div class="alert alert-dismissible fade show alert-<%= adminmessage.type %> mt-4" role="alert">
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            <strong>
-              <%= adminmessage.message %>
-            </strong>
+      <div class="container-fluid offers-container">
+
+        <% if (typeof adminmessage !=='undefined' && adminmessage) { %>
+          <div id="flash-message" hidden data-message="<%= adminmessage.message %>"
+            data-type="<%= adminmessage.type || 'success' %>">
           </div>
           <% } %>
-            <div class="d-flex justify-content-between align-items-center my-4">
-              <h3 class="m-0">Category Offers</h3>
+
+            <div class="page-header">
+              <div>
+                <h3 class="page-title">Category Offers</h3>
+                <p class="page-subtitle">
+                  Manage discounts and offers for your shoe categories.
+                </p>
+              </div>
+
+              <div class="category-count">
+                Total Categories: <%= category.length %>
+              </div>
             </div>
-            <div class="row ms-5 mt-5">
-              <% category.forEach(element=> { %>
-                <div class="col-md-4">
-                  <div class="categoryBox w-100">
-                    <div class="card">
-                      <img src="/category_images/<%= element.image %>" alt="<%= element.categoryname %> Image"
-                        class="card-img-top">
-                      <div class="card-body">
-                        <h5 class="fw-bold">
-                          <%= element.categoryname %>
-                        </h5>
-                        <p class="text-muted fw-bold">Offer Status:
-                          <span class="offer-status <%= element.offer.isOfferActive ? 'actives' : 'inactive' %>">
-                            <%= element.offer.isOfferActive ? 'Active' : 'InActive' %>
-                          </span>
-                        </p>
-                        <a class="btn btn-dark" href="/admin/offers/addoffer/<%= element._id %>">ADD OFFERS</a>
-                      </div>
+
+            <% if (category.length> 0) { %>
+
+              <div class="category-grid">
+
+                <% category.forEach(element=> { %>
+
+                  <div class="category-card">
+
+                    <div class="category-image-wrapper">
+
+                      <img src="<%= element.image || 'https://placehold.co/400x300?text=No+Image' %>"
+                        alt="<%= element.categoryname %>" class="category-image" loading="lazy"
+                        onerror="this.onerror=null; this.src='https://placehold.co/400x300?text=No+Image';">
+
                     </div>
+
+                    <div class="category-details">
+
+                      <h5 class="category-name">
+                        <%= element.categoryname %>
+                      </h5>
+
+                      <div class="offer-info">
+
+                        <span class="offer-label">Offer Status</span>
+
+                        <span
+                          class="status-badge <%= element.offer && element.offer.isOfferActive ? 'status-active' : 'status-inactive' %>">
+                          <%= element.offer && element.offer.isOfferActive ? 'Active' : 'Inactive' %>
+                        </span>
+
+                      </div>
+
+                      <a class="offer-button" href="/admin/offers/addoffer/<%= element._id %>">
+
+                        <%= element.offer && element.offer.isOfferActive ? 'EDIT OFFER' : 'ADD OFFER' %>
+
+                      </a>
+
+                    </div>
+
                   </div>
+
+                  <% }) %>
+
+              </div>
+
+              <% } else { %>
+
+                <div class="empty-state">
+                  <h5>No Categories Found</h5>
+                  <p>Add categories to your store before managing category offers.</p>
                 </div>
-                <% }) %>
-            </div>
+
+                <% } %>
+
       </div>
     </main>
 
     <%- include('../partials/adminfooter') %>
+
 </body>
+
+<script>
+  const flashMessage = document.getElementById('flash-message');
+
+  if (flashMessage && typeof Swal !== 'undefined') {
+    const message = flashMessage.dataset.message;
+    const type = flashMessage.dataset.type;
+
+    const icon = type === 'danger'
+      ? 'error'
+      : ['success', 'error', 'warning', 'info', 'question'].includes(type)
+        ? type
+        : 'info';
+
+    Swal.fire({
+      toast: true,
+      position: 'top-end',
+      icon: icon,
+      title: message,
+      showConfirmButton: false,
+      timer: 2500,
+      timerProgressBar: true
+    });
+  }
+</script>
 
 </html>

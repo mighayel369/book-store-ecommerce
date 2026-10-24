@@ -4,253 +4,778 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shoe Rack</title>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <title>My Wallet | Shoe Rack</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <style>
+        :root {
+            --wallet-primary: #f4512c;
+            --wallet-primary-dark: #d83d1b;
+            --wallet-text: #202124;
+            --wallet-muted: #747781;
+            --wallet-border: #e8e9ed;
+            --wallet-background: #f7f8fa;
+            --wallet-white: #ffffff;
+            --wallet-green: #218447;
+            --wallet-red: #dc3545;
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f8f9fa;
-            color: #333;
+            font-family: Arial, Helvetica, sans-serif;
+            background: var(--wallet-background);
+            color: var(--wallet-text);
         }
 
-        .account-nav {
-            border: 1px solid #ccc;
-            border-radius: 10px;
-            padding: 20px;
-            width: 100%;
-            font-weight: bold;
-            background-color: #fff;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        .wallet-page {
+            min-height: 65vh;
+            padding: 22px 0 60px;
         }
 
-        .account-navitem {
-            border-bottom: 1px solid #ccc;
-            padding: 10px;
-            cursor: pointer;
+        .wallet-page .breadcrumb-text {
+            color: var(--wallet-muted);
+            font-size: 14px;
+            margin-bottom: 26px;
         }
 
-        .account-navitem:last-child {
-            border-bottom: none;
-        }
-
-        .nav-link {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            color: #555;
+        .wallet-page .breadcrumb-text a {
+            color: var(--wallet-muted);
             text-decoration: none;
         }
 
-        .nav-link i {
-            margin-right: 10px;
+        .wallet-page .breadcrumb-text a:hover {
+            color: var(--wallet-primary);
         }
 
-        .account {
-            margin-left: 30px;
-            margin-top: 70px;
+        .wallet-page .breadcrumb-current {
+            color: var(--wallet-primary);
+            font-weight: 600;
         }
 
-        .active {
-            background-color: #df9f9f;
-            border-radius: 5px;
+        .wallet-layout {
+            align-items: flex-start;
+            row-gap: 24px;
         }
 
-        .arrow {
+        .wallet-main-card {
+            background: var(--wallet-white);
+            border: 1px solid var(--wallet-border);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 5px 24px rgba(30, 35, 50, 0.045);
+        }
+
+        .wallet-header {
+            padding: 25px 28px;
+            border-bottom: 1px solid var(--wallet-border);
+        }
+
+        .wallet-eyebrow {
+            display: block;
+            color: var(--wallet-primary);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-size: 11px;
+            font-weight: 700;
+            margin-bottom: 7px;
+        }
+
+        .wallet-header h1 {
+            font-size: 25px;
+            font-weight: 750;
+            margin: 0 0 7px;
+            letter-spacing: -0.5px;
+        }
+
+        .wallet-header p {
+            color: var(--wallet-muted);
+            font-size: 13px;
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        .wallet-content {
+            padding: 26px 28px 30px;
+        }
+
+
+        .wallet-balance-card {
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            padding: 28px;
+            color: #fff;
+            background: linear-gradient(120deg, #f4512c 0%, #f87545 100%);
+            border-radius: 14px;
+            margin-bottom: 30px;
+            isolation: isolate;
+        }
+
+        .wallet-balance-card::before,
+        .wallet-balance-card::after {
+            content: "";
             position: absolute;
-            left: 255px;
+            border: 1px solid rgba(255, 255, 255, 0.13);
+            border-radius: 50%;
+            z-index: -1;
         }
 
-        .addressDiv {
-            margin-top: 130px;
-            background-color: #fff;
-            border: 1px solid #ccc;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            min-height: 400px;
+        .wallet-balance-card::before {
+            width: 210px;
+            height: 210px;
+            right: -50px;
+            top: -100px;
         }
 
-        .header-section {
-            background-color: #b46363;
-            color: white;
-            height: 50px;
-            text-align: center;
-            padding-top: 10px;
-            border-bottom: 1px solid #ccc;
-            border-top-left-radius: 10px;
-            border-top-right-radius: 10px;
+        .wallet-balance-card::after {
+            width: 150px;
+            height: 150px;
+            right: 40px;
+            bottom: -105px;
         }
 
-        .walletDiv {
-            width: 100%;
-            padding: 20px;
-            text-align: center;
+        .wallet-balance-label {
+            display: block;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.88);
+            font-weight: 600;
+            margin-bottom: 11px;
         }
 
-        .wallet-balance {
-            font-size: 24px;
-            font-weight: bold;
-            margin-bottom: 20px;
+        .wallet-balance-amount {
+            font-size: clamp(28px, 4vw, 38px);
+            font-weight: 750;
+            letter-spacing: -1px;
+            overflow-wrap: anywhere;
+            line-height: 1.25;
         }
 
-        .transactions-table {
-            margin-top: 20px;
-            min-height: 150px;
+        .wallet-balance-note {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.85);
+            margin-top: 10px;
         }
 
-        .table th,
-        .table td {
+        .wallet-balance-icon {
+            width: 64px;
+            height: 64px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 17px;
+            background: rgba(255, 255, 255, 0.18);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            font-size: 28px;
+        }
+
+
+        .transaction-heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        .transaction-heading h2 {
+            font-size: 18px;
+            font-weight: 750;
+            margin: 0 0 5px;
+        }
+
+        .transaction-heading p {
+            font-size: 12px;
+            color: var(--wallet-muted);
+            margin: 0;
+        }
+
+        .transaction-count {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 26px;
+            height: 24px;
+            padding: 0 8px;
+            margin-left: 5px;
+            border-radius: 7px;
+            background: #fff0eb;
+            color: var(--wallet-primary);
+            font-size: 11px;
+            font-weight: 700;
             vertical-align: middle;
         }
-        .colored-toast {
-         background: rgba(236, 17, 90, 0.9) !important; 
-          color: white !important;
-         }
 
-          .toast-text {
-          color: #ffffff !important;
-          }
+        .transaction-table-wrap {
+            width: 100%;
+            overflow-x: auto;
+            border: 1px solid var(--wallet-border);
+            border-radius: 11px;
+        }
+
+        .transaction-table {
+            width: 100%;
+            margin: 0;
+            border-collapse: separate;
+            border-spacing: 0;
+            font-size: 12px;
+            white-space: nowrap;
+        }
+
+        .transaction-table thead th {
+            background: #f8f9fb;
+            color: #626671;
+            padding: 15px 16px;
+            border-bottom: 1px solid var(--wallet-border);
+            font-size: 10px;
+            font-weight: 750;
+            text-transform: uppercase;
+            letter-spacing: 0.65px;
+            vertical-align: middle;
+        }
+
+        .transaction-table tbody td {
+            padding: 16px;
+            border-bottom: 1px solid #f0f0f3;
+            vertical-align: middle;
+            color: #454852;
+        }
+
+        .transaction-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .transaction-table tbody tr {
+            transition: background 0.2s ease;
+        }
+
+        .transaction-table tbody tr:hover {
+            background: #fffaf8;
+        }
+
+        .transaction-date {
+            color: #555965;
+            font-weight: 600;
+        }
+
+        .transaction-description {
+            display: block;
+            max-width: 240px;
+            white-space: normal;
+            line-height: 1.6;
+            overflow-wrap: anywhere;
+            font-weight: 600;
+            color: #30333a;
+        }
+
+        .transaction-type {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            border-radius: 6px;
+            padding: 6px 9px;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: capitalize;
+            background: #f1f2f5;
+            color: #5f626b;
+        }
+
+        .transaction-amount {
+            font-weight: 750;
+            font-size: 13px;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .transaction-amount.credit {
+            color: var(--wallet-green);
+        }
+
+        .transaction-amount.debit {
+            color: var(--wallet-red);
+        }
+
+        .transaction-empty {
+            padding: 50px 20px !important;
+            text-align: center;
+            white-space: normal;
+        }
+
+        .transaction-empty-icon {
+            width: 52px;
+            height: 52px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 14px;
+            border-radius: 50%;
+            background: #fff0eb;
+            color: var(--wallet-primary);
+            font-size: 20px;
+        }
+
+        .transaction-empty strong {
+            display: block;
+            font-size: 14px;
+            color: #30333a;
+            margin-bottom: 6px;
+        }
+
+        .transaction-empty span {
+            display: block;
+            color: var(--wallet-muted);
+            font-size: 12px;
+        }
+
+
+        .wallet-pagination {
+            margin-top: 23px;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .wallet-pagination .pagination {
+            gap: 5px;
+            flex-wrap: wrap;
+            margin: 0;
+        }
+
+        .wallet-pagination .page-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 36px;
+            min-height: 36px;
+            padding: 8px 11px;
+            color: #555965;
+            background: #fff;
+            border: 1px solid var(--wallet-border);
+            border-radius: 7px !important;
+            font-size: 12px;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .wallet-pagination .page-link:hover {
+            color: var(--wallet-primary);
+            border-color: #f5b5a5;
+            background: #fff8f5;
+        }
+
+        .wallet-pagination .page-item.active .page-link {
+            color: #fff;
+            background: var(--wallet-primary);
+            border-color: var(--wallet-primary);
+        }
+
+        .wallet-pagination .page-item.disabled .page-link {
+            color: #b6b8bf;
+            background: #f8f9fa;
+            pointer-events: none;
+        }
+
+        .wallet-footer-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid var(--wallet-border);
+        }
+
+        .wallet-footer-note {
+            color: var(--wallet-muted);
+            font-size: 11px;
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        .wallet-clear-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px 14px;
+            border-radius: 8px;
+            background: #fff;
+            color: #c83242;
+            border: 1px solid #f0c4c9;
+            font-size: 12px;
+            font-weight: 700;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .wallet-clear-btn:hover {
+            background: #fff2f3;
+            color: #b42332;
+            border-color: #e8a3ab;
+        }
+
+        .colored-toast {
+            color: #fff !important;
+        }
+
+        .colored-toast .swal2-title {
+            color: #fff !important;
+            font-size: 14px !important;
+        }
+
+        @media (max-width: 991.98px) {
+            .wallet-content {
+                padding: 22px;
+            }
+
+            .wallet-header {
+                padding: 23px 22px;
+            }
+        }
+
+        @media (max-width: 575.98px) {
+            .wallet-page {
+                padding-top: 16px;
+                padding-bottom: 35px;
+            }
+
+            .wallet-page .breadcrumb-text {
+                margin-bottom: 18px;
+                font-size: 12px;
+            }
+
+            .wallet-header {
+                padding: 20px 17px;
+            }
+
+            .wallet-header h1 {
+                font-size: 22px;
+            }
+
+            .wallet-content {
+                padding: 17px;
+            }
+
+            .wallet-balance-card {
+                padding: 21px 18px;
+                border-radius: 12px;
+                gap: 12px;
+                margin-bottom: 25px;
+            }
+
+            .wallet-balance-icon {
+                width: 48px;
+                height: 48px;
+                border-radius: 12px;
+                font-size: 21px;
+            }
+
+            .wallet-balance-amount {
+                font-size: 29px;
+            }
+
+            .transaction-heading h2 {
+                font-size: 16px;
+            }
+
+            .transaction-table thead th,
+            .transaction-table tbody td {
+                padding: 13px 12px;
+            }
+
+            .wallet-footer-actions {
+                align-items: stretch;
+                flex-direction: column;
+            }
+
+            .wallet-clear-btn {
+                width: 100%;
+            }
+        }
     </style>
 </head>
 
 <body>
     <%- include('../partials/userHeader') %>
-        <p class="fw-bold text-dark fs-5 mt-4 ms-3">Home > <span>Account ></span><span class="text-warning fs-5">
-                Wallet</span></p>
 
-        <div class="container-fluid">
-            <% if (message) { %>
-                <script>
-                  Swal.fire({
-                    toast: true,
-                    position: 'top-end',
-                    title: '<%= message.message %>',
-                    showConfirmButton: false,
-                    timer: 2000,
-                    timerProgressBar: false,
-                    background: '#28a745',
-                    customClass: {
-                      popup: 'colored-toast',
-                      text: 'toast-text'
-                    }
-                  });
-                </script>
-                <% } %>
-                    <div class="row">
-                        <div class="col-md-3">
-                            <%- include('../partials/account-nav') %>
-                        </div>
-                        <div class="col-md-9">
-                            <div class="addressDiv">
-                                <div class="header-section">
-                                    <h5 class="fw-bold">Wallet</h5>
-                                </div>
-                                <div class="walletDiv">
-                                    <div class="wallet-balance">
-                                        Wallet Balance: ₹<%= users.wallet.balance %>
-                                    </div>
-                                    <h5 class="mt-4 fw-bold" style="text-align: left;">Transaction History</h5>
-                                    <div class="transactions-table">
-                                        <table class="table table-striped">
-                                            <thead>
-                                                <tr>
-                                                    <th>Date</th>
-                                                    <th>Description</th>
-                                                    <th>Type</th>
-                                                    <th>Amount</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <% if (transactionData.length>0) { %>
-                                                    <% transactionData.forEach(transaction=> { %>
+        <main class="wallet-page">
+            <div class="container">
+                <nav class="breadcrumb-text" aria-label="Breadcrumb">
+                    <a href="/">Home</a>
+                    <span class="mx-2">/</span>
+                    <a href="/account">Account</a>
+                    <span class="mx-2">/</span>
+                    <span class="breadcrumb-current">Wallet</span>
+                </nav>
+
+                <% if (message && message.message) { %>
+                    <div id="flash-message" hidden>
+                        <%= message.message %>
+                    </div>
+
+                    <script>
+                        document.addEventListener('DOMContentLoaded', function () {
+                            const messageElement = document.getElementById('flash-message');
+
+                            if (messageElement) {
+                                Swal.fire({
+                                    toast: true,
+                                    position: 'top-end',
+                                    title: messageElement.textContent.trim(),
+                                    showConfirmButton: false,
+                                    timer: 2500,
+                                    timerProgressBar: true,
+                                    background: '#218838',
+                                    color: '#fff',
+                                    customClass: {
+                                        popup: 'colored-toast'
+                                    }
+                                });
+                            }
+                        });
+                    </script>
+                    <% } %>
+
+                        <div class="row wallet-layout">
+                            <aside class="col-lg-3 col-md-4">
+                                <%- include('../partials/account-nav') %>
+                            </aside>
+
+                            <section class="col-lg-9 col-md-8">
+                                <div class="wallet-main-card">
+                                    <header class="wallet-header">
+                                        <span class="wallet-eyebrow">Your account</span>
+                                        <h1>My Wallet</h1>
+                                        <p>View your available balance and keep track of your transactions.</p>
+                                    </header>
+
+                                    <div class="wallet-content">
+                                        <!-- Wallet balance -->
+                                        <section class="wallet-balance-card" aria-label="Wallet balance">
+                                            <div>
+                                                <span class="wallet-balance-label">
+                                                    <i class="fa-solid fa-wallet me-2"></i>
+                                                    Available wallet balance
+                                                </span>
+
+                                                <div class="wallet-balance-amount">
+                                                    ₹<%= Number(users && users.wallet && users.wallet.balance !=null ?
+                                                        users.wallet.balance : 0).toLocaleString('en-IN', {
+                                                        minimumFractionDigits: 2, maximumFractionDigits: 2 }) %>
+                                                </div>
+
+                                                <div class="wallet-balance-note">
+                                                    Your current Shoe Rack wallet balance
+                                                </div>
+                                            </div>
+
+                                            <div class="wallet-balance-icon">
+                                                <i class="fa-solid fa-wallet"></i>
+                                            </div>
+                                        </section>
+
+                                        <section>
+                                            <div class="transaction-heading">
+                                                <div>
+                                                    <h2>
+                                                        Transaction history
+                                                        <span class="transaction-count">
+                                                            <%= typeof totalTransactions !=='undefined' ?
+                                                                totalTransactions : transactionData.length %>
+                                                        </span>
+                                                    </h2>
+                                                    <p>Review your wallet activity and transaction details.</p>
+                                                </div>
+                                            </div>
+
+                                            <div class="transaction-table-wrap">
+                                                <table class="table transaction-table">
+                                                    <thead>
                                                         <tr>
-                                                            <td>
-                                                                <%= new Date(transaction.date).toLocaleDateString() %>
-                                                            </td>
-                                                            <td>
-                                                                <%= transaction.description %>
-                                                            </td>
-                                                            <td>
-                                                                <%= transaction.transactionType %>
-                                                            </td>
-                                                            <td>
-                                                                <%= transaction.amount ? transaction.amount.toFixed(2)
-                                                                    : '0.00' %>
-                                                            </td>
-
+                                                            <th scope="col">Date</th>
+                                                            <th scope="col">Description</th>
+                                                            <th scope="col">Type</th>
+                                                            <th scope="col" class="text-end">Amount</th>
                                                         </tr>
-                                                        <% }) %>
-                                                            <% }else{ %>
+                                                    </thead>
+
+                                                    <tbody>
+                                                        <% if (transactionData && transactionData.length> 0) { %>
+                                                            <% transactionData.forEach(transaction=> { %>
                                                                 <tr>
-                                                                    <td colspan="4"
-                                                                        class="text-center mt-5 fw-bold text-danger">
-                                                                        <i
-                                                                            class="fa-solid fa-exclamation-circle me-2"></i>
-                                                                        No Transactions Found!
+                                                                    <td>
+                                                                        <span class="transaction-date">
+                                                                            <%= new
+                                                                                Date(transaction.date).toLocaleDateString('en-IN',
+                                                                                { day: '2-digit' , month: 'short' ,
+                                                                                year: 'numeric' }) %>
+                                                                        </span>
+                                                                    </td>
+
+                                                                    <td>
+                                                                        <span class="transaction-description">
+                                                                            <%= transaction.description
+                                                                                || 'Wallet transaction' %>
+                                                                        </span>
+                                                                    </td>
+
+                                                                    <td>
+                                                                        <span class="transaction-type">
+                                                                            <i class="fa-solid fa-circle-dot"></i>
+                                                                            <%= transaction.transactionType
+                                                                                || 'Transaction' %>
+                                                                        </span>
+                                                                    </td>
+
+                                                                    <td class="text-end">
+                                                                        <% const amount=Number(transaction.amount || 0);
+                                                                            const transactionType=String(
+                                                                            transaction.transactionType || ''
+                                                                            ).toLowerCase(); const
+                                                                            isCredit=transactionType.includes('credit')
+                                                                            || transactionType.includes('refund') ||
+                                                                            transactionType.includes('deposit'); %>
+
+                                                                            <span
+                                                                                class="transaction-amount <%= isCredit ? 'credit' : 'debit' %>">
+                                                                                <%= isCredit ? '+' : '' %>₹<%=
+                                                                                        amount.toLocaleString('en-IN', {
+                                                                                        minimumFractionDigits: 2,
+                                                                                        maximumFractionDigits: 2 }) %>
+                                                                            </span>
                                                                     </td>
                                                                 </tr>
-                                                                <% } %>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                    <% if (transactionData.length>0) { %>
-                                        <nav aria-label="Page navigation example">
-                                            <ul class="pagination d-flex justify-content-end">
-                                                <li class="page-item <%= currentPage === 1 ? 'disabled' : '' %>">
-                                                    <a class="page-link"
-                                                        href="?page=<%= currentPage - 1 %>&limit=<%= limit %>&search=<%= search %>"
-                                                        aria-label="Previous">
-                                                        <span aria-hidden="true">&laquo;</span>
-                                                    </a>
-                                                </li>
-                                                <% for (let i=1; i <=totalPages; i++) { %>
-                                                    <li class="page-item <%= currentPage === i ? 'active' : '' %>">
-                                                        <a class="page-link"
-                                                            href="?page=<%= i %>&limit=<%= limit %>&search=<%= search %>">
-                                                            <%= i %>
-                                                        </a>
-                                                    </li>
-                                                    <% } %>
+                                                                <% }) %>
+                                                                    <% } else { %>
+                                                                        <tr>
+                                                                            <td colspan="4" class="transaction-empty">
+                                                                                <div class="transaction-empty-icon">
+                                                                                    <i class="fa-solid fa-receipt"></i>
+                                                                                </div>
+
+                                                                                <strong>No transactions found</strong>
+                                                                                <span>Your wallet transactions will
+                                                                                    appear here.</span>
+                                                                            </td>
+                                                                        </tr>
+                                                                        <% } %>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+
+                                            <% if (transactionData && transactionData.length> 0 && totalPages > 1) { %>
+                                                <nav class="wallet-pagination" aria-label="Transaction pagination">
+                                                    <ul class="pagination">
                                                         <li
-                                                            class="page-item <%= currentPage === totalPages ? 'disabled' : '' %>">
+                                                            class="page-item <%= currentPage === 1 ? 'disabled' : '' %>">
                                                             <a class="page-link"
-                                                                href="?page=<%= currentPage + 1 %>&limit=<%= limit %>&search=<%= search %>"
-                                                                aria-label="Next">
-                                                                <span aria-hidden="true">&raquo;</span>
+                                                                href="?page=<%= Math.max(1, currentPage - 1) %>&limit=<%= limit %>&search=<%= encodeURIComponent(search || '') %>"
+                                                                aria-label="Previous page">
+                                                                <i class="fa-solid fa-chevron-left"></i>
                                                             </a>
                                                         </li>
-                                            </ul>
-                                        </nav>
-                                        <% } %>
-                                            <div class="text-end">
-                                                <a type="button" href="/wallet/clearhistory/<%= users._id %>"
-                                                    class="btn btn-danger fw-bold">Clear-History</a>
-                                            </div>
+
+                                                        <% for (let i=1; i <=totalPages; i++) { %>
+                                                            <li
+                                                                class="page-item <%= currentPage === i ? 'active' : '' %>">
+                                                                <a class="page-link"
+                                                                    href="?page=<%= i %>&limit=<%= limit %>&search=<%= encodeURIComponent(search || '') %>"
+                                                                    <%=currentPage===i ? 'aria-current="page"' : '' %>>
+                                                                    <%= i %>
+                                                                </a>
+                                                            </li>
+                                                            <% } %>
+
+                                                                <li
+                                                                    class="page-item <%= currentPage === totalPages ? 'disabled' : '' %>">
+                                                                    <a class="page-link"
+                                                                        href="?page=<%= Math.min(totalPages, currentPage + 1) %>&limit=<%= limit %>&search=<%= encodeURIComponent(search || '') %>"
+                                                                        aria-label="Next page">
+                                                                        <i class="fa-solid fa-chevron-right"></i>
+                                                                    </a>
+                                                                </li>
+                                                    </ul>
+                                                </nav>
+                                                <% } %>
+                                        </section>
+
+                                        <div class="wallet-footer-actions">
+                                            <p class="wallet-footer-note">
+                                                <i class="fa-solid fa-shield-halved me-1"></i>
+                                                Keep track of your wallet activity here.
+                                            </p>
+
+                                            <a href="/wallet/clearhistory/<%= users._id %>" class="wallet-clear-btn"
+                                                id="clear-wallet-history">
+                                                <i class="fa-regular fa-trash-can"></i>
+                                                Clear history
+                                            </a>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
+                            </section>
                         </div>
-                    </div>
-        </div>
+            </div>
+        </main>
 
         <%- include('../partials/userfooter') %>
+
+
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
             <script>
                 $(document).ready(function () {
-
                     const navItems = $('.account-navitem a');
+                    const currentPath =
+                        window.location.pathname.replace(/\/+$/, '') || '/';
+
                     navItems.each(function () {
-                        if (window.location.pathname === $(this).attr('href')) {
-                            $(this).parent().addClass('active');
+                        const linkPath =
+                            (new URL(this.href, window.location.origin))
+                                .pathname.replace(/\/+$/, '') || '/';
+
+                        const isActive = currentPath === linkPath;
+
+                        $(this).parent().toggleClass('active', isActive);
+
+                        if (isActive) {
+                            $(this).attr('aria-current', 'page');
+                        } else {
+                            $(this).removeAttr('aria-current');
                         }
                     });
 
-                    navItems.on('click', function () {
-                        navItems.parent().removeClass('active');
-                        $(this).parent().addClass('active');
+                    $('#clear-wallet-history').on('click', function (event) {
+                        event.preventDefault();
+
+                        const clearUrl = this.href;
+
+                        Swal.fire({
+                            title: 'Clear transaction history?',
+                            text: 'This action may permanently remove your wallet transaction history.',
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonText: 'Continue',
+                            cancelButtonText: 'Cancel',
+                            confirmButtonColor: '#f4512c',
+                            cancelButtonColor: '#6c757d',
+                            reverseButtons: true
+                        }).then(function (result) {
+                            if (result.isConfirmed) {
+                                window.location.href = clearUrl;
+                            }
+                        });
                     });
-                })
-
-
+                });
             </script>
 </body>
 

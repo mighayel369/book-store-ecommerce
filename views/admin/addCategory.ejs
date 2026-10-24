@@ -4,34 +4,266 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Shoe Rack</title>
+  <title>Add Category | Shoe Rack</title>
+
   <style>
-    .couponDiv {
-      background-color: #f8f9fa;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-      width: 450px;
-      margin-top: 80px;
+    .add-category-page {
+      background: #f5f6f8;
+      min-height: 80vh;
+      padding: 35px 0 55px;
     }
 
-    .coupon-header {
-      border-bottom: 1px solid #dee2e6;
-      padding-bottom: 8px;
-      margin-bottom: 15px;
+    .page-heading {
+      margin-bottom: 25px;
+    }
+
+    .page-heading h2 {
+      font-size: 26px;
+      font-weight: 700;
+      color: #202020;
+      margin-bottom: 7px;
+    }
+
+    .page-heading p {
+      color: #777;
+      font-size: 14px;
+      margin-bottom: 0;
+    }
+
+    .category-form-card {
+      background: #fff;
+      border: 1px solid #e8e8e8;
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.035);
+    }
+
+    .form-card-header {
+      padding: 23px 28px;
+      border-bottom: 1px solid #eee;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .header-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 11px;
+      background: #f0f0f0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      color: #222;
+      flex-shrink: 0;
+    }
+
+    .form-card-header h5 {
+      font-weight: 700;
+      font-size: 17px;
+      margin: 0 0 5px;
+    }
+
+    .form-card-header p {
+      color: #777;
+      font-size: 13px;
+      margin: 0;
+    }
+
+    .category-form-body {
+      padding: 28px;
     }
 
     .form-label {
-      font-size: 0.9rem;
+      font-size: 13px;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 8px;
     }
 
-    .form-control,
-    .form-select {
-      font-size: 0.9rem;
+    .required-mark {
+      color: #dc3545;
     }
 
-    .btn {
-      font-size: 0.9rem;
+    .form-control {
+      border: 1px solid #dedede;
+      border-radius: 8px;
+      padding: 11px 13px;
+      font-size: 14px;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .form-control:focus {
+      border-color: #555;
+      box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.06);
+    }
+
+    textarea.form-control {
+      resize: vertical;
+      min-height: 115px;
+    }
+
+    .field-help {
+      display: block;
+      margin-top: 6px;
+      font-size: 12px;
+      color: #888;
+    }
+
+    .image-upload-box {
+      border: 1px dashed #c9c9c9;
+      background: #fafafa;
+      border-radius: 10px;
+      padding: 22px;
+      text-align: center;
+      transition: background 0.2s, border-color 0.2s;
+    }
+
+    .image-upload-box:hover {
+      background: #f5f5f5;
+      border-color: #777;
+    }
+
+    .upload-icon {
+      font-size: 29px;
+      color: #666;
+      margin-bottom: 10px;
+    }
+
+    .upload-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 5px;
+    }
+
+    .upload-description {
+      font-size: 12px;
+      color: #888;
+      margin-bottom: 15px;
+    }
+
+    .image-upload-box .form-control {
+      background: #fff;
+      font-size: 13px;
+    }
+
+    .preview-wrapper {
+      display: none;
+      margin-top: 18px;
+    }
+
+    .preview-image {
+      width: 140px;
+      height: 120px;
+      object-fit: contain;
+      border: 1px solid #e5e5e5;
+      border-radius: 9px;
+      background: #fff;
+      padding: 5px;
+    }
+
+    .preview-caption {
+      margin-top: 7px;
+      color: #666;
+      font-size: 12px;
+      overflow-wrap: anywhere;
+    }
+
+    .form-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      padding-top: 24px;
+      margin-top: 26px;
+      border-top: 1px solid #eee;
+    }
+
+    .btn-cancel {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: #fff;
+      color: #444;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 11px 18px;
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .btn-cancel:hover {
+      background: #f5f5f5;
+      color: #222;
+    }
+
+    .btn-submit {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: #222;
+      color: #fff;
+      border: 1px solid #222;
+      border-radius: 8px;
+      padding: 11px 20px;
+      font-size: 13px;
+      font-weight: 600;
+      transition: background 0.2s;
+    }
+
+    .btn-submit:hover {
+      background: #444;
+      color: #fff;
+    }
+
+    .btn-submit:disabled {
+      opacity: 0.65;
+      cursor: not-allowed;
+    }
+
+    .form-alert {
+      border-radius: 8px;
+      font-size: 13px;
+    }
+
+    .form-section-label {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.7px;
+      font-weight: 700;
+      color: #777;
+      margin-bottom: 18px;
+    }
+
+    @media (max-width: 576px) {
+      .add-category-page {
+        padding: 24px 0 35px;
+      }
+
+      .page-heading h2 {
+        font-size: 22px;
+      }
+
+      .form-card-header,
+      .category-form-body {
+        padding: 20px;
+      }
+
+      .form-actions {
+        flex-direction: column-reverse;
+        align-items: stretch;
+      }
+
+      .btn-cancel,
+      .btn-submit {
+        width: 100%;
+      }
     }
   </style>
 </head>
@@ -40,41 +272,258 @@
 
   <%- include('../partials/adminHeader') %>
 
-    <main>
-      <div class="container mt-4">
-        <div class="row">
-          <div class="col-lg-6 mx-auto">
-            <div class="couponDiv">
-              <div class="coupon-header text-center">
-                <h5 class="fw-bold"><i class="fa-solid fa-layer-group"></i> Add Category</h5>
+    <main class="add-category-page">
+      <div class="container">
+
+        <div class="page-heading">
+          <h2>Add Category</h2>
+          <p>Create a category to organize the shoes in your store.</p>
+        </div>
+
+        <div class="row justify-content-center">
+          <div class="col-lg-8 col-xl-7">
+
+            <div class="category-form-card">
+
+              <div class="form-card-header">
+                <div class="header-icon">
+                  <i class="fa-solid fa-layer-group"></i>
+                </div>
+
+                <div>
+                  <h5>Category Information</h5>
+                  <p>Enter the details for your new shoe category.</p>
+                </div>
               </div>
-              <form action="/admin/addcategory" method="post" enctype="multipart/form-data">
-                <div class="mb-3">
-                  <label for="categoryname" class="form-label">Category Name</label>
-                  <input type="string" class="form-control" id="categoryname" placeholder="Name" name="categoryname">
-                </div>
-                <div class="mb-3">
-                  <label for="categorydescription" class="form-label">Description</label>
-                  <input type="String" class="form-control" id="categorydescription" placeholder="Description"
-                    name="categorydescription">
-                </div>
-                <div class="mb-3">
-                  <label for="image" class="form-label">Category Image</label>
-                  <input type="file" class="form-control" id="image" placeholder="file not chosen" name="image">
-                </div>
-                <% if (adminmessage) { %>
-                  <p class="text-white" id="change">
-                    <%= adminmessage.message %>
-                  </p>
+
+              <div class="category-form-body">
+
+                <% if (typeof adminmessage !=='undefined' && adminmessage) { %>
+                  <div id="flash-message" hidden data-message="<%= adminmessage.message %>"
+                    data-type="<%= adminmessage.type || 'success' %>">
+                  </div>
                   <% } %>
-                    <div class="d-grid mt-3">
-                      <button type="submit" class="btn btn-dark btn-sm"><i class="fa-solid fa-layer-group"></i> Add
-                        Category</button>
-                    </div>
-              </form>
+
+                    <form action="/admin/addcategory" method="post" enctype="multipart/form-data" id="addCategoryForm">
+
+                      <div class="form-section-label">
+                        Basic Details
+                      </div>
+
+
+                      <div class="mb-4">
+                        <label for="categoryname" class="form-label">
+                          Category Name <span class="required-mark">*</span>
+                        </label>
+
+                        <input type="text" class="form-control" id="categoryname" name="categoryname"
+                          placeholder="e.g. Sports Shoes" maxlength="80" required>
+
+                        <small class="field-help">
+                          Choose a clear name that customers can easily recognize.
+                        </small>
+                      </div>
+
+
+                      <div class="mb-4">
+                        <label for="categorydescription" class="form-label">
+                          Description <span class="required-mark">*</span>
+                        </label>
+
+                        <textarea class="form-control" id="categorydescription" name="categorydescription"
+                          placeholder="Describe the type of shoes in this category..." maxlength="500"
+                          required></textarea>
+
+                        <small class="field-help">
+                          <span id="descriptionCount">0</span>/500 characters
+                        </small>
+                      </div>
+
+                      <div class="mb-3">
+                        <label for="image" class="form-label">
+                          Category Image <span class="required-mark">*</span>
+                        </label>
+
+                        <div class="image-upload-box">
+                          <div class="upload-icon">
+                            <i class="fa-solid fa-cloud-arrow-up"></i>
+                          </div>
+
+                          <div class="upload-title">
+                            Upload a category image
+                          </div>
+
+                          <p class="upload-description">
+                            Choose a clear image representing this shoe category.
+                          </p>
+
+                          <input type="file" class="form-control" id="image" name="image"
+                            accept="image/jpeg,image/png,image/webp" required>
+
+                          <small class="field-help">
+                            Supported formats: JPG, PNG, WebP.
+                          </small>
+
+                          <div class="preview-wrapper" id="previewWrapper">
+                            <img src="" alt="Category image preview" class="preview-image" id="imagePreview">
+
+                            <div class="preview-caption" id="imageName"></div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="form-actions">
+                        <a href="/admin/category" class="btn-cancel">
+                          <i class="fa-solid fa-arrow-left"></i>
+                          Back to Categories
+                        </a>
+
+                        <button type="submit" class="btn-submit" id="submitBtn">
+                          <i class="fa-solid fa-plus"></i>
+                          Add Category
+                        </button>
+                      </div>
+
+                    </form>
+              </div>
             </div>
+
           </div>
         </div>
+
       </div>
     </main>
+
+    <script>
+      const categoryForm = document.getElementById('addCategoryForm');
+      const imageInput = document.getElementById('image');
+      const imagePreview = document.getElementById('imagePreview');
+      const previewWrapper = document.getElementById('previewWrapper');
+      const imageName = document.getElementById('imageName');
+      const descriptionInput = document.getElementById('categorydescription');
+      const descriptionCount = document.getElementById('descriptionCount');
+
+      let previewUrl = null;
+
+      imageInput.addEventListener('change', function () {
+        const file = this.files[0];
+
+        if (previewUrl) {
+          URL.revokeObjectURL(previewUrl);
+          previewUrl = null;
+        }
+
+        if (!file) {
+          previewWrapper.style.display = 'none';
+          imagePreview.removeAttribute('src');
+          return;
+        }
+
+        const allowedTypes = [
+          'image/jpeg',
+          'image/png',
+          'image/webp'
+        ];
+
+        if (!allowedTypes.includes(file.type)) {
+          Swal.fire({
+            icon: 'error',
+            title: 'Invalid image format',
+            text: 'Please select a JPG, PNG, or WebP image.'
+          });
+
+          this.value = '';
+          previewWrapper.style.display = 'none';
+          return;
+        }
+
+        if (file.size > 5 * 1024 * 1024) {
+          Swal.fire({
+            icon: 'error',
+            title: 'Image is too large',
+            text: 'Please choose an image smaller than 5 MB.'
+          });
+
+          this.value = '';
+          previewWrapper.style.display = 'none';
+          return;
+        }
+
+        previewUrl = URL.createObjectURL(file);
+        imagePreview.src = previewUrl;
+        imageName.textContent = file.name;
+        previewWrapper.style.display = 'block';
+      });
+
+      descriptionInput.addEventListener('input', function () {
+        descriptionCount.textContent = this.value.length;
+      });
+
+      categoryForm.addEventListener('submit', function (event) {
+        const categoryName = document
+          .getElementById('categoryname')
+          .value.trim();
+
+        const categoryDescription = descriptionInput.value.trim();
+
+        if (!categoryName || !categoryDescription) {
+          event.preventDefault();
+
+          Swal.fire({
+            icon: 'warning',
+            title: 'Missing information',
+            text: 'Please enter the category name and description.'
+          });
+
+          return;
+        }
+
+        if (!imageInput.files.length) {
+          event.preventDefault();
+
+          Swal.fire({
+            icon: 'warning',
+            title: 'Category image required',
+            text: 'Please select an image for this category.'
+          });
+
+          return;
+        }
+      });
+
+      window.addEventListener('beforeunload', function () {
+        if (previewUrl) {
+          URL.revokeObjectURL(previewUrl);
+        }
+      });
+
+
+      const flashMessage = document.getElementById('flash-message');
+
+      if (flashMessage && typeof Swal !== 'undefined') {
+        const message = flashMessage.dataset.message;
+        const type = flashMessage.dataset.type;
+
+        const icon = type === 'danger'
+          ? 'error'
+          : ['success', 'error', 'warning', 'info', 'question'].includes(type)
+            ? type
+            : 'info';
+
+        Swal.fire({
+          toast: true,
+          position: 'top-end',
+          icon: icon,
+          title: message,
+          showConfirmButton: false,
+          timer: 2500,
+          timerProgressBar: true
+        });
+      }
+    </script>
+
     <%- include('../partials/adminfooter') %>
+
+</body>
+
+</html>

@@ -4,116 +4,363 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Shoe Rack</title>
+
+  <title>Shoe Rack | Product Offers</title>
+
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
   <style>
-    .categoryBox {
+    body {
+      background-color: #f7f8fa;
+    }
+
+    .offers-container {
+      padding: 30px 15px 50px;
+    }
+
+    .page-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 15px;
       margin-bottom: 30px;
     }
 
-    .card {
-      border: none;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      transition: transform 0.2s;
+    .page-title {
+      font-size: 28px;
+      font-weight: 700;
+      color: #212529;
+      margin: 0;
+    }
+
+    .page-subtitle {
+      color: #777;
+      font-size: 14px;
+      margin-top: 6px;
+      margin-bottom: 0;
+    }
+
+    .product-count {
+      background-color: #212529;
+      color: #fff;
+      padding: 8px 15px;
+      border-radius: 5px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 25px;
+    }
+
+    .product-card {
+      background-color: #fff;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid #ececec;
+      box-shadow: 0 3px 12px rgba(0, 0, 0, 0.05);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
       display: flex;
       flex-direction: column;
-      width: 280px;
+      min-width: 0;
     }
 
-    .card:hover {
+    .product-card:hover {
       transform: translateY(-5px);
+      box-shadow: 0 8px 22px rgba(0, 0, 0, 0.10);
     }
 
-    .card-img-top {
+    .product-image-wrapper {
+      position: relative;
+      width: 100%;
+      height: 240px;
+      background-color: #f4f4f4;
+      overflow: hidden;
+    }
+
+    .product-image {
       width: 100%;
       height: 100%;
-      object-fit: cover;
+      object-fit: contain;
+      padding: 12px;
+      transition: transform 0.3s ease;
     }
 
-    .img-div {
-      height: 270px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    .product-card:hover .product-image {
+      transform: scale(1.04);
     }
 
-    .card-body {
-      padding: 1.25rem;
-      text-align: center;
+    .status-badge {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      padding: 6px 11px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+
+    .status-active {
+      color: #166534;
+      background-color: #dcfce7;
+    }
+
+    .status-inactive {
+      color: #991b1b;
+      background-color: #fee2e2;
+    }
+
+    .product-details {
+      padding: 20px;
       display: flex;
       flex-direction: column;
-      justify-content: space-around;
+      flex: 1;
     }
 
-    .btn-dark {
-      width: 100%;
-      margin-top: 10px;
-      padding: 10px 0;
-      border-radius: 0;
+    .product-name {
+      font-size: 17px;
+      font-weight: 700;
+      color: #252525;
+      margin: 0 0 14px;
+      line-height: 1.5;
+      overflow-wrap: anywhere;
     }
 
-    .add-category-btn {
-      margin-left: 10px;
+    .offer-info {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+      font-size: 13px;
+    }
+
+    .offer-label {
+      color: #777;
     }
 
     .offer-status {
-      font-weight: bold;
+      font-weight: 700;
     }
 
-    .offer-status.actives {
-      color: yellowgreen;
+    .offer-status.active {
+      color: #198754;
     }
 
     .offer-status.inactive {
-      color: red;
+      color: #dc3545;
+    }
+
+    .offer-button {
+      display: block;
+      width: 100%;
+      text-align: center;
+      text-decoration: none;
+      background-color: #212529;
+      color: #fff;
+      padding: 11px 14px;
+      border: 1px solid #212529;
+      border-radius: 5px;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      margin-top: auto;
+      transition: background-color 0.2s ease, color 0.2s ease;
+    }
+
+    .offer-button:hover {
+      background-color: #fff;
+      color: #212529;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 65px 20px;
+      background-color: #fff;
+      border: 1px dashed #ddd;
+      border-radius: 10px;
+    }
+
+    .empty-state h5 {
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .empty-state p {
+      color: #777;
+      margin: 0;
+    }
+
+    @media (max-width: 576px) {
+      .offers-container {
+        padding: 20px 12px 35px;
+      }
+
+      .page-title {
+        font-size: 23px;
+      }
+
+      .product-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+      }
+
+      .product-image-wrapper {
+        height: 155px;
+      }
+
+      .product-details {
+        padding: 12px;
+      }
+
+      .product-name {
+        font-size: 14px;
+      }
+
+      .offer-info {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+      }
+
+      .status-badge {
+        top: 7px;
+        right: 7px;
+        font-size: 9px;
+        padding: 5px 7px;
+      }
+
+      .offer-button {
+        font-size: 11px;
+        padding: 10px 5px;
+      }
     }
   </style>
 </head>
 
 <body>
+
   <%- include('../partials/adminHeader') %>
 
     <main>
-      <div class="container">
-        <% if (adminmessage) { %>
-          <div class="alert alert-dismissible fade show alert-<%= adminmessage.type %> mt-4" role="alert">
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            <strong>
-              <%= adminmessage.message %>
-            </strong>
+      <div class="container-fluid offers-container">
+
+        <% if (typeof adminmessage !=='undefined' && adminmessage) { %>
+          <div id="flash-message" hidden data-message="<%= adminmessage.message %>"
+            data-type="<%= adminmessage.type || 'success' %>">
           </div>
           <% } %>
-            <div class="d-flex justify-content-between align-items-center my-4">
-              <h3 class="m-0">Product Offers</h3>
+
+            <div class="page-header">
+              <div>
+                <h3 class="page-title">Product Offers</h3>
+                <p class="page-subtitle">
+                  Manage discounts and offers for your shoe products.
+                </p>
+              </div>
+
+              <div class="product-count">
+                Total Products: <%= products.length %>
+              </div>
             </div>
-            <div class="row ms-5 mt-5">
-              <% products.forEach(product=> { %>
-                <div class="col-md-4">
-                  <div class="categoryBox w-100">
-                    <div class="card">
-                      <div class="img-div">
-                        <img src="/product_images/<%= product.image[0] %>" class="card-img-top">
-                      </div>
-                      <div class="card-body">
-                        <h5 class="fw-bold">
-                          <%= product.productname %>
-                        </h5>
-                        <p class="text-muted fw-bold">Offer Status:
-                          <span class="offer-status <%= product.offer.isOfferActive ? 'actives' : 'inactive' %>">
-                            <%= product.offer.isOfferActive ? 'Active' : 'InActive' %>
-                          </span>
-                        </p>
-                        <a class="btn btn-dark" href="/admin/productoffers/addoffer/<%= product._id %>">ADD OFFERS</a>
-                      </div>
+
+            <% if (products.length> 0) { %>
+
+              <div class="product-grid">
+
+                <% products.forEach(product=> { %>
+
+                  <div class="product-card">
+
+                    <div class="product-image-wrapper">
+
+                      <img src="<%= product.image && product.image.length > 0
+                    ? product.image[0]
+                    : '/images/no-image.png' %>" class="product-image" alt="<%= product.productname %>" loading="lazy"
+                        onerror="this.onerror=null; this.src='https://placehold.co/400x300?text=No+Image';">
+
+                      <span
+                        class="status-badge <%= product.offer && product.offer.isOfferActive ? 'status-active' : 'status-inactive' %>">
+                        <%= product.offer && product.offer.isOfferActive ? 'Active' : 'Inactive' %>
+                      </span>
+
                     </div>
+
+                    <div class="product-details">
+
+                      <h5 class="product-name">
+                        <%= product.productname %>
+                      </h5>
+
+                      <div class="offer-info">
+
+                        <span class="offer-label">Offer Status</span>
+
+                        <span
+                          class="offer-status <%= product.offer && product.offer.isOfferActive ? 'active' : 'inactive' %>">
+                          <%= product.offer && product.offer.isOfferActive ? 'Active' : 'Inactive' %>
+                        </span>
+
+                      </div>
+
+                      <a class="offer-button" href="/admin/productoffers/addoffer/<%= product._id %>">
+
+                        <%= product.offer && product.offer.isOfferActive ? 'EDIT OFFER' : 'ADD OFFER' %>
+
+                      </a>
+
+                    </div>
+
                   </div>
+
+                  <% }) %>
+
+              </div>
+
+              <% } else { %>
+
+                <div class="empty-state">
+                  <h5>No Products Found</h5>
+                  <p>Add products to your store before managing product offers.</p>
                 </div>
-                <% }) %>
-            </div>
+
+                <% } %>
+
       </div>
     </main>
+
+    <%- include('../partials/adminfooter') %>
+
 </body>
-<%- include('../partials/adminfooter') %>
+<script>
+  const flashMessage = document.getElementById('flash-message');
+
+  if (flashMessage && typeof Swal !== 'undefined') {
+    const message = flashMessage.dataset.message;
+    const type = flashMessage.dataset.type;
+
+    const icon = type === 'danger'
+      ? 'error'
+      : ['success', 'error', 'warning', 'info', 'question'].includes(type)
+        ? type
+        : 'info';
+
+    Swal.fire({
+      toast: true,
+      position: 'top-end',
+      icon: icon,
+      title: message,
+      showConfirmButton: false,
+      timer: 2500,
+      timerProgressBar: true
+    });
+  }
+</script>
 
 </html>

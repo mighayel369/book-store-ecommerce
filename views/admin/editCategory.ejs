@@ -4,34 +4,268 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Shoe Rack</title>
+  <title>Edit Category | Shoe Rack</title>
+
   <style>
-    .couponDiv {
-      background-color: #a2c7ec;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-      width: 450px;
-      margin: 0 auto;
+    .edit-category-page {
+      background: #f5f6f8;
+      min-height: 80vh;
+      padding: 35px 0 55px;
     }
 
-    .coupon-header {
-      border-bottom: 1px solid #dee2e6;
-      padding-bottom: 8px;
-      margin-bottom: 15px;
+    .page-heading {
+      margin-bottom: 25px;
+    }
+
+    .page-heading h2 {
+      font-size: 26px;
+      font-weight: 700;
+      color: #202020;
+      margin-bottom: 7px;
+    }
+
+    .page-heading p {
+      color: #777;
+      font-size: 14px;
+      margin-bottom: 0;
+    }
+
+    .category-form-card {
+      background: #fff;
+      border: 1px solid #e8e8e8;
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.035);
+    }
+
+    .form-card-header {
+      padding: 23px 28px;
+      border-bottom: 1px solid #eee;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .header-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 11px;
+      background: #f0f0f0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      color: #222;
+      flex-shrink: 0;
+    }
+
+    .form-card-header h5 {
+      font-weight: 700;
+      font-size: 17px;
+      margin: 0 0 5px;
+    }
+
+    .form-card-header p {
+      color: #777;
+      font-size: 13px;
+      margin: 0;
+    }
+
+    .category-form-body {
+      padding: 28px;
     }
 
     .form-label {
-      font-size: 0.9rem;
+      font-size: 13px;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 8px;
     }
 
-    .form-control,
-    .form-select {
-      font-size: 0.9rem;
+    .required-mark {
+      color: #dc3545;
     }
 
-    .btn {
-      font-size: 0.9rem;
+    .form-control {
+      border: 1px solid #dedede;
+      border-radius: 8px;
+      padding: 11px 13px;
+      font-size: 14px;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .form-control:focus {
+      border-color: #555;
+      box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.06);
+    }
+
+    textarea.form-control {
+      resize: vertical;
+      min-height: 115px;
+    }
+
+    .field-help {
+      display: block;
+      margin-top: 6px;
+      font-size: 12px;
+      color: #888;
+    }
+
+    .form-section-label {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.7px;
+      font-weight: 700;
+      color: #777;
+      margin-bottom: 18px;
+    }
+
+    .current-image-box {
+      border: 1px solid #e8e8e8;
+      border-radius: 10px;
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      background: #fafafa;
+      flex-wrap: wrap;
+    }
+
+    .current-image {
+      width: 125px;
+      height: 115px;
+      object-fit: contain;
+      background: #fff;
+      border: 1px solid #e5e5e5;
+      border-radius: 8px;
+      padding: 5px;
+    }
+
+    .current-image-details {
+      flex: 1;
+      min-width: 150px;
+    }
+
+    .current-image-details h6 {
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .current-image-details p {
+      color: #777;
+      font-size: 12px;
+      margin-bottom: 0;
+    }
+
+    .new-image-preview {
+      display: none;
+      margin-top: 15px;
+      padding: 15px;
+      border: 1px dashed #ccc;
+      border-radius: 10px;
+      background: #fafafa;
+    }
+
+    .new-image-preview img {
+      width: 125px;
+      height: 115px;
+      object-fit: contain;
+      background: #fff;
+      border: 1px solid #e5e5e5;
+      border-radius: 8px;
+      padding: 5px;
+    }
+
+    .preview-label {
+      color: #198754;
+      font-size: 12px;
+      font-weight: 600;
+      margin-top: 8px;
+    }
+
+    .preview-filename {
+      font-size: 12px;
+      color: #777;
+      margin-top: 5px;
+      overflow-wrap: anywhere;
+    }
+
+    .form-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      padding-top: 24px;
+      margin-top: 26px;
+      border-top: 1px solid #eee;
+    }
+
+    .btn-cancel,
+    .btn-submit {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      border-radius: 8px;
+      padding: 11px 18px;
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+
+    .btn-cancel {
+      background: #fff;
+      color: #444;
+      border: 1px solid #ddd;
+    }
+
+    .btn-cancel:hover {
+      background: #f5f5f5;
+      color: #222;
+    }
+
+    .btn-submit {
+      background: #222;
+      color: #fff;
+      border: 1px solid #222;
+    }
+
+    .btn-submit:hover {
+      background: #444;
+      color: #fff;
+    }
+
+    .form-alert {
+      border-radius: 8px;
+      font-size: 13px;
+    }
+
+    @media (max-width: 576px) {
+      .edit-category-page {
+        padding: 24px 0 35px;
+      }
+
+      .page-heading h2 {
+        font-size: 22px;
+      }
+
+      .form-card-header,
+      .category-form-body {
+        padding: 20px;
+      }
+
+      .form-actions {
+        flex-direction: column-reverse;
+        align-items: stretch;
+      }
+
+      .btn-cancel,
+      .btn-submit {
+        width: 100%;
+      }
     }
   </style>
 </head>
@@ -40,38 +274,233 @@
 
   <%- include('../partials/adminHeader') %>
 
-    <main>
-      <div class="container mt-4">
-        <div class="row">
-          <div class="col-lg-6 mx-auto">
-            <div class="couponDiv">
-              <div class="coupon-header text-center">
-                <h5 class="fw-bold"><i class="fa-solid fa-layer-group"></i> Edit Category</h5>
+    <main class="edit-category-page">
+      <div class="container">
+
+        <div class="page-heading">
+          <h2>Edit Category</h2>
+          <p>Update the category information for your Shoe Rack store.</p>
+        </div>
+
+        <div class="row justify-content-center">
+          <div class="col-lg-8 col-xl-7">
+
+            <div class="category-form-card">
+
+              <div class="form-card-header">
+                <div class="header-icon">
+                  <i class="fa-solid fa-pen-to-square"></i>
+                </div>
+
+                <div>
+                  <h5>Category Information</h5>
+                  <p>Make the necessary changes and save your updates.</p>
+                </div>
               </div>
-              <form action="/admin/editcategory/<%= categorydata._id %>" method="post" enctype="multipart/form-data">
-                <div class="mb-3">
-                  <label for="categoryname" class="form-label">Category Name</label>
-                  <input type="string" class="form-control" id="categoryname" placeholder="Name" name="categoryname"
-                    value="<%= categorydata.categoryname %>">
-                </div>
-                <div class="mb-3">
-                  <label for="categorydescription" class="form-label">Description</label>
-                  <input type="String" class="form-control" id="categorydescription" placeholder="Description"
-                    name="categorydescription" value="<%= categorydata.categorydescription %>">
-                </div>
-                <div class="mb-3">
-                  <label for="image" class="form-label">Category Image</label>
-                  <input type="file" class="form-control" id="image" placeholder="file not chosen" name="image">
-                </div>
-                <img src="/category_images/<%= categorydata.image %>" alt="Category Image" width="100">
-                <input type="hidden" name="old_image" value="<%= categorydata.image %>" />
-                <div class="d-grid mt-3">
-                  <button type="submit" class="btn btn-dark btn-sm">Save Changes</button>
-                </div>
-              </form>
+
+              <div class="category-form-body">
+
+
+                <% if (typeof adminmessage !=='undefined' && adminmessage) { %>
+                  <div id="flash-message" hidden data-message="<%= adminmessage.message %>"
+                    data-type="<%= adminmessage.type || 'success' %>">
+                  </div>
+                  <% } %>
+
+                    <form action="/admin/editcategory/<%= categorydata._id %>" method="post"
+                      enctype="multipart/form-data" id="editCategoryForm">
+
+                      <div class="mb-4">
+                        <div class="form-section-label">Basic Details</div>
+
+                        <label for="categoryname" class="form-label">
+                          Category Name <span class="required-mark">*</span>
+                        </label>
+
+                        <input type="text" class="form-control" id="categoryname" name="categoryname"
+                          placeholder="e.g. Sports Shoes" maxlength="80" value="<%= categorydata.categoryname %>"
+                          required>
+                      </div>
+
+                      <div class="mb-4">
+                        <label for="categorydescription" class="form-label">
+                          Description <span class="required-mark">*</span>
+                        </label>
+
+                        <textarea class="form-control" id="categorydescription" name="categorydescription"
+                          placeholder="Describe this shoe category..." maxlength="500"
+                          required><%= categorydata.categorydescription %></textarea>
+
+                        <small class="field-help">
+                          <span id="descriptionCount">
+                            <%= (categorydata.categorydescription || '' ).length %>
+                          </span>/500 characters
+                        </small>
+                      </div>
+
+                      <div class="mb-4">
+                        <label class="form-label">Current Category Image</label>
+
+                        <div class="current-image-box">
+                          <img src="<%= categorydata.image %>" alt="<%= categorydata.categoryname %>"
+                            class="current-image" id="currentImage"
+                            onerror="this.style.display='none'; document.getElementById('currentImageError').style.display='flex';">
+
+                          <div id="currentImageError"
+                            style="display:none; width:125px; height:115px; align-items:center; justify-content:center; background:#eee; border-radius:8px; color:#777;">
+                            <i class="fa-solid fa-image fa-2x"></i>
+                          </div>
+
+                          <div class="current-image-details">
+                            <h6>Current image</h6>
+                            <p>Your existing image will be retained unless you select a replacement below.</p>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="mb-3">
+                        <label for="image" class="form-label">
+                          Replace Category Image
+                        </label>
+
+                        <input type="file" class="form-control" id="image" name="image"
+                          accept="image/jpeg,image/png,image/webp">
+
+                        <small class="field-help">
+                          Optional. Choose a JPG, PNG, or WebP image to replace the current image.
+                        </small>
+
+                        <div class="new-image-preview" id="newImagePreview">
+                          <img src="" alt="New category image preview" id="newImage">
+                          <div class="preview-label">
+                            <i class="fa-solid fa-check-circle"></i>
+                            New image selected
+                          </div>
+                          <div class="preview-filename" id="newImageName"></div>
+                        </div>
+                      </div>
+
+                      <input type="hidden" name="old_image" value="<%= categorydata.image %>">
+
+                      <div class="form-actions">
+                        <a href="/admin/category" class="btn-cancel">
+                          <i class="fa-solid fa-arrow-left"></i>
+                          Cancel
+                        </a>
+
+                        <button type="submit" class="btn-submit">
+                          <i class="fa-solid fa-floppy-disk"></i>
+                          Save Changes
+                        </button>
+                      </div>
+
+                    </form>
+              </div>
             </div>
+
           </div>
         </div>
+
       </div>
     </main>
+
+    <script>
+      const imageInput = document.getElementById('image');
+      const newImagePreview = document.getElementById('newImagePreview');
+      const newImage = document.getElementById('newImage');
+      const newImageName = document.getElementById('newImageName');
+      const descriptionInput = document.getElementById('categorydescription');
+      const descriptionCount = document.getElementById('descriptionCount');
+
+      let previewUrl = null;
+
+      imageInput.addEventListener('change', function () {
+        const file = this.files[0];
+
+        if (previewUrl) {
+          URL.revokeObjectURL(previewUrl);
+          previewUrl = null;
+        }
+
+        if (!file) {
+          newImagePreview.style.display = 'none';
+          newImage.removeAttribute('src');
+          return;
+        }
+
+        const allowedTypes = [
+          'image/jpeg',
+          'image/png',
+          'image/webp'
+        ];
+
+        if (!allowedTypes.includes(file.type)) {
+          Swal.fire({
+            icon: 'error',
+            title: 'Invalid image format',
+            text: 'Please select a JPG, PNG, or WebP image.'
+          });
+
+          this.value = '';
+          newImagePreview.style.display = 'none';
+          return;
+        }
+
+        if (file.size > 5 * 1024 * 1024) {
+          Swal.fire({
+            icon: 'error',
+            title: 'Image is too large',
+            text: 'Please choose an image smaller than 5 MB.'
+          });
+
+          this.value = '';
+          newImagePreview.style.display = 'none';
+          return;
+        }
+
+        previewUrl = URL.createObjectURL(file);
+        newImage.src = previewUrl;
+        newImageName.textContent = file.name;
+        newImagePreview.style.display = 'block';
+      });
+
+      descriptionInput.addEventListener('input', function () {
+        descriptionCount.textContent = this.value.length;
+      });
+
+      window.addEventListener('beforeunload', function () {
+        if (previewUrl) {
+          URL.revokeObjectURL(previewUrl);
+        }
+      });
+    </script>
+
     <%- include('../partials/adminfooter') %>
+
+</body>
+<script>
+  const flashMessage = document.getElementById('flash-message');
+
+  if (flashMessage && typeof Swal !== 'undefined') {
+    const message = flashMessage.dataset.message;
+    const type = flashMessage.dataset.type;
+
+    const icon = type === 'danger'
+      ? 'error'
+      : ['success', 'error', 'warning', 'info', 'question'].includes(type)
+        ? type
+        : 'info';
+
+    Swal.fire({
+      toast: true,
+      position: 'top-end',
+      icon: icon,
+      title: message,
+      showConfirmButton: false,
+      timer: 2500,
+      timerProgressBar: true
+    });
+  }
+</script>
+
+</html>
